@@ -1,0 +1,29 @@
+:root{
+                --bg: #f7f7f7;
+                --black: #000;
+                --white: #fff;
+                --primary: #cfcfcf;
+                --shadow: 0 8px 20px rgba(0 , 0, 0, 0.25);
+                --font-title: 22px;
+                --font-text: 15px;
+            }
+            body{
+                font-family: "Montserrat", sans-serif;
+                background: var(--bg);
+                color: var(--black);
+            }
+            p, label{
+                font-size: var(--font-text);
+                color: var(--black);
+                margin: 0 0 10px 0;
+            }
+            label{
+                font-weight: 700;
+            }
+
+.btn-agregar{
+    color: #fff;
+    border: 1px #000;
+    background-color: #820000;
+    margin-bottom: 50px;
+}
