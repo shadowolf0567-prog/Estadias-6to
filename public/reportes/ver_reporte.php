@@ -91,7 +91,7 @@ mysqli_close($conn);
     </style>
 </head>
 <body>
-    <?php require_once __DIR__ . '/menu.php'; ?>
+    <?php require_once __DIR__ . '/../gestion/menu.php'; ?>
 
     <div class="container mt-4">
         <div class="no-print mb-3">
@@ -141,7 +141,7 @@ mysqli_close($conn);
                         <?php else: ?>
                             <p class="text-muted">No se especificó cliente</p>
                         <?php endif; ?>
-                        <a href="ver_cliente.php?id=<?= $reporte['id_cliente'] ?>" class="btn btn-info">
+                        <a href="../clientes/ver_cliente.php?id=<?= $reporte['id_cliente'] ?>" class="btn btn-info">
                             <i class="bi bi-eye"></i> Ver Cliente
                         </a>
                     </div>
@@ -157,7 +157,7 @@ mysqli_close($conn);
                         <?php else: ?>
                             <p class="text-muted">No se especificó equipo</p>
                         <?php endif; ?>
-                        <a href="ver_equipo.php?id=<?= $reporte['id_equipo'] ?>" class="btn btn-info">
+                        <a href="../equipos/ver_equipo.php?id=<?= $reporte['id_equipo'] ?>" class="btn btn-info">
                             <i class="bi bi-eye"></i> Ver Equipo
                         </a>
                     </div>
@@ -179,7 +179,7 @@ mysqli_close($conn);
                                 <p><span class="info-label">Atendido por: </span><?= htmlspecialchars($reporte['tecnico'] ?: 'No especificado') ?></p>
                                 <p><span class="info-label">Refacciones usadas: </span><?= htmlspecialchars($reporte['refaccion'] ?: 'Ninguna') ?></p>
                                 <p><span class="info-label">Fecha atención: </span> <?= date('d/m/Y',strtotime($reporte['fecha_atencion'])) ?></p>
-                                <p><span class="info-label">¿Qué se hizo?: </span> <?= htmlspecialchars($reporte['acciones']) ?></p>
+                                <p><span class="info-label">¿Qué se hizo?: </span> <?= nl2br(htmlspecialchars($reporte['acciones'] ?: '')) ?></p>
                                 <p><span class="info-label">Observaciones</span></p>
                                 <div class="bg-white p-2 rounded"><?= nl2br(htmlspecialchars($reporte['observaciones_atencion'] ?: 'Sin observaciones')) ?></div>
                             </div>

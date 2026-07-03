@@ -20,15 +20,15 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                 switch($usuario['tip_usr']){
                     case 1:
                         mysqli_close($conn);
-                        header("Location: ../gestion/clientes.php");
+                        header("Location: ../clientes/clientes.php");
                         exit;
                     case 2:
                         mysqli_close($conn);
-                        header("Location: ../gestion/reportes.php");
+                        header("Location: ../reportes/reportes.php");
                         exit;
                     case 3:
                         mysqli_close($conn);
-                        header("Location: ../gestion/agregar_clientes.php");
+                        header("Location: ../clientes/agregar_clientes.php");
                         exit;
                     default:
                         mysqli_close($conn);

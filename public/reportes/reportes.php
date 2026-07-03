@@ -149,7 +149,7 @@ $contadores = contar_reportes_por_estado();
     </style>
 </head>
 <body>
-    <?php require_once __DIR__ . '/menu.php'; ?>
+    <?php require_once __DIR__ . '/../gestion/menu.php'; ?>
     <div class="container mt-4">
         <h2 class="mb-4">Reportes</h2>
         <?php if(isset($_GET['msg'])): ?>

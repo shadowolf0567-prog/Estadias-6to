@@ -53,7 +53,7 @@ if($equipo['id_equipo']){
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
 </head>
 <body>
-    <?php require_once __DIR__ . '/menu.php'; ?>
+    <?php require_once __DIR__ . '/../gestion/menu.php'; ?>
     <div class="container mt-4">
         <div class="mb-3">
             <a href="equipos.php" class="btn btn-secondary">
@@ -94,7 +94,7 @@ if($equipo['id_equipo']){
                             <div class="col-md-12">
                                 <p><span class="info-label">Cliente: </span><?= htmlspecialchars($equipo['nombre']) ?></p>
                                 <p><span class="info-label">Número de Cuenta: </span><?= htmlspecialchars($equipo['no_cuenta']) ?></p>
-                                <a href="./ver_cliente.php?id=<?= $equipo['id_cliente'] ?>" class="btn btn-info">
+                                <a href="../clientes/ver_cliente.php?id=<?= $equipo['id_cliente'] ?>" class="btn btn-info">
                                     <i class="bi bi-eye"></i> Ver Cliente
                                 </a>
                             </div>
@@ -117,7 +117,7 @@ if($equipo['id_equipo']){
                                         <?php endif; ?>
                                         <p><span class="info-label">Estado: </span><?= htmlspecialchars($reportes['estado']) ?></p>
                                         <p><span class="info-label">Descripción del Problema: </span><?= htmlspecialchars($reportes['descripcion']) ?></p>
-                                        <a href="./ver_reporte.php?id=<?= $reportes['id_reporte'] ?>" class="btn btn-info">
+                                        <a href="../reportes/ver_reporte.php?id=<?= $reportes['id_reporte'] ?>" class="btn btn-info">
                                             <i class="bi bi-eye"></i> Ver Reporte
                                         </a>
                                     </div>

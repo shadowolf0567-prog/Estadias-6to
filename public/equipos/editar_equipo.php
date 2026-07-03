@@ -102,7 +102,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
     </style>
 </head>
 <body>
-    <?php require_once __DIR__ . '/menu.php'; ?>
+    <?php require_once __DIR__ . '/../gestion/menu.php'; ?>
     <div class="container mt-4">
         <h2 class="mb-3">Datos del Equipo</h2>
         <?php if($mensaje): ?>

@@ -94,7 +94,7 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
     </style>
 </head>
 <body>
-    <?php require_once __DIR__ .'/menu.php'; ?>
+    <?php require_once __DIR__ .'/../gestion/menu.php'; ?>
     <div class="container mt-4">
         <h2 class="text-center mb-4">Registrar Nuevo Equipo</h2>
 
@@ -534,7 +534,7 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
                     telefonos: datosContacto.telefonos,
                     correos: datosContacto.correos
                 };
-                fetch('crear_cliente_ajax.php',{
+                fetch('../clientes/crear_cliente_ajax.php',{
                     method: "POST",
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(datosCliente)

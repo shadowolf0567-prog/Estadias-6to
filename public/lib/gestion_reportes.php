@@ -206,7 +206,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     $id_equipo=!empty($_POST['id_equipo']) ? intval($_POST['id_equipo']): null;
 
                     $resultado=agregar_reportes($reporte,$fecha,$tecnico,$refaccion,$descripcion,$id_cliente,$id_equipo);
-                    header('Location: ../gestion/agregar_reporte.php?'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
+                    header('Location: ../reportes/agregar_reporte.php?'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
                     exit;
                 }
                 break;
@@ -225,10 +225,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     $acciones = trim($_POST['acciones']);
 
                     $resultado=editar_reporte($id_reporte,$reporte,$fecha,$tecnico,$refaccion,$descripcion,$id_cliente,$id_equipo,$observaciones_atencion,$fecha_atencion,$acciones);
-                    header('Location: ../gestion/ver_reporte.php?id='.$id_reporte.'&'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
+                    header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.'&'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
                     exit;
                 }else{
-                    header('Location: ../gestion/editar_reportes.php?error='.urlencode('Faltan campos'));
+                    header('Location: ../reportes/editar_reportes.php?error='.urlencode('Faltan campos'));
                     exit;
                 }
                 break;
@@ -236,7 +236,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 if(isset($_POST['id_reporte'])){
                     $id_reporte = intval($_POST['id_reporte']);
                     $resultado=eliminar_reporte($id_reporte);
-                    header('Location: ../gestion/reportes.php?'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
+                    header('Location: ../reportes/reportes.php?'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
                     exit;
                 }
                 break;
@@ -244,7 +244,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 if(isset($_POST['id_reporte'])){
                     $id_reporte = intval($_POST['id_reporte']);
                     $resultado = eliminar_reporte($id_reporte);
-                    header('Location: ../gestion/reportes.php?tab=atendido&'.$resultado['estatus'].'='.urlencode(($resultado['mensaje'])));
+                    header('Location: ../reportes/reportes.php?tab=atendido&'.$resultado['estatus'].'='.urlencode(($resultado['mensaje'])));
                     exit;
                 }
                 break;
@@ -257,7 +257,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     $fecha_atencion = isset($_POST['fecha_atencion']) ? trim($_POST['fecha_atencion']) : '';
                     $acciones = isset($_POST['acciones']) ? trim($_POST['acciones']) : '';
                     $resultado = marcar_atendido($id_reporte,$observaciones,$tecnico, $refaccion, $fecha_atencion, $acciones);
-                    header('Location: ../gestion/reportes.php?tab=atendido&'.$resultado['estatus']. '='. urlencode($resultado['mensaje']));
+                    header('Location: ../reportes/reportes.php?tab=atendido&'.$resultado['estatus']. '='. urlencode($resultado['mensaje']));
                     exit;
                 }
                 break;
@@ -266,12 +266,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 if(isset($_POST['id_reporte'])){
                     $id_reporte = intval($_POST['id_reporte']);
                     $resultado = reabrir_reporte($id_reporte);
-                    header('Location: ../gestion/reportes.php?tab=pendiente&'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
+                    header('Location: ../reportes/reportes.php?tab=pendiente&'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
                     exit;
                 }
                 break;
             default:
-            header('Location: ../gestion/reportes.php?error='.urlencode('Acción no valida'));
+            header('Location: ../reportes/reportes.php?error='.urlencode('Acción no valida'));
             exit;
         }
     }

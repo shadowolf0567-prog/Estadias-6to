@@ -1,20 +1,22 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../config/db.php';
-if(!isset($_SESSION['tip_usr']) || ($_SESSION['tip_usr'] !=1 && $_SESSION['tip_usr'] != 2)){
+
+if(!isset($_SESSION['tip_usr']) || ($_SESSION['tip_usr'] != 1 && $_SESSION['tip_usr'] !=2)){
     header('Location: ../login.php?error='.urlencode('Acceso denegado'));
     exit;
 }
+
 if(!isset($_GET['id']) || empty($_GET['id'])){
-    header('Location: clientes.php?error='.urlencode('ID de cliente no especificada'));
+    header('Location: clientes.php?error='.urlencode('ID de cliente no especificado'));
     exit;
 }
 $id_cliente = intval($_GET['id']);
 $sql = "SELECT c.*,
-                GROUP_CONCAT(DISTINCT ct.telefono SEPARATOR ', ') as telefonos,
-                GROUP_CONCAT(DISTINCT cc.correo SEPARATOR ', ') as correos
+                GROUP_CONCAT(DISTINCT CONCAT_WS('||', t.telefono, t.contacto, t.es_principal) SEPARATOR ';;') as telefonos_raw,
+                GROUP_CONCAT(DISTINCT CONCAT_WS('||', cc.correo, cc.contacto, cc.es_principal) SEPARATOR ';;') as correos_raw
         FROM clientes c
-        LEFT JOIN telefonos ct ON c.id_cliente = ct.id_cliente
+        LEFT JOIN telefonos t ON c.id_cliente = t.id_cliente
         LEFT JOIN correos cc ON c.id_cliente = cc.id_cliente
         WHERE c.id_cliente = ?
         GROUP BY c.id_cliente";
@@ -30,15 +32,48 @@ if(!$cliente){
     exit;
 }
 
-$equipos_cliente=[];
+$telefonos = [];
+if(!empty($cliente['telefonos_raw'])){
+    $items = explode(';;',$cliente['telefonos_raw']);
+    foreach($items as $item){
+        $parts = explode('||',$item);
+        if(count($parts) >= 3){
+            $telefonos[] = [
+                'telefono' => $parts[0],
+                'contacto' => $parts[1] ?: '',
+                'es_principal' => $parts[2] == '1'
+            ];
+        }
+    }
+}
+$cliente['telefonos'] = $telefonos;
+
+$correos =[];
+if(!empty($cliente['correos_raw'])){
+    $items = explode(';;',$cliente['correos_raw']);
+    foreach($items as $item){
+        $parts = explode('||',$item);
+        if(count($parts) >= 3){
+            $correos[] = [
+                'correo' => $parts[0],
+                'contacto' => $parts[1] ?: '',
+                'es_principal' => $parts[2] == '1'
+            ];
+        }
+    }
+}
+$cliente['correos'] = $correos;
+$cliente['correos'] = $correos;
+
+$equipos_cliente = [];
 if($cliente['id_cliente']){
-    $sql_equipos_cliente = "SELECT e.id_equipo,modelo,inicio_contrato,fin_contrato,no_serie,
-                                (SELECT COUNT(*) FROM reportes r WHERE r.id_equipo = e.id_equipo) as total_reportes
+    $sql_equipos_cliente = "SELECT id_equipo, modelo, inicio_contrato,fin_contrato,no_serie,
+                                    (SELECT COUNT(*) FROM reportes r WHERE r.id_equipo = e.id_equipo) as total_reportes
                             FROM equipos e
-                            WHERE e.id_cliente = ?
+                            WHERE id_cliente = ?
                             ORDER BY no_serie ASC";
     $stmt_eq = mysqli_prepare($conn,$sql_equipos_cliente);
-    mysqli_stmt_bind_param($stmt_eq,"i",$cliente['id_cliente']);
+    mysqli_stmt_bind_param($stmt_eq, "i", $cliente['id_cliente']);
     mysqli_stmt_execute($stmt_eq);
     $result_eq = mysqli_stmt_get_result($stmt_eq);
     while($row = mysqli_fetch_assoc($result_eq)){
@@ -46,19 +81,7 @@ if($cliente['id_cliente']){
     }
     mysqli_stmt_close($stmt_eq);
 }
-$telefonos = [];
-if($cliente['id_cliente']){
-    $sql_telefonos = "SELECT telefono, contacto
-                        FROM telefonos
-                        WHERE id_cliente = ?";
-    $stmt_tel = mysqli_prepare($conn,$sql_telefonos);
-    mysqli_stmt_bind_param($stmt_tel,"i",$cliente['id_cliente']);
-    mysqli_stmt_execute($stmt_tel);
-    $result_tel = mysqli_stmt_get_result($stmt_tel);
-    while($row = mysqli_fetch_assoc($result_tel)){
-        $telefono[] = $row;
-    }
-}
+mysqli_close($conn);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -70,8 +93,9 @@ if($cliente['id_cliente']){
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
     <style>
         .info-card{
-            border:none;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
         .info-card .card-header{
             background-color: #f8f9fa;
@@ -80,14 +104,9 @@ if($cliente['id_cliente']){
         }
         .info-label{
             font-weight: 600;
-            color: #495067;
+            color: #495057;
             width: 160px;
             display: inline-block;
-        }
-        .cliente-header{
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
         }
         .equipo-card{
             transition: transform 0.2s;
@@ -99,14 +118,15 @@ if($cliente['id_cliente']){
     </style>
 </head>
 <body>
-    <?php require_once __DIR__ .'/menu.php'; ?>
+    <?php require_once __DIR__ .'/../gestion/menu.php'; ?>
+
     <div class="container mt-4">
         <div class="mb-3">
             <a href="clientes.php" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> Volver
             </a>
             <a href="editar_clientes.php?id_cliente=<?= $cliente['id_cliente'] ?>" class="btn btn-warning">
-                <i class="bi bi-pencil"></i> Editar Cliente
+                <i class="bi bi-pencil"></i> Editar
             </a>
         </div>
         <div class="cliente-header">
@@ -124,8 +144,9 @@ if($cliente['id_cliente']){
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <p><span class="info-label">Número de Cuenta: </span><?= htmlspecialchars($cliente['no_cuenta']) ?></p>
-                                <p><span class="info-label">Dirección: </span><?= htmlspecialchars($cliente['direccion']) ?></p>
+                                <p><span class="info-label">Nombre: </span><?= htmlspecialchars($cliente['nombre']) ?></p>
+                                <p><span class="info-label">Número de Cuenta: </span><?= htmlspecialchars(($cliente['no_cuenta'] ?: 'No registrado')) ?></p>
+                                <p><span class="info-label">Dirección: </span><?= htmlspecialchars($cliente['direccion'] ?: 'No registrado') ?></p>
                             </div>
                         </div>
                     </div>
@@ -137,15 +158,13 @@ if($cliente['id_cliente']){
                     <div class="card-body">
                         <?php if(count($cliente['telefonos']) > 0): ?>
                             <?php foreach($cliente['telefonos'] as $telefono): ?>
-                                <div class="badge bg-info p-2 me-2 mb-2" style="font-size: 0.9rem;">
-                                    <i class="bi bi-telephone"></i> <?= htmlspecialchars($telefono['telefono']) ?>
-                                    <?php if($telefono['contacto']): ?>
-                                        <span><?= htmlspecialchars($telefono['contacto']) ?></span>
+                                    <i class="bi bi-telephone"></i> <?= htmlspecialchars($telefono['telefono']) ?>  
+                                    <?php if(!empty($telefono['contacto'])): ?>
+                                        <i class="bi bi-person-circle"></i> <?= htmlspecialchars($telefono['contacto']) ?>
                                     <?php endif; ?>
-                                </div>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <p class="text-muted">No hay telefonos registrados</p>
+                            <p class="text-muted">No hay teléfonos registrados</p>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -156,9 +175,10 @@ if($cliente['id_cliente']){
                     <div class="card-body">
                         <?php if(count($cliente['correos']) > 0): ?>
                             <?php foreach($cliente['correos'] as $correo): ?>
-                                <?php if($correo['contacto']): ?>
+                                <i class="bi bi-envelope"></i> <?= htmlspecialchars($correo['correo']) ?>
+                                <?php if(!empty($correo['contacto'])): ?>
                                     <?= htmlspecialchars($correo['contacto']) ?>
-                                <?php endif ?>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <p class="text-muted">No hay correos registrados</p>
@@ -174,18 +194,27 @@ if($cliente['id_cliente']){
                             <?php $total_reportes = intval($equipo['total_reportes'] ?? 0); ?>
                             <div class="col-md-6 col-lg-4">
                                 <div class="card info-card equipo-card h-100">
-                                    <div class="card-header"><?= htmlspecialchars($equipo['modelo']) ?></div>
+                                    <div class="card-header"><?= htmlspecialchars($equipo['modelo'] ?: 'Sin modelo') ?></div>
                                     <div class="card-body">
                                         <p><span class="info-label">Número de Serie: </span><?= htmlspecialchars($equipo['no_serie']) ?></p>
                                         <p><span class="info-label">Inicio de Contrato: </span><?= htmlspecialchars($equipo['inicio_contrato']) ?></p>
-                                        <p><span class="info-label">Fin de Contrato: </span><?= htmlspecialchars($equipo['fin_contrato'] ?: 'No especificado') ?></p>
+                                        <p><span class="info-label">Fin de Contrato: </span><?= htmlspecialchars($equipo['fin_contrato']) ?></p>
                                         <hr>
-                                        <p><span class="info-label">Reportes: </span><?= htmlspecialchars($equipo['total_reportes']) ?></p>
-                                        <div class="card-footer">
-                                            <a href="ver_equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-sm btn-info">
-                                                <i class="bi bi-eye"></i> Ver Equipo
-                                            </a>
-                                        </div>
+                                        <p>
+                                            <span class="info-label">Reportes:</span>
+                                            <?php if($total_reportes > 0): ?>
+                                                <a href="../reportes/reportes.php?tab=pendiente&id_equipo=<?= $equipo['id_equipo'] ?>">
+                                                    <?= $total_reportes ?>
+                                                </a>
+                                            <?php else: ?>
+                                                <span>0 reportes</span>
+                                            <?php endif; ?>
+                                        </p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a href="../equipos/ver_equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-sm btn-info">
+                                            <i class="bi bi-eye"></i> Ver
+                                        </a>
                                     </div>
                                 </div>
                             </div>

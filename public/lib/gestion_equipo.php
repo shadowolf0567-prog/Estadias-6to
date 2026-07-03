@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../config/db.php';
 if($_SERVER['REQUEST_METHOD'] !== 'POST'){
-    header('Location: ../gestion/equipos.php');
+    header('Location: ../equipos/equipos.php');
     exit;
 }
 function mostrar_equipos(){
@@ -286,7 +286,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                     $fin_contrato=trim($_POST['fin_contrato']);
 
                     $resultado=agregar_equipo($no_serie,$modelo,$accesorios,$inicio_contrato,$fin_contrato);
-                    header('Location: ../gestion/agregar_equipo.php?'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
+                    header('Location: ../equipos/agregar_equipo.php?'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
                     exit;
                 }
                 break;
@@ -300,15 +300,15 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                         $id_cliente=isset($_POST['id_cliente']) && !empty($_POST['id_cliente']) ? intval($_POST['id_cliente']) : null;
 
                         if(empty($no_serie)){
-                            header('Location: ../gestion/editar_equipo.php?id_equipo='.$id_equipo.'&error='.urlencode('El número de serie es obligatorio'));
+                            header('Location: ../equipos/editar_equipo.php?id_equipo='.$id_equipo.'&error='.urlencode('El número de serie es obligatorio'));
                             exit;
                         }
 
                         $resultado=editar_equipo($id_equipo,$no_serie,$modelo,$inicio_contrato,$fin_contrato,$id_cliente);
                         if($resultado['estatus'] === 'msg' || $resultado['estatus'] === 'info'){
-                            header('Location: ../gestion/editar_equipo.php?id_equipo='.$id_equipo.'&msg='.urlencode($resultado['mensaje']));
+                            header('Location: ../equipos/editar_equipo.php?id_equipo='.$id_equipo.'&msg='.urlencode($resultado['mensaje']));
                         }else{
-                            header('Location: ../gestion/editar_equipo.php?id_equipo='.$id_equipo.'&error='.urlencode($resultado['mensaje']));
+                            header('Location: ../equipos/editar_equipo.php?id_equipo='.$id_equipo.'&error='.urlencode($resultado['mensaje']));
                             exit;
                         }
                     }
@@ -317,7 +317,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                     if(isset($_POST['id_equipo'])){
                         $id_equipo = intval($_POST['id_equipo']);
                         $resultado = eliminar_equipo($id_equipo);
-                        header('Location: ../gestion/equipos.php?'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
+                        header('Location: ../equipos/equipos.php?'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
                         exit;
                     }
                     break;
@@ -335,20 +335,20 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                             $id_cliente = intval($_POST['id_cliente']);
                         }
                         if(empty($no_serie)){
-                            header('Location: ../gestion/agregar_equipo.php?error='.urlencode('El número de serie es obligatorio'));
+                            header('Location: ../equipos/agregar_equipo.php?error='.urlencode('El número de serie es obligatorio'));
                             exit;
                         }
                         $resultado = agregar_equipo_con_cliente($no_serie,$modelo,$accesorios,$inicio_contrato,$fin_contrato,$id_cliente);
                         if($resultado['estatus']==='msg'){
-                            header('Location: ../gestion/agregar_equipo.php?msg='.urlencode($resultado['mensaje']));
+                            header('Location: ../equipos/agregar_equipo.php?msg='.urlencode($resultado['mensaje']));
                         }else{
-                            header('Location: ../gestion/agregar_equipo.php?error='.urlencode($resultado['mensaje']));
+                            header('Location: ../equipos/agregar_equipo.php?error='.urlencode($resultado['mensaje']));
                         }
                         exit;
                     }
                     break;
                 default:
-                    header('Location: ../gestion/equipos.php?error='.urlencode('Acción no válida'));
+                    header('Location: ../equipos/equipos.php?error='.urlencode('Acción no válida'));
                     exit;
         }
     }

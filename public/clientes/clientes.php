@@ -53,7 +53,7 @@ function resaltar_coincidencia($texto,$busqueda){
     <link rel="stylesheet" href="../assets/css/bootstrap-icons.css">
 </head>
 <body>
-    <?php require_once __DIR__.'/menu.php'; ?>
+    <?php require_once __DIR__.'/../gestion/menu.php'; ?>
     <div class="container mt-4">
         <h2 class="mb-4">Clientes</h2>
         <div class="busqueda-container">

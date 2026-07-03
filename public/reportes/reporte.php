@@ -40,7 +40,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
 </head>
 <body>
-    <?php require_once __DIR__ . '/menu.php'; ?>
+    <?php require_once __DIR__ . '/../gestion/menu.php'; ?>
     <div class="container mt-4">
         <h2 class="mb-4">Nuevo Reporte</h2>
         <?php if($mensaje): ?>

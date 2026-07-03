@@ -10,16 +10,16 @@
         
         <div style="display: flex; align-items: center; gap: 30px;">
             <div style="display: flex; gap: 35px;">
-                <a href="equipos.php" style="color: white; text-decoration: none; font-weight: 600; padding: 5px 0;">
+                <a href="../equipos/equipos.php" style="color: white; text-decoration: none; font-weight: 600; padding: 5px 0;">
                     Equipos
                 </a>
-                <a href="reportes.php" style="color: white; text-decoration: none; font-weight: 600; padding: 5px 0;">
+                <a href="../reportes/reportes.php" style="color: white; text-decoration: none; font-weight: 600; padding: 5px 0;">
                     Reportes
                 </a>
-                <a href="clientes.php" style="color:white; text-decoration: none; font-weight: 600; padding: 5px 0;">
+                <a href="../clientes/clientes.php" style="color:white; text-decoration: none; font-weight: 600; padding: 5px 0;">
                     Clientes
                 </a>
-                <a href="backup.php" style="color:white; text-decoration: none; font-weight: 600; padding: 5px 0;">
+                <a href="../respaldos/backup.php" style="color:white; text-decoration: none; font-weight: 600; padding: 5px 0;">
                     Respaldar
                 </a>
             </div>

@@ -128,7 +128,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
     </style>
 </head>
 <body>
-    <?php require_once __DIR__ . '/menu.php';?>
+    <?php require_once __DIR__ . '/../gestion/menu.php';?>
     <div class="container mt-4">
         <h2 class="mb-4">Editar Reporte</h2>
         <?php if($mensaje): ?>
@@ -258,7 +258,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 <button type="submit" class="btn btn-primary" id="btnGuardar">
                     <i class="bi bi-save"></i> Guardar Cambios
                 </button>
-                <a href=""ver_reporte.php?id=<?= $reporte['id_reporte'] ?>" class="btn btn-secondary">
+                <a href="ver_reporte.php?id=<?= $reporte['id_reporte'] ?>" class="btn btn-secondary">
                     <i class="bi bi-x-circle"></i> Cancelar
                 </a>
             </div>

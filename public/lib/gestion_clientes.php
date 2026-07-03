@@ -298,9 +298,9 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                     }
                     $resultado = agregar_cliente_completo($nombre,$no_cuenta,$direccion,$telefonos,$correos);
                     if($resultado['estatus'] === 'msg'){
-                        header('Location: ../gestion/agregar_clientes.php?&msg='.urlencode($resultado['mensaje']));
+                        header('Location: ../clientes/agregar_clientes.php?&msg='.urlencode($resultado['mensaje']));
                     }else{
-                        header('Location: ../gestion/agregar_clientes.php?&error='.urlencode(($resultado['mensaje'])));
+                        header('Location: ../clientes/agregar_clientes.php?&error='.urlencode(($resultado['mensaje'])));
                     }
                     exit;
 
@@ -337,7 +337,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                     }
                     $resultado = editar_cliente_completo($id_cliente,$nombre,$no_cuenta,$direccion,$telefonos,$correos);
                     if($resultado['estatus'] === 'msg'){
-                        header('Location: ../gestion/editar_clientes.php?id_cliente='.$id_cliente.'&msg='.urlencode($resultado['mensaje']));
+                        header('Location: ../clientes/editar_clientes.php?id_cliente='.$id_cliente.'&msg='.urlencode($resultado['mensaje']));
                     }else{
                         header('Location: ../gestion/editar_clientes.php?id_cliente='.$id_cliente,'&error='.urlencode($resultado['mensaje']));
                     }
@@ -365,21 +365,21 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                         $id_cliente = intval($_POST['id_cliente']);
                     }
                     if(empty($no_serie)){
-                        header('Location: ../gestion/agregar_equipo.php?error='.urlencode('El número de serie es obligatorio'));
+                        header('Location: ../equipos/agregar_equipo.php?error='.urlencode('El número de serie es obligatorio'));
                         exit;
                     }
                     $resultado = agregar_equipo_con_cliente($no_serie,$modelo,$inicio_contrato,$fin_contrato,$id_cliente);
                     if($resultado['estatus'] === 'msg'){
-                        header('Location: ../gestion/agregar_equipo.php?msg='.urlencode($resultado['mensaje']));
+                        header('Location: ../equipos/agregar_equipo.php?msg='.urlencode($resultado['mensaje']));
                     }else{
-                        header('Location: ../gestion/agregar_equipo.php?error='.urlencode($resultado['mensaje']));
+                        header('Location: ../equipos/agregar_equipo.php?error='.urlencode($resultado['mensaje']));
                     }
                     exit;
                 }
                 break;
 
             default:
-                header('Location: ../gestion/clientes.php?error='.urlencode('Acción no valida'));
+                header('Location: ../clientes/clientes.php?error='.urlencode('Acción no valida'));
                 exit;
         }
     }
