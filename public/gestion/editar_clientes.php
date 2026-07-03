@@ -95,8 +95,11 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         <?php foreach($cliente['telefonos'] as $index => $telefono): ?>
                             <div class="telefono-item">
                                 <div class="row g-2">
-                                    <div class="col-md-8">
+                                    <div class="col-md-4">
                                         <input type="text" name="telefonos[<?= $index ?>][numero]" class="form-control" value="<?= htmlspecialchars($telefono['telefono']) ?>">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" name="telefonos[<?= $index ?>][contacto]" value="<?= htmlspecialchars($telefono['contacto'] ?? '') ?>" class="form-control">
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-check mt-2">
@@ -113,7 +116,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                     <?php else: ?>
                         <div class="telefono-item">
                             <div class="row g-2">
-                                <div class="col-md-8">
+                                <div class="col-md-4">
                                     <input type="text" name="telefonos[0][numero]" class="form-control">
                                 </div>
                                 <div class="col-md-3">
@@ -140,8 +143,11 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         <?php foreach($cliente['correos'] as $index => $correo): ?>
                             <div class="correo-item">
                                 <div class="row g-2">
-                                    <div class="col-md-8">
+                                    <div class="col-md-4">
                                         <input type="email" name="correos[<?= $index ?>][direccion]" class="form-control" value="<?= htmlspecialchars($correo['correo']) ?>">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" name="correos[<?= $index ?>][contacto]" id="" class="form-control">
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-check mt-2">

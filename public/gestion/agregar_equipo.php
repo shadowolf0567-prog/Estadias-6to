@@ -190,7 +190,7 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
                                                 <input type="text" class="form-control" id="nuevo_telefono" data-tipo="telefono" class="form-control">
                                             </div>
                                             <div class="col-md-4">
-                                                
+                                                <input type="text" name="contacto_telefono" data-tipo="telefono-contacto" id="" class="form-control" placeholder="Titular">
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-check mt-2">
@@ -215,6 +215,9 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
                                     <div class="row g-2">
                                         <div class="col-md-4">
                                             <input type="email" data-tipo="correo" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" name="contacto_correo" id="" data-tipo="correo-contacto" class="form-control" placeholder="Titular">
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-check mt-2">
@@ -314,8 +317,11 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
             const html = `
                 <div class="${itemClass}">
                     <div class="row g-2">
-                        <div class="col-md-8">
+                        <div class="col-md-4">
                             <input type = "${isTelefono ? 'text' : 'email'}" class="form-control" placeholder="${isTelefono ? 'Número de teléfono' : 'Correo electrónico'}" data-tipo="${tipo}">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" placeholder="Titular" data-tipo="${tipo}-titular">
                         </div>
                         <div class="col-md-3">
                             <div class="form-check mt-2">
@@ -468,10 +474,12 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
             const telefonos = [];
             document.querySelectorAll('#telefonosContainer .telefono-item').forEach(item => {
                 const numero = item.querySelector('input[data-tipo="telefono"]');
+                const contacto = item.querySelector('input[data-tipo="telefono-contacto"]');
                 const principal = item.querySelector('input[data-tipo="telefono-principal"]');
                 if(numero && numero.value.trim() !== ''){
                     telefonos.push({
                         numero: numero.value.trim(),
+                        contacto: contacto ? contacto.value.trim() : '',
                         es_principal: principal ? principal.checked : false
                     });
                 }
@@ -480,10 +488,12 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
             const correos = [];
             document.querySelectorAll('#correosContainer .correo-item').forEach(item => {
                 const correo = item.querySelector('input[data-tipo="correo"]');
+                const contacto = item.querySelector('input[data-tipo="correo-contacto"]');
                 const principal = item.querySelector('input[data-tipo="correo-principal"]');
                 if(correo && correo.value.trim() !== ''){
                     correos.push({
                         direccion: correo.value.trim(),
+                        contacto: contacto ? contacto.value.trim() : '',
                         es_principal: principal ? principal.checked : false
                     });
                 }

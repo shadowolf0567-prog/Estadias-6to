@@ -30,24 +30,26 @@ $id_cliente = mysqli_insert_id($conn);
 mysqli_stmt_close($stmt);
 
 if(isset($data['telefonos']) && is_array($data['telefonos']) && count($data['telefonos']) > 0){
-    $sql_telefono = "INSERT INTO telefonos(id_cliente,telefono,es_principal) VALUES (?,?,?)";
+    $sql_telefono = "INSERT INTO telefonos(id_cliente,telefono,contacto,es_principal) VALUES (?,?,?,?)";
     $stmt_telefono = mysqli_prepare($conn,$sql_telefono);
     foreach($data['telefonos'] as $telefono){
         if(!empty($telefono['numero'])){
+            $contacto = $telefono['contacto'] ?? '';
             $es_principal = isset($telefono['es_principal']) ? 1 : 0;
-            mysqli_stmt_bind_param($stmt_telefono,'isi',$id_cliente,$telefono['numero'],$es_principal);
+            mysqli_stmt_bind_param($stmt_telefono,'issi',$id_cliente,$telefono['numero'],$contacto,$es_principal);
             mysqli_stmt_execute($stmt_telefono);
         }
     }
     mysqli_stmt_close($stmt_telefono);
 }
 if(isset($data['correos']) && is_array($data['correos']) && count($data['correos']) > 0){
-    $sql_correo = "INSERT INTO correos (id_cliente,correo,es_principal) VALUES (?,?,?)";
+    $sql_correo = "INSERT INTO correos (id_cliente,correo,contacto,es_principal) VALUES (?,?,?,?)";
     $stmt_correo = mysqli_prepare($conn,$sql_correo);
     foreach($data['correos'] as $correo){
         if(!empty($correo['direccion'])){
+            $contacto = $correo['contacto'] ?? '';
             $es_principal = isset($correo['es_principal']) ? 1 : 0;
-            mysqli_stmt_bind_param($stmt_correo,'isi',$id_cliente,$correo['direccion'],$es_principal);
+            mysqli_stmt_bind_param($stmt_correo,'issi',$id_cliente,$correo['direccion'],$contacto,$es_principal);
             mysqli_stmt_execute($stmt_correo);
         }
     }

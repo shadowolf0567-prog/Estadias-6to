@@ -135,9 +135,14 @@ if($cliente['id_cliente']){
                 <div class="card info-card">
                     <div class="card-header">Teléfonos</div>
                     <div class="card-body">
-                        <?php if($cliente['telefonos']): ?>
-                            <?php foreach(explode(', ,  ',$cliente['telefonos']) as $telefono): ?>
-                                    <?= htmlspecialchars($telefono) ?>
+                        <?php if(count($cliente['telefonos']) > 0): ?>
+                            <?php foreach($cliente['telefonos'] as $telefono): ?>
+                                <div class="badge bg-info p-2 me-2 mb-2" style="font-size: 0.9rem;">
+                                    <i class="bi bi-telephone"></i> <?= htmlspecialchars($telefono['telefono']) ?>
+                                    <?php if($telefono['contacto']): ?>
+                                        <span><?= htmlspecialchars($telefono['contacto']) ?></span>
+                                    <?php endif; ?>
+                                </div>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <p class="text-muted">No hay telefonos registrados</p>
@@ -149,9 +154,11 @@ if($cliente['id_cliente']){
                 <div class="card info-card">
                     <div class="card-header">Correos Electrónicos</div>
                     <div class="card-body">
-                        <?php if($cliente['correos']): ?>
-                            <?php foreach(explode(', ,  ',$cliente['correos']) as $correo): ?>
-                                    <?= htmlspecialchars($correo) ?>
+                        <?php if(count($cliente['correos']) > 0): ?>
+                            <?php foreach($cliente['correos'] as $correo): ?>
+                                <?php if($correo['contacto']): ?>
+                                    <?= htmlspecialchars($correo['contacto']) ?>
+                                <?php endif ?>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <p class="text-muted">No hay correos registrados</p>
@@ -196,3 +203,6 @@ if($cliente['id_cliente']){
     <script src="../assets/js/bootstrap.min.js"></script>
 </body>
 </html>
+
+git config --global user.email "shadowolf0567@gmail.com"
+git config --global user.name "shadowolf0567-prog"
