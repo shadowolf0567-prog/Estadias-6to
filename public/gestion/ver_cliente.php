@@ -203,6 +203,3 @@ if($cliente['id_cliente']){
     <script src="../assets/js/bootstrap.min.js"></script>
 </body>
 </html>
-
-git config --global user.email "shadowolf0567@gmail.com"
-git config --global user.name "shadowolf0567-prog"
