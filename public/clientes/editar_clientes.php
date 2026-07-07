@@ -67,7 +67,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             </div>
         <?php endif; ?>
         <form action="../lib/gestion_clientes.php" method="post" id="formCliente">
-            <input type="hidden" name="accion" value="editar_conpleto">
+            <input type="hidden" name="accion" value="editar_completo">
             <input type="hidden" name="id_cliente" value="<?= $cliente['id_cliente'] ?>">
             <div class="form-section">
                 <h5>Datos del Cliente</h5>
@@ -84,14 +84,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         <label>Dirección</label>
                         <textarea name="direccion" class="form-control" required><?= htmlspecialchars($cliente['direccion']) ?></textarea>
                     </div>
-                    <div class="col-md-6">
-                        <label>Inicio de Contrato</label>
-                        <input type="date" name="inicio_contrato" class="form-control">
-                    </div>
-                    <div class="col-md-6">
-                        <label>Fin de Contrato</label>
-                        <input type="date" name="fin_contrato" class="form-control">
-                    </div>
                 </div>
             </div>
             <div class="form-section">
@@ -105,7 +97,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                         <input type="text" name="telefonos[<?= $index ?>][numero]" class="form-control" value="<?= htmlspecialchars($telefono['telefono']) ?>">
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" name="telefonos[<?= $index ?>][contacto]" class="form-control" value="<?= htmlspecialchars($telefono['telefono']) ?>">
+                                        <input type="text" name="telefonos[<?= $index ?>][contacto]" class="form-control" value="<?= htmlspecialchars($telefono['contacto']) ?? ''?>" placeholder="Titular">
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-check mt-2">
@@ -130,15 +122,147 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-check mt-2">
-                                        input:checkbox
+                                        <input type="checkbox" name="telefonos[0][es_principal]" id="" class="form-check-input" value="1" checked>
+                                        <label class="form-check-label">Principal</label>
                                     </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <i class="bi bi-dash-circle btn-remover" onclick="removerItem(this, 'telefonosContainer')" style="font-size:24px;"></i>
                                 </div>
                             </div>
                         </div>
                     <?php endif ?>
                 </div>
+                <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="agregarTelefono()">
+                    <i class="bi bi-plus-circle"></i> Agregar teléfono
+                </button>
+            </div>
+            <div class="form-section">
+                <h5>Correos electrónicos</h5>
+                <div id="correosContainer">
+                    <?php if(count($cliente['correos']) > 0): ?>
+                        <?php foreach($cliente['correos'] as $index => $correo): ?>
+                            <div class="correo-item">
+                                <div class="row g-2">
+                                    <div class="col-md-4">
+                                        <input type="email" name="correos[<?= $index ?>][direccion]" class="form-control" value="<?= htmlspecialchars($correo['correo']) ?>">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" name="correos[<?= $index ?>][contacto]" class="form-control" value="<?= htmlspecialchars( $correo['contacto'] ?? '') ?>" placeholder="Titular">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-check mt-2">
+                                            <input type="checkbox" name="correos[<?= $index ?>][es_principal]" class="form-check-input" value="1" <?= $correo['es_principal'] ? 'checked' : '' ?>>
+                                            <label class="form-check-label">Principal</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <i class="bi bi-dash-circle btn-remover" onclick="removerItem(this,'correosContainer')" style="font-size: 24px;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="correo-item">
+                            <div class="row g-2">
+                                <div class="col-md-4">
+                                    <input type="email" name="correos[0][direccion]" id="" class="form-control">
+                                </div>
+                                <div class="form-check mt-2">
+                                    <input type="checkbox" name="correos[0][contacto]" id="" class="form-control" placeholder="Titular">
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-check mt-2">
+                                        <input type="checkbox" name="correos[0][es_principal]" class="form-check-input" value="1" checked>
+                                        <label class="form-check-label">Principal</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <i class="bi bi-dash-circle btn-remover" onclick="removerItem(this, 'correosContainer')" style="font-size: 24px;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="agregarCorreo()">
+                        <i class="bi bi-plus-circle"></i> Agregar correo
+                </button>
+            </div>
+            <div class="mt-3 mb-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Guardar Cambios
+                </button>
+                <a href="ver_cliente.php?id=<?= $cliente['id_cliente'] ?>" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                </a>
             </div>
         </form>
     </div>
+    <script src="../assets/js/bootstrap.min.js"></script>
+    <script>
+        let telefonoIndex = <?= count($cliente['telefonos']) > 0 ? count($cliente['telefonos']) : 1 ?>;
+        let correoIndex = <?= count($cliente['correos']) > 0 ? count($cliente['correos']) : 1 ?>;
+
+        function agregarTelefono(){
+            const container = document.getElementById('telefonosContainer');
+            const html = `
+                <div class="telefono-item">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <input type="text" name="telefonos[${telefonoIndex}][numero]" class="form-control" placeholder="Número de teléfono">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="telefonos[${telefonoIndex}][contacto]" class="form-control" placeholder="Titular">
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check mt-2">
+                                <input type="checkbox" name="telefonos[${telefonoIndex}][es_principal]" class="form-check-input" value="1">
+                                <label class="form-check-label">Principal</label>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <i class="bi bi-dash-circle btn-remover" onclick="removerItem(this, 'telefonosContainer')" style="font-size: 24px;"></i>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend',html);
+            telefonoIndex++;
+        }
+        function agregarCorreo(){
+            const container = document.getElementById('correosContainer');
+            const html = `
+                <div class="correo-item">
+                    <div row g-2>
+                        <div class="col-md-4">
+                            <input type="email" name="correos[${correoIndex}][direccion]" class="form-control" placeholder="Correo Electrónico">
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text" name="correos[${correoIndex}][titular]" class="form-control" placeholder="Titular">
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check mt-2">
+                                <input type="checkbox" name="correos[${correoIndex}][contacto]" class="form-check-input" value="1">
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <i class="bi bi-dash-circle btn-remover" onclick="removerItem(this, 'correosContainer')" style="font-size: 24px;"></i>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend',html);
+            correoIndex++;
+        }
+        function removerItem(element,containerId){
+            const container = document.getElementById(containerId);
+            const item = element.closest('.telefono-item, .correo-item');
+            if(container.children.length > 1){
+                item.remove();
+            }else{
+                alert('Debe haber al menos un elemento.');
+            }
+        }
+    </script>
 </body>
 </html>
