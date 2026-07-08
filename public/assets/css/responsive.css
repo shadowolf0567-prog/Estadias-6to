@@ -23,7 +23,6 @@
    ============================================ */
 .navbar {
     padding: 10px 15px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
     position: sticky;
     top: 0;
     z-index: 999;
@@ -240,7 +239,6 @@
    HEADER RESPONSIVO
    ============================================ */
 .cliente-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     padding: 20px;
     border-radius: 12px;

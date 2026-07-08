@@ -1,15 +1,15 @@
 <style>
-    body {
-        margin: 0;
-        padding: 0;
+    img{
+        height: 34px;
+        width: auto;
     }
 </style>
-
 <div style="background: #820000; padding: 15px 0; width: 100%; margin: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
     <div style="margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
         
         <div style="display: flex; align-items: center; gap: 30px;">
             <div style="display: flex; gap: 35px;">
+                <img src="../assets/img/Logo.png">
                 <a href="../equipos/equipos.php" style="color: white; text-decoration: none; font-weight: 600; padding: 5px 0;">
                     Equipos
                 </a>
