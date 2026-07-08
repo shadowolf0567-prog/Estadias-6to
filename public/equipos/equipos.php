@@ -91,6 +91,7 @@ $total_resultados = count($equipos);
     <title>Equipos</title>
     <link rel="stylesheet" href="../assets/css/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
     <style>
         .filtros-card{
             background: #f8f9fa;

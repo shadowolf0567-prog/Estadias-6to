@@ -120,6 +120,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
     <title>Respaldo de Base de Datos</title>
     <link rel="stylesheet" href="../assets/css/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
     <style>
         .backup-card{
             transition: transform 0.3s;

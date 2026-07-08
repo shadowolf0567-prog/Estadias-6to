@@ -27,6 +27,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
     <title>Editar Cliente</title>
     <link rel="stylesheet" href="../assets/css/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
     <style>
         .form-section{
             background: #f8f9fa;
@@ -168,8 +169,8 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                 <div class="col-md-4">
                                     <input type="email" name="correos[0][direccion]" id="" class="form-control">
                                 </div>
-                                <div class="form-check mt-2">
-                                    <input type="checkbox" name="correos[0][contacto]" id="" class="form-control" placeholder="Titular">
+                                <div class="col md-4">
+                                    <input type="text" name="correos[0][contacto]" id="" class="form-control" placeholder="Titular">
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-check mt-2">
@@ -233,16 +234,17 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             const container = document.getElementById('correosContainer');
             const html = `
                 <div class="correo-item">
-                    <div row g-2>
+                    <div class="row g-2">
                         <div class="col-md-4">
                             <input type="email" name="correos[${correoIndex}][direccion]" class="form-control" placeholder="Correo Electrónico">
                         </div>
                         <div class="col-md-4">
-                            <div class="text" name="correos[${correoIndex}][titular]" class="form-control" placeholder="Titular">
-                        </div>
+                            <input type="text" name="correos[${correoIndex}][contacto]" class="form-control" placeholder="Titular">
+                        </input>
                         <div class="col-md-3">
                             <div class="form-check mt-2">
-                                <input type="checkbox" name="correos[${correoIndex}][contacto]" class="form-check-input" value="1">
+                                <input type="checkbox" name="correos[${correoIndex}][es_principal]" class="form-check-input" value="1">
+                                <label class="form-check-label">Principal</label>
                             </div>
                         </div>
                         <div class="col-md-1">

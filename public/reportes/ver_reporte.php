@@ -44,6 +44,7 @@ mysqli_close($conn);
     <title>Ver Reporte #<?= $reporte['id_reporte'] ?></title>
     <link rel="stylesheet" href="../assets/css/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
     <style>
         body{
             background-color: #f4f6f9;

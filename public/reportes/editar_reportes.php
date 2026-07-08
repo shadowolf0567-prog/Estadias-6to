@@ -81,6 +81,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
     <title>Editar Reporte</title>
     <link rel="stylesheet" href="../assets/css/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
     <style>
         .form-section{
             background: #f8f9fa;

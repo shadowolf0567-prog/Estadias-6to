@@ -81,6 +81,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
     <title>Editar Reporte</title>
     <link rel="stylesheet" href="../assets/css/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
     <style>
         .form-section{
             background: #f8f9fa;
@@ -144,7 +145,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             </div>
         <?php endif; ?>
         <form action="../lib/gestion_reportes.php" method="post" id="formReporte">
-            <input type="hidden" name="accion" value="editar">
+            <input type="hidden" name="accion" value="editar_atendido">
             <input type="hidden" name="id_reporte" value="<?= $reporte['id_reporte'] ?>">
             <input type="hidden" name="id_cliente" value="<?= $reporte['id_cliente'] ?>" id="idCliente">
             <div class="form-section">

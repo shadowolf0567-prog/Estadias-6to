@@ -29,18 +29,13 @@ function agregar_reportes($reporte,$fecha,$tecnico,$refaccion,$descripcion,$id_c
         ];
     }
 }
-function editar_reporte($id_reporte,$reporte,$fecha,$tecnico,$refaccion,$descripcion,$id_cliente = null,$id_equipo = null, $observaciones_atencion,$fecha_atencion,$acciones){
+function editar_reporte($id_reporte,$reporte,$fecha,$descripcion,$id_cliente = null,$id_equipo = null){
     global $conn;
     $sql="UPDATE reportes SET reporte=?,
     fecha=?,
-    tecnico=?,
-    refaccion=?,
     descripcion=?,
     id_cliente = ?,
-    id_equipo =?,
-    observaciones_atencion = ?,
-    fecha_atencion = ?,
-    acciones = ? WHERE id_reporte =?";
+    id_equipo =? WHERE id_reporte =?";
     $update_preparado=mysqli_prepare($conn,$sql);
     if(!$update_preparado){
         return[
@@ -49,7 +44,7 @@ function editar_reporte($id_reporte,$reporte,$fecha,$tecnico,$refaccion,$descrip
         ];
     }
     
-    mysqli_stmt_bind_param($update_preparado,"sssssiisssi",$reporte,$fecha,$tecnico,$refaccion,$descripcion,$id_cliente,$id_equipo,$observaciones_atencion,$fecha_atencion,$acciones,$id_reporte);
+    mysqli_stmt_bind_param($update_preparado,"sssiii",$reporte,$fecha,$descripcion,$id_cliente,$id_equipo,$id_reporte);
     $query_ok=mysqli_stmt_execute($update_preparado);
     $rows_ok=mysqli_affected_rows($conn);
     mysqli_stmt_close($update_preparado);
@@ -65,7 +60,7 @@ function editar_reporte($id_reporte,$reporte,$fecha,$tecnico,$refaccion,$descrip
         ];
     }
 
-    }
+}
 function eliminar_reporte($id_reporte){
     global $conn;
     $sql="DELETE FROM reportes WHERE id_reporte=?";
@@ -191,6 +186,35 @@ function reabrir_reporte($id_reporte){
         ];
     }
 }
+
+function editar_atendidos($id_reporte,$reporte,$fecha,$descripcion,$tecnico,$refaccion,$fecha_atencion,$observaciones_atencion,$acciones,$id_cliente = null,$id_equipo = null){
+    global $conn;
+    $sql = "UPDATE reportes SET reporte=?,fecha=?,descripcion=?,
+            tecnico=?,refaccion=?,fecha_atencion=?,observaciones_atencion = ?,acciones=?,
+            id_cliente = ?, id_equipo = ? WHERE id_reporte = ?";
+    $update_preparado = mysqli_prepare($conn,$sql);
+    if(!$update_preparado){
+        return[
+            'estatus' => 'error',
+            'mensaje' => 'Error en la ejecución de la base de datos'
+        ];
+    }
+    mysqli_stmt_bind_param($update_preparado,"ssssssssiii",$reporte,$fecha,$descripcion,$tecnico,$refaccion,$fecha_atencion,$observaciones_atencion,$acciones,$id_cliente,$id_equipo,$id_reporte);
+    $query_ok = mysqli_stmt_execute($update_preparado);
+    $rows_ok = mysqli_affected_rows($conn);
+    mysqli_stmt_close($update_preparado);
+    if($query_ok && $rows_ok > 0){
+        return[
+            'estatus' => 'msg',
+            'mensaje' => 'Reporte editado exitosamente'
+        ];
+    }else{
+        return[
+            'estatus' => 'error',
+            'mensaje' => 'No se pudo editar el reporte'
+        ];
+    }
+}
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     if(isset($_POST['accion'])){
         $accion=$_POST['accion'];
@@ -215,16 +239,11 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     $id_reporte=intval($_POST['id_reporte']);
                     $reporte=trim($_POST['reporte']);
                     $fecha=trim($_POST['fecha']);
-                    $tecnico=trim($_POST['tecnico']);
-                    $refaccion=trim($_POST['refaccion']);
                     $descripcion=trim($_POST['descripcion']);
                     $id_cliente=!empty($_POST['id_cliente']) ? intval($_POST['id_cliente']) : null;
                     $id_equipo=!empty($_POST['id_equipo']) ? intval($_POST['id_equipo']) : null;
-                    $observaciones_atencion = trim($_POST['observaciones_atencion']);
-                    $fecha_atencion = trim($_POST['fecha_atencion']);
-                    $acciones = trim($_POST['acciones']);
 
-                    $resultado=editar_reporte($id_reporte,$reporte,$fecha,$tecnico,$refaccion,$descripcion,$id_cliente,$id_equipo,$observaciones_atencion,$fecha_atencion,$acciones);
+                    $resultado=editar_reporte($id_reporte,$reporte,$fecha,$descripcion,$id_cliente,$id_equipo);
                     header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.'&'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
                     exit;
                 }else{
@@ -270,6 +289,26 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     exit;
                 }
                 break;
+            case 'editar_atendido':
+                if(isset($_POST['id_reporte'],$_POST['reporte'],$_POST['fecha'],$_POST['descripcion'])){
+                    $id_reporte = intval($_POST['id_reporte']);
+                    $reporte = trim($_POST['reporte']);
+                    $fecha = trim($_POST['fecha']);
+                    $descripcion = trim($_POST['descripcion']);
+                    $tecnico = trim($_POST['tecnico']);
+                    $refaccion = trim($_POST['refaccion']);
+                    $fecha_atencion = trim($_POST['fecha_atencion']);
+                    $observaciones_atencion = trim($_POST['observaciones_atencion']);
+                    $acciones = trim($_POST['acciones']);
+                    $id_cliente = !empty($_POST['id_cliente']) ? intval($_POST['id_cliente']) : null;
+                    $id_equipo = !empty($_POST['id_equipo']) ? intval($_POST['id_equipo']) : null;
+                    $resultado = editar_atendidos($id_reporte,$reporte,$fecha,$descripcion,$tecnico,$refaccion,$fecha_atencion,$observaciones_atencion,$acciones,$id_cliente,$id_equipo);
+                    header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.'&'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
+                    exit;
+                }else{
+                    header('Location: ../reportes/editar_reportes.php?error='.urlencode('Faltan campos'));
+                    exit;
+                }
             default:
             header('Location: ../reportes/reportes.php?error='.urlencode('Acción no valida'));
             exit;

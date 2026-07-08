@@ -90,6 +90,7 @@ mysqli_close($conn);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ver Cliente</title>
     <link rel="stylesheet" href="../assets/css/bootstrap-icons.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
     <style>
         .info-card{
@@ -177,7 +178,7 @@ mysqli_close($conn);
                             <?php foreach($cliente['correos'] as $correo): ?>
                                 <i class="bi bi-envelope"></i> <?= htmlspecialchars($correo['correo']) ?>
                                 <?php if(!empty($correo['contacto'])): ?>
-                                    <?= htmlspecialchars($correo['contacto']) ?>
+                                    <i class="bi bi-person-circle"></i><?= htmlspecialchars($correo['contacto']) ?>
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         <?php else: ?>
