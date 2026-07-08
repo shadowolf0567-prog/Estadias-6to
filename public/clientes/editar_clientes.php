@@ -101,10 +101,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                         <input type="text" name="telefonos[<?= $index ?>][contacto]" class="form-control" value="<?= htmlspecialchars($telefono['contacto']) ?? ''?>" placeholder="Titular">
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="form-check mt-2">
-                                            <input type="checkbox" name="telefonos[<?= $index ?>][es_principal]" class="form-check-input" value="1" <?= $telefono['es_principal'] ? 'checked' : '' ?>>
-                                            <label>Principal</label>
-                                        </div>
                                     </div>
                                     <div class="col-md 1">
                                         <i class="bi bi-dash-circle btn-remover" onclick="removerItem(this, 'telefonosContainer')" style="font-size: 24px;"></i>
@@ -122,10 +118,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                     <input type="text" name="telefonos[0][contacto]" class="form-control" placeholder="Titular">
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="form-check mt-2">
-                                        <input type="checkbox" name="telefonos[0][es_principal]" id="" class="form-check-input" value="1" checked>
-                                        <label class="form-check-label">Principal</label>
-                                    </div>
                                 </div>
                                 <div class="col-md-1">
                                     <i class="bi bi-dash-circle btn-remover" onclick="removerItem(this, 'telefonosContainer')" style="font-size:24px;"></i>
@@ -152,10 +144,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                         <input type="text" name="correos[<?= $index ?>][contacto]" class="form-control" value="<?= htmlspecialchars( $correo['contacto'] ?? '') ?>" placeholder="Titular">
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="form-check mt-2">
-                                            <input type="checkbox" name="correos[<?= $index ?>][es_principal]" class="form-check-input" value="1" <?= $correo['es_principal'] ? 'checked' : '' ?>>
-                                            <label class="form-check-label">Principal</label>
-                                        </div>
                                     </div>
                                     <div class="col-md-1">
                                         <i class="bi bi-dash-circle btn-remover" onclick="removerItem(this,'correosContainer')" style="font-size: 24px;"></i>
@@ -173,10 +161,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                     <input type="text" name="correos[0][contacto]" id="" class="form-control" placeholder="Titular">
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="form-check mt-2">
-                                        <input type="checkbox" name="correos[0][es_principal]" class="form-check-input" value="1" checked>
-                                        <label class="form-check-label">Principal</label>
-                                    </div>
                                 </div>
                                 <div class="col-md-1">
                                     <i class="bi bi-dash-circle btn-remover" onclick="removerItem(this, 'correosContainer')" style="font-size: 24px;"></i>
@@ -216,10 +200,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                             <input type="text" name="telefonos[${telefonoIndex}][contacto]" class="form-control" placeholder="Titular">
                         </div>
                         <div class="col-md-3">
-                            <div class="form-check mt-2">
-                                <input type="checkbox" name="telefonos[${telefonoIndex}][es_principal]" class="form-check-input" value="1">
-                                <label class="form-check-label">Principal</label>
-                            </div>
                         </div>
                         <div class="col-md-1">
                             <i class="bi bi-dash-circle btn-remover" onclick="removerItem(this, 'telefonosContainer')" style="font-size: 24px;"></i>
@@ -240,12 +220,8 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         </div>
                         <div class="col-md-4">
                             <input type="text" name="correos[${correoIndex}][contacto]" class="form-control" placeholder="Titular">
-                        </input>
+                        </div>
                         <div class="col-md-3">
-                            <div class="form-check mt-2">
-                                <input type="checkbox" name="correos[${correoIndex}][es_principal]" class="form-check-input" value="1">
-                                <label class="form-check-label">Principal</label>
-                            </div>
                         </div>
                         <div class="col-md-1">
                             <i class="bi bi-dash-circle btn-remover" onclick="removerItem(this, 'correosContainer')" style="font-size: 24px;"></i>

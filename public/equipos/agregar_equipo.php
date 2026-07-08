@@ -175,7 +175,7 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
                             </div>
                             <div class="col-md-6">
                                 <label>Número de Cuenta</label>
-                                <input type="text" id="nuevo_no_cuenta" class="form-control">
+                                <input type="text" id="nuevo_no_cuenta" class="form-control" required>
                             </div>
                             <div class="col-md-12">
                                 <label>Dirección</label>
@@ -188,16 +188,12 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
                                 <div class="telefono-item">
                                         <div class="row g-2">
                                             <div class="col-md-4">
-                                                <input type="text" class="form-control" id="nuevo_telefono" data-tipo="telefono" class="form-control">
+                                                <input type="text" class="form-control" id="nuevo_telefono" data-tipo="telefono" class="form-control" placeholder="Número de teléfono">
                                             </div>
                                             <div class="col-md-4">
                                                 <input type="text" name="contacto_telefono" data-tipo="telefono-contacto" id="" class="form-control" placeholder="Titular">
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="form-check mt-2">
-                                                    <input type="checkbox" data-tipo="telefono-principal" class="form-check-input" checked>
-                                                    <label class="form-check-label">Principal</label>
-                                                </div>
                                             </div>
                                             <div class="col-md-1">
                                                 <i class="bi bi-dash-circle btn-remover" onclick="removerItem(this, 'telefonosContainer')" style="font-size: 24px;"></i>
@@ -215,16 +211,12 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
                                 <div class="correo-item">
                                     <div class="row g-2">
                                         <div class="col-md-4">
-                                            <input type="email" data-tipo="correo" class="form-control">
+                                            <input type="email" data-tipo="correo" class="form-control" placeholder="Correo Electrónico">
                                         </div>
                                         <div class="col-md-4">
                                             <input type="text" name="contacto_correo" id="" data-tipo="correo-contacto" class="form-control" placeholder="Titular">
                                         </div>
                                         <div class="col-md-3">
-                                            <div class="form-check mt-2">
-                                                <input type="checkbox" data-tipo="correo-principal" class="form-check-input" checked>
-                                                <label class="form-check-label">Principal</label>
-                                            </div>
                                         </div>
                                         <div class="col-md-1">
                                             <i class="bi bi-dash-circle btn-remover" onclick="removerItem(this, 'correosContainer')" style="font-size: 24px;"></i>
@@ -273,7 +265,7 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
                 </div>
             </div>
         </div>
-        <div class="mt-4">
+        <div class="mt-4 mb-4">
             <button type="button" class="btn btn-primary" id="btnGuardar">
                 <i class="bi bi-save"></i> Agregar Equipo
             </button>
@@ -325,10 +317,6 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
                             <input type="text" class="form-control" placeholder="Titular" data-tipo="${tipo}-titular">
                         </div>
                         <div class="col-md-3">
-                            <div class="form-check mt-2">
-                                <input type="checkbox" class="form-check-input" data-tipo="${tipo}-principal" checked>
-                                <label class="form-check-label">Principal</label>
-                            </div>
                         </div>
                         <div class="col-md-1">
                             <i class="bi bi-dash-circle btn-remover" onclick="removerItem(this, '${containerId}')" style="font-size: 24px;"></i>

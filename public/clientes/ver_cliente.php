@@ -91,7 +91,7 @@ mysqli_close($conn);
     <title>Ver Cliente</title>
     <link rel="stylesheet" href="../assets/css/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
-
+    <link rel="stylesheet" href="../assets/css/responsives.css">
     <style>
         .info-card{
             border: none;

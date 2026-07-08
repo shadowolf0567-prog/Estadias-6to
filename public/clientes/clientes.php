@@ -112,7 +112,7 @@ function resaltar_coincidencia($texto,$busqueda){
                                 <td><?= htmlspecialchars($cliente['no_cuenta']); ?></td>
                                 <td><?= htmlspecialchars($cliente['direccion']); ?></td>
                                 <td>
-                                <form action="../lib/gestion_clientes.php" method="POST" style="display: inline-block;"
+                                <form action="../lib/gestion_clientes.php" method="post" style="display: inline-block;"
                                 onsubmit="return confirm('¿Quieres eliminar a este cliente')">
                                 <input type="hidden" name="accion" value="eliminar">
                                 <input type="hidden" name="id_cliente" value="<?php echo $cliente['id_cliente']; ?>">

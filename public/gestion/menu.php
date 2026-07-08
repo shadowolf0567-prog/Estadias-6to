@@ -1,32 +1,46 @@
-<style>
-    img{
-        height: 34px;
-        width: auto;
-    }
-</style>
-<div style="background: #820000; padding: 15px 0; width: 100%; margin: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
-    <div style="margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
+<!-- menu.php - Menú con hamburguesa -->
+<nav class="navbar navbar-expand-lg navbar-dark" style="background: #808080;">
+    <div class="container">
+        <!-- Logo a la izquierda -->
+        <img src="../assets/img/Logo.png" alt="Logo" style="height: 44px; width: auto;">
         
-        <div style="display: flex; align-items: center; gap: 30px;">
-            <div style="display: flex; gap: 35px;">
-                <img src="../assets/img/Logo.png">
-                <a href="../equipos/equipos.php" style="color: white; text-decoration: none; font-weight: 600; padding: 5px 0;">
-                    Equipos
-                </a>
-                <a href="../reportes/reportes.php" style="color: white; text-decoration: none; font-weight: 600; padding: 5px 0;">
-                    Reportes
-                </a>
-                <a href="../clientes/clientes.php" style="color:white; text-decoration: none; font-weight: 600; padding: 5px 0;">
-                    Clientes
-                </a>
-                <a href="../respaldos/backup.php" style="color:white; text-decoration: none; font-weight: 600; padding: 5px 0;">
-                    Respaldar
-                </a>
-            </div>
+        <!-- Botón hamburguesa -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <!-- Menú -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'clientes') !== false ? 'active' : '' ?>" 
+                       href="../clientes/clientes.php">Clientes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'equipos') !== false ? 'active' : '' ?>" 
+                       href="../equipos/equipos.php">Equipos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'reportes') !== false ? 'active' : '' ?>" 
+                       href="../reportes/reportes.php">Reportes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'backup') !== false ? 'active' : '' ?>" 
+                       href="../respaldos/backup.php">Respaldos
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="../logout.php">
+                        <i class="bi bi-box-arrow-right"></i> Salir
+                    </a>
+                </li>
+            </ul>
         </div>
-        <a href="../logout.php" class="nav-link text-white">
-            <i class="bi bi-box-arrow-right me-2"></i>
-            Cerrar Sesión
-        </a>
     </div>
-</div>
+</nav>
