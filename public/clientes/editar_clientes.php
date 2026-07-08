@@ -27,7 +27,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
     <title>Editar Cliente</title>
     <link rel="stylesheet" href="../assets/css/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
-    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/responsives.css">
     <style>
         .form-section{
             background: #f8f9fa;

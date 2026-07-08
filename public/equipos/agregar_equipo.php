@@ -35,7 +35,7 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
     <title>Agregar Equipo</title>
     <link rel="stylesheet" href="../assets/css/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
-    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/responsives.css">
     <style>
         .nav-tabs .nav-link.existente.active{
             background-color: #0d6efd;

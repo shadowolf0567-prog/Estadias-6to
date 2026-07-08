@@ -51,7 +51,7 @@ function resaltar_coincidencia($texto,$busqueda){
     <title>Clientes</title>
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
     <link rel="stylesheet" href="../assets/css/bootstrap-icons.css">
-    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/responsives.css">
 </head>
 <body>
     <?php require_once __DIR__.'/../gestion/menu.php'; ?>
