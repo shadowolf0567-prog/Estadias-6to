@@ -219,10 +219,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             <div class="form-section">
                 <h5>Detalles del Reporte</h5>
                 <div class="row g-3">
-                    <div class="col-md-12">
-                        <label class="form-label">Título del Reporte</label>
-                        <input type="text" name="reporte" class="form-control" required value="<?= htmlspecialchars($reporte['reporte']) ?>">
-                    </div>
                     <div class="col-md-6">
                         <label class="form-label">Fecha de creación del Reporte</label>
                         <input type="date" name="fecha" class="form-control" value="<?= htmlspecialchars($reporte['fecha']) ?>">

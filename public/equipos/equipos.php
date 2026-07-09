@@ -236,10 +236,14 @@ $total_resultados = count($equipos);
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="6" class="text-center py-4">
-                                <i class="bi bi-inbox" style="font-size: 48px;"></i>
-                                <p class="mt-2">No se encontraron equpos con los filtros seleccionados.</p>
-                                <a href="equipos.php" class="btn btn-sm btn-primary">Limpiar filtros</a> 
+                            <td colspan="6" class="text-center">
+                                <div class="alert alert-warning m-3">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                    No se encontraaron clientes
+                                    <?php if(!empty($busqueda)): ?>
+                                        para "<strong><?php echo htmlspecialchars($busqueda) ?></strong>"
+                                    <?php endif; ?>
+                                </div>
                             </td>
                         </tr>
                     <?php endif; ?>

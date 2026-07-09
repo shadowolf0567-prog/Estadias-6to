@@ -41,6 +41,16 @@ if($result_clientes){
         $clientes[] = $row;
     }
 }
+$componentes = [];
+$sql_comp = "SELECT id, componente, descripcion
+            FROM componentes
+            ORDER BY componente ASC";
+$result_comp = mysqli_query($conn,$sql_comp);
+if($result_comp){
+    while($row = mysqli_fetch_assoc($result_comp)){
+        $componentes[] = $row;
+    }
+}
 $error=isset($_GET['error']) ? $_GET['error'] : '';
 $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
 ?>
@@ -166,17 +176,41 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             <div class="form-section">
                 <h5>Detalles del Reporte</h5>
                 <div class="row g-3">
-                    <div class="col-md-12">
-                        <label class="form-label">Titulo del reporte</label>
-                        <input type="text" name="reporte" class="form-control" required>
-                    </div>
                     <div class="col-md-6">
                         <label class="form-label">Fecha</label>
                         <input type="date" name="fecha" class="form-control">
                     </div>
-                    <div class="col-md-12">
-                        <label class="form-label">Descripción del reporte</label>
-                        <textarea name="descripcion" class="form-control" required></textarea>
+                <div class="col-md-6">
+                    <label class="form-label">Componente(s)</label>
+                    <select id="tipoComponente" name="tipo_componente" class="form-select" onchange="mostrarSeccion(this.value)">
+                        <option value="">-- Ninguno --</option>
+                            <option value="SER-01">Servicio Preventivo</option>
+                            <option value="SER-02">Servicio Correctivo</option>
+                            <option value="refaccion">Refaccion</option>
+                            <option value="componente">Componente</option>
+                    </select>
+                    <button type="button" class="btn btn-outline-primary">
+                    <i class="bi bi-plus-circle"></i> Añadir Componente
+                </button>
+                </div>
+                    <div id="seccionDescripcion" style="display: none; margin-top: 15px;">
+                        <div class="form-section">
+                            <h5>Descripción</h5>
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <label>Nombre</label>
+                                    <input type="text" name="" id="" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Cantidad</label>
+                                    <input type="number" name="" id="" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Descripción</label>
+                                    <textarea name="" id="" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -218,8 +252,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
         const equipoSelect = document.getElementById('id_equipo');
         const infoEquipoDiv = document.getElementById('infoEquipo');
         const infoEquipoTexto = document.getElementById('infoEquipoTexto');
-        const telefonoInput = document.getElementById('telefono_cliente');
-        const contactoInput = document.getElementById('contacto_cliente');
         const btnGuardar = document.getElementById('btnGuardar');
 
         function escapeHtml(text){
@@ -227,6 +259,14 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+        function mostrarSeccion(valor){
+            const seccion = document.getElementById('seccionDescripcion');
+            if(valor === 'componente' || valor === 'refaccion'){
+                seccion.style.display = 'block';
+            }else{
+                seccion.style.display = 'none';
+            }
         }
         
         function buscarClientes(termino){

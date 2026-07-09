@@ -136,8 +136,7 @@ mysqli_close($conn);
         <div class="reporte-header">
             <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <div>
-                    <h2 class="mb-0">Reporte #<?= $reporte['id_reporte'] ?></h2>
-                    <p class="mb-0 mt-2"><strong>Título:</strong> <?= htmlspecialchars($reporte['reporte']) ?></p>
+                    <h2 class="mb-0">Reporte</h2>
                 </div>
                 <div class="text-end mt-2 mt-md-0">
                     <div class="estado-badge estado-<?= $reporte['estado'] ?>">
@@ -192,7 +191,7 @@ mysqli_close($conn);
                             <hr>
                                 <h6><i class="bi bi-check-circle"></i> Reporte Atendido</h6>
                                 <p><span class="info-label">Atendido por:</span> <?= htmlspecialchars($reporte['tecnico'] ?: 'No especificado') ?></p>
-                                <p><span class="info-label">Refacciones usadas: </span><?= htmlspecialchars($reporte['refaccion']) ?></p>
+                                <!-- <p><span class="info-label">Refacciones usadas: </span><?= htmlspecialchars($reporte['refaccion']) ?></p> -->
                                 <p><span class="info-label">Fecha Atención: </span><?= date('d/m/Y',strtotime($reporte['fecha_atencion'])) ?></p>
                                 <p><span class="info-label">¿Qué se hizo? </span><?= nl2br(htmlspecialchars($reporte['acciones'] ?: '')) ?></p>
                                 <p><span class="info-label">Observaciones</span></p>
@@ -231,7 +230,7 @@ mysqli_close($conn);
                         </div>
                         <div class="mb-3">
                             <label class="form-label">¿Qué se hizo?:</label>
-                            <textarea name="acciones" class="form-control" rows="4" required></textarea>
+                            <textarea name="acciones" class="form-control" rows="4"></textarea>
                         </div>
                         <div class="mb-4">
                             <label class="form-label">Observaciones</label>
@@ -246,7 +245,7 @@ mysqli_close($conn);
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modalReabrir" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modalReabrir" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-warning">

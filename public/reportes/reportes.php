@@ -178,11 +178,6 @@ $contadores = contar_reportes_por_estado();
                 <input type="hidden" name="tab" value="<?= $tab_activa ?>">
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label class="form-label">Título del reporte</label>
-                        <input type="text" name="reporte" class="form-control"
-                        value="<?= htmlspecialchars($filtros['reporte']) ?>">
-                    </div>
-                    <div class="col-md-4">
                         <label class="form-label">Cliente</label>
                         <input type="text" name="cliente" class="form-control"
                         value="<?= htmlspecialchars($filtros['cliente']) ?>">
@@ -249,7 +244,6 @@ $contadores = contar_reportes_por_estado();
                 <table class="table table-striped table-hover">
                     <thead class="table-dark">
                         <tr>
-                            <th>Título</th>
                             <th>Cliente</th>
                             <th>No. Serie</th>
                             <th>Fecha</th>
@@ -261,7 +255,6 @@ $contadores = contar_reportes_por_estado();
                         <?php if(count($reportes) > 0): ?>
                             <?php foreach($reportes as $reporte): ?>
                                 <tr class="<?= $reporte['estado'] == 'atendido' ? 'atendido-row' : '' ?>">
-                                    <td><?= htmlspecialchars(substr($reporte['reporte'],0,40)) ?></td>
                                     <td><?= htmlspecialchars($reporte['cliente_nombre'] ?: '-') ?></td>
                                     <td><?= htmlspecialchars($reporte['equipo_serie'] ?: '-')  ?></td>
                                     <td><?= date('d/m/Y', strtotime($reporte['fecha'])) ?></td>
@@ -287,10 +280,14 @@ $contadores = contar_reportes_por_estado();
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="7" class="text-center py-4">
-                                    <i class="bi bi-inbox" style="font-size:400px;"></i>
-                                    <p class="mt-2">No se encontraron reportes con los filtros utilizados.</p>
-                                    <a href="?tab=<?= $tab_activa ?>" class="btn btn-sm btn-primary">Limpiar filtros</a>
+                                <td colspan="7" class="text-center">
+                                    <div class="alert alert-warning m-3">
+                                        <i class="bi bi-exclamation-triangle"></i>
+                                        No se encontraron clientes
+                                        <?php if(!empty($buqueda)): ?>
+                                            para "<strong><?php echo htmlspecialchars($buqueda) ?></strong>"
+                                        <?php endif; ?>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endif; ?>
@@ -302,12 +299,10 @@ $contadores = contar_reportes_por_estado();
                 <table class="table table-striped table-hover">
                     <thead class="table-dark">
                         <tr>
-                            <th>Título</th>
                             <th>Cliente</th>
                             <th>No. Serie</th>
                             <th>Fecha</th>
                             <th>Técnico</th>
-                            <th>Refacción</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
@@ -316,7 +311,6 @@ $contadores = contar_reportes_por_estado();
                         <?php if(count($reportes) > 0): ?>
                             <?php foreach($reportes as $reporte): ?>
                                 <tr class="<?= $reporte['estado'] == 'atendido' ? 'atendido-row' : '' ?>">                                    
-                                    <td><?= htmlspecialchars(substr($reporte['reporte'],0,40)) ?>...</td>
                                     <td>
                                         <?= htmlspecialchars($reporte['cliente_nombre']) ?>
                                     </td>
@@ -335,13 +329,13 @@ $contadores = contar_reportes_por_estado();
                                             <span class="text-muted">-</span>
                                         <?php endif; ?>
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         <?php if($reporte['refaccion']): ?>
                                             <?= htmlspecialchars(substr($reporte['refaccion'],0,25)) ?>
                                         <?php else: ?>
                                             <span class="text-muted">-</span>
                                         <?php endif; ?>
-                                    </td>
+                                    </td> -->
                                     <td>
                                         <span class="badge-estado badge-atendido">
                                             <i class="bi bi-check-circle"></i> Atendido
@@ -365,10 +359,14 @@ $contadores = contar_reportes_por_estado();
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="9" class="text-center py-4">
-                                    <i class="bi bi-inbox" style="font-size: 48px"></i>
-                                    <p class="mt-2">No se encontraron reportes con los filtros seleccionados.</p>
-                                    <a href="?tab=<?= $tab_activa ?>" class="btn btn-sm btn-primary">Limpiar filtros</a>
+                                <td colspan="9" class="text-center">
+                                    <div class="alert alert-warning m-3">
+                                        <i class="bi bi-exclamation-triangle"></i>
+                                        No se encontraron clientes
+                                        <?php if(!empty($buqueda)): ?>
+                                            para "<strong><?php echo htmlspecialchars($buqueda) ?></strong>"
+                                        <?php endif; ?>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endif; ?>
