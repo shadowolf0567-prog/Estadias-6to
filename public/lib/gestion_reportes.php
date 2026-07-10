@@ -1,9 +1,9 @@
 <?php
 require_once __DIR__ . '/../../config/db.php';
-function agregar_reportes($fecha,$tecnico,/*$refaccion,*/$descripcion,$id_cliente = null,$id_equipo =  null){
+function agregar_reportes_con_reportes($fecha,$tecnico,$descripcion,$id_cliente = null,$id_equipo =  null,$componentes=[]){
     global $conn;
-    $sql="INSERT INTO reportes(fecha,tecnico,/*refaccion,*/descripcion,id_cliente,id_equipo,estado)
-     VALUES (?,?,?,?/*,?*/,?,'pendiente')";
+    $sql="INSERT INTO reportes(fecha,tecnico,descripcion,id_cliente,id_equipo,estado)
+     VALUES (?,?,?,?,?,'pendiente')";
     $insert_preparado=mysqli_prepare($conn,$sql);
     if(!$insert_preparado){
         return[
@@ -12,32 +12,37 @@ function agregar_reportes($fecha,$tecnico,/*$refaccion,*/$descripcion,$id_client
         ];
     }
     mysqli_stmt_bind_param($insert_preparado,'sssii',
-    $fecha,$tecnico,/*$refaccion,*/$descripcion,$id_cliente,
+    $fecha,$tecnico,$descripcion,$id_cliente,
     $id_equipo);
-    /*Fatal error: Uncaught mysqli_sql_exception: Cannot add or update a child
-     row: a foreign key constraint fails (`emipac`.`reportes`, CONSTRAINT
-     `reportes_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` 
-     (`id_cliente`) ON DELETE SET NULL) in 
-     C:\Apache24\htdocs\Emipac\public\lib\gestion_reportes.php:17 
-     Stack trace: #0 C:\Apache24\htdocs\Emipac\public\lib\gestion_reportes.php(17): 
-     mysqli_stmt_execute(Object(mysqli_stmt)) #1 
-     C:\Apache24\htdocs\Emipac\public\lib\gestion_reportes.php(231): 
-     agregar_reportes('2026-07-07', '', '', 'kljk', 92, 87) #2 {main} thrown in 
-     C:\Apache24\htdocs\Emipac\public\lib\gestion_reportes.php on line 17*/
     $query_ok=mysqli_stmt_execute($insert_preparado);
-    $rows_ok=mysqli_affected_rows($conn);
+    $id_reporte = mysqli_insert_id($conn);
+    $rows_ok = mysqli_affected_rows($conn);
     mysqli_stmt_close($insert_preparado);
     if($query_ok && $rows_ok >0) {
         return[
             'estatus' => 'msg',
             'mensaje' => 'Reporte generado con éxito'
         ];
-    }else{
-        return[
-            'estatus' => 'error',
-            'mensaje' => 'Error al generar el reporte'
-        ];
+        
     }
+    if(!empty($componentes) && is_array($componentes)){
+        $sql_comp = "INSERT INTO reportes_componentes(id_reporte,id,cantidad,tipo)
+                    VALUES (?,?,?,?)";
+        $stmt_comp = mysqli_prepare($conn, $sql_comp);
+        foreach($componentes as $comp){
+            if(!empty($comp['id'])){
+                $cantidad = intval($comp['cantidad'] ?? 1);
+                $tipo = $comp['tipo'];
+                mysqli_stmt_bind_param($stmt_comp,'iiis',$id_reporte,$comp['id'],$cantidad,$estado);
+                mysqli_stmt_execute($stmt_comp);
+            }
+        }
+        mysqli_stmt_close($stmt_comp);
+    }
+    return[
+        'estatus' => 'error',
+        'mensaje' => 'Error al generar el reporte'
+    ];
 }
 function editar_reporte($id_reporte,$fecha,$descripcion,$id_cliente = null,$id_equipo = null){
     global $conn;
@@ -128,7 +133,9 @@ function mostrar_reportes(){
     if(!$conn){
         return[];
     }
-    $sql="SELECT * FROM reportes";
+    $sql="SELECT r.*,rc.* FROM reportes r
+            INNER JOIN reportes_componentes rc
+            ON r.id_reporte = rc.id_reporte";
     $select_preparado=mysqli_prepare($conn,$sql);
     mysqli_stmt_execute($select_preparado);
     $resultado=mysqli_stmt_get_result($select_preparado);
@@ -233,13 +240,29 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 if(isset($_POST['fecha'])){
                     $fecha=trim($_POST['fecha']);
                     $tecnico=trim($_POST['tecnico'] ?? '');
-                    /*$refaccion=trim($_POST['refaccion'] ?? '');*/
                     $descripcion=trim($_POST['descripcion']);
                     $id_cliente=!empty($_POST['id_cliente']) ? intval($_POST['id_cliente']) : null;
                     $id_equipo=!empty($_POST['id_equipo']) ? intval($_POST['id_equipo']): null;
 
-                    $resultado=agregar_reportes($fecha,$tecnico/*,$refaccion*/,$descripcion,$id_cliente,$id_equipo);
-                    header('Location: ../reportes/agregar_reporte.php?'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
+                    $componentes = [];
+                    if(isset($_POST['componentes']) && is_array($_POST['componentes'])){
+                        foreach($_POST['componentes'] as $id_componente => $datos){
+                            if(!empty($datos['id'])){
+                                $componentes[] = [
+                                    'id' => intval($datos['id']),
+                                    'cantidad' => intval($datos['cantidad'] ?? 1),
+                                    'tipo' => $datos['tipo']
+                                ];
+                            }
+                        }
+                    }
+
+                    $resultado=agregar_reportes_con_reportes($fecha,$tecnico,$descripcion,$id_cliente,$id_equipo,$componentes);
+                    if($resultado['estatus'] === 'msg'){
+                        header('Location: ../reportes/agregar_reporte.php?msg='.urlencode($resultado['mensaje']));
+                    }else{
+                        header('Location: ../reportes/agregar_reporte.php?error='.urlencode(($resultado['mensaje'])));
+                    }
                     exit;
                 }
                 break;

@@ -28,6 +28,22 @@ mysqli_stmt_execute($stmt);
 $resultado = mysqli_stmt_get_result($stmt);
 $reporte = mysqli_fetch_assoc($resultado);
 
+$componentes_reporte = [];
+            if($reporte['id_reporte']){
+                $sql_comp = "SELECT rc.*, c.componente as componente_nombre, c.descripcion as componente_descripcion
+                            FROM reportes_componentes rc
+                            INNER JOIN componentes c ON rc.id = c.id
+                            WHERE rc.id_reporte = ?";
+                $stmt_comp = mysqli_prepare($conn,$sql_comp);
+                mysqli_stmt_bind_param($stmt_comp,'i',$reporte['id_reporte']);
+                mysqli_stmt_execute($stmt_comp);
+                $result_comp = mysqli_stmt_get_result($stmt_comp);
+                while($row=mysqli_fetch_assoc($result_comp)){
+                    $componentes_reporte[] = $row;
+                }
+                mysqli_stmt_close($stmt_comp);
+            }
+
 if(!$reporte){
     header('Location: reportes.php?error=' . urlencode('Reporte no encontrado'));
     exit;
@@ -172,6 +188,35 @@ mysqli_close($conn);
                     </div>
                 </div>
             </div>
+            <?php if(count($componentes_reporte) > 0): ?>
+                <div class="col-md-12 mt-3">
+                    <div class="card info-card">
+                        <div class="card-header">Componentes</div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Componente</th>
+                                            <th>Cantidad</th>
+                                            <th>Descripción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($componentes_reporte as $comp): ?>
+                                            <tr>
+                                                <td><strong><?= htmlspecialchars($comp['componente_nombre']) ?></strong></td>
+                                                <td><?= $comp['cantidad'] ?></td>
+                                                <td><?= htmlspecialchars($comp['componente_descripcion']) ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
             <div class="col-12">
                 <div class="card info-card">
                     <div class="card-header">Detalle del reporte</div>
@@ -180,7 +225,6 @@ mysqli_close($conn);
                             <div class="col-md-6">
                                 <p><span class="info-label">Fecha:</span> <?= date('d/m/Y', strtotime($reporte['fecha'])) ?></p>
                                 <p><span class="info-label">Técnico:</span> <?= htmlspecialchars($reporte['tecnico'] ?: 'No asignado') ?></p>
-                                <p><span class="info-label">Refacción:</span> <?= htmlspecialchars($reporte['refaccion'] ?: 'No especificada') ?></p>
                             </div>
                         </div>
                         <hr>
