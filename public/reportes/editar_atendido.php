@@ -219,12 +219,48 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 </div>
             </div>
             <div class="form-section">
+                <h5>Componentes</h5>
+                <div id="componentesContainer">
+                    <div class="componente-item" id="componente_0">
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                <label class="form-label">Tipo</label>
+                                <select name="componentes[0][tipo]" class="form-select" onchange="mostrarSeccion(this,0)" value="">
+                                    <option value="">-- Ninguno --</option>
+                                    <option value="SER-01">SER-01</option>
+                                    <option value="SER-02">SER-02</option>
+                                    <option value="refaccion">Refacción</option>
+                                    <option value="componente">Componente</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Nombre</label>
+                                <input type="text" id="nombre_0" name="componentes[0][componente]" class="form-control" placeholder="Nombre del componente/servicio">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Cantidad</label>
+                                <input type="number" name="componentes[0][cantidad]" class="form-control" value="1" min="1">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">&nbsp;</label>
+                                <i class="bi bi-dash-circle btn-remover" onclick="removerComponente(this)" style="display: block; margin-top: 5px;"></i>
+                            </div>
+                        </div>
+                        <div class="row g-2 mt-2" id="seccionDescripcion_0" style="display: none;">
+                            <div class="col-md-12">
+                                <label class="form-label">Descripción</label>
+                                <textarea name="componentes[0][descripcion]" class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="agregarComponente()">
+                    <i class="bi bi-plus-circle"></i> Agregar componente
+                </button>
+            </div>
+            <div class="form-section">
                 <h5>Detalles del Reporte</h5>
                 <div class="row g-3">
-                    <div class="col-md-12">
-                        <label class="form-label">Título del Reporte</label>
-                        <input type="text" name="reporte" class="form-control" required value="<?= htmlspecialchars($reporte['reporte']) ?>">
-                    </div>
                     <div class="col-md-6">
                         <label class="form-label">Fecha de creación del Reporte</label>
                         <input type="date" name="fecha" class="form-control" value="<?= htmlspecialchars($reporte['fecha']) ?>">
@@ -233,17 +269,9 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         <label class="form-label">Fecha de atención</label>
                         <input type="date" name="fecha_atencion" class="form-control" value="<?= htmlspecialchars($reporte['fecha_atencion']) ?>">
                     </div>
-                    <div class="col-md-12">
-                        <label class="form-label">Descripción del Problema</label>
-                        <textarea name="descripcion" class="form-control" rows="3" required><?= $reporte['descripcion'] ?></textarea>
-                    </div>
                     <div class="col-md-6">
                         <label class="form-label">Técnico</label>
                         <input type="text" name="tecnico" class="form-control" value="<?= htmlspecialchars($reporte['tecnico']) ?>">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Refacciones</label>
-                        <input type="text" name="refaccion" class="form-control" value="<?= htmlspecialchars($reporte['refaccion']) ?>">
                     </div>
                     <div class="col-md-12">
                         <label class="form-label">Observaciones</label>
@@ -281,6 +309,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
         });
         let clienteIDSeleccionado = <?= $reporte['id_cliente'] ?: 'null' ?>;
         let clientesData = <?= json_encode($clientes) ?>;
+        let contadorComponentes = 1;
         const todosEquipos = <?= json_encode($todos_equipos) ?>;
         const equipoActualId = <?= $reporte['id_equipo'] ?: 'null' ?>;
         const clienteActualId = <?= $reporte['id_cliente'] ?: 'null' ?>;
@@ -302,6 +331,83 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+        function mostrarSeccion(select, index){
+            const seccion = document.getElementById('seccionDescripcion_' + index);
+            const nombreInput = document.getElementById('nombre_' + index);
+            if(seccion){
+                if(select.value === 'componente' || select.value === 'refaccion'){
+                    seccion.style.display = 'block';
+                }else{
+                    seccion.style.display = 'none';
+                }
+            }
+            if(nombreInput) {
+                switch(select.value){
+                    case 'SER-01':
+                        nombreInput.value = 'Servicio Preventivo';
+                        nombreInput.disabled=true;
+                    break;
+                    case 'SER-02':
+                        nombreInput.value = 'Servicio Correctivo';
+                        nombreInput.disabled=true;
+                    break;
+                    default:
+                        nombreInput.value = '';
+                        nombreInput.disabled = false;
+                        nombreInput.placeholder = 'Nombre del componente/servicio';
+                    break;
+                }
+            }
+        }
+        function agregarComponente(){
+            const container = document.getElementById('componentesContainer');
+            const html = `
+                <div class="componente-item" id="componente_${contadorComponentes}">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Tipo</label>
+                            <select name ="componentes[${contadorComponentes}][tipo]" class="form-select" onchange="mostrarSeccion(this,${contadorComponentes})">
+                                <option value="">-- Ninguno --</option>
+                                <option value="SER-01">SER-01</option>
+                                <option value="SER-02">SER-02</option>
+                                <option value="refaccion">Refaccion</option>
+                                <option value="componente">Componente</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" id="nombre_${contadorComponentes}" name="componentes[${contadorComponentes}][componente]" class="form-control" placeholder="Nombre del componente/servicio">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Cantidad</label>
+                            <input type="number" name="componentes[${contadorComponentes}][cantidad]" class="form-control" value="1" min="1">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">&nbsp;</label>
+                            <i class="bi bi-dash-circle btn-remover" onclick="removerComponente(this)" style="display: block; margin-top: 5px;"></i>
+                        </div>
+                    </div>
+                    <div class="row g-2 mt-2" id="seccionDescripcion_${contadorComponentes}" style="display: none;">
+                        <div class="col-md-12">
+                            <label class="form-label">Descripción</label>
+                            <textarea name="componentes[${contadorComponentes}][descripcion]" class="form-control" rows="2" placeholder="Describe el componente o refacción..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+            contadorComponentes++;
+
+        }
+        function removerComponente(element){
+            const item = element.closest('.componente-item');
+            const container = document.getElementById('componentesContainer');
+            if(container.children.length > 1){
+                item.remove();
+            }else{
+                alert('Debe haber al menos un componente');
+            }
         }
         function buscarClientes(termino){
             if(!resultadosDiv) return;

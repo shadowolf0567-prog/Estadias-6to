@@ -29,7 +29,7 @@ if(!$equipo){
 
 $reportes_equipos = [];
 if($equipo['id_equipo']){
-    $sql_reportes_equipos = "SELECT id_reporte, reporte, fecha, estado, fecha_atencion, descripcion
+    $sql_reportes_equipos = "SELECT id_reporte, fecha, estado, fecha_atencion
                                 FROM reportes r
                                 WHERE id_equipo = ?";
     $stmt_re = mysqli_prepare($conn,$sql_reportes_equipos);
@@ -110,14 +110,13 @@ if($equipo['id_equipo']){
                         <?php foreach($reportes_equipos as $reportes): ?>
                             <div class="col-md-6 col-lg-4">
                                 <div class="card info-card equipo-card h-100">
-                                    <div class="card-header"><?= htmlspecialchars($reportes['reporte']) ?></div>
+                                    <div class="card-header">Información del Reporte</div>
                                     <div class="card-body">
                                         <p><span class="info-label">Fecha: </span><?= htmlspecialchars($reportes['fecha']) ?></p>
                                         <?php if($reportes['estado'] == 'atendido'): ?>
                                             <p><span class="info-label">Fecha de Atención: </span><?= htmlspecialchars($reportes['fecha_atencion']) ?></p>
                                         <?php endif; ?>
                                         <p><span class="info-label">Estado: </span><?= htmlspecialchars($reportes['estado']) ?></p>
-                                        <p><span class="info-label">Descripción del Problema: </span><?= htmlspecialchars($reportes['descripcion']) ?></p>
                                         <a href="../reportes/ver_reporte.php?id=<?= $reportes['id_reporte'] ?>" class="btn btn-info">
                                             <i class="bi bi-eye"></i> Ver Reporte
                                         </a>

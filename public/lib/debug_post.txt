@@ -1,0 +1,128 @@
+2026-07-10 21:35:32 - POST: Array
+(
+    [accion] => agregar
+    [id_cliente] => 88
+    [telefono_cliente] => 
+    [contacto_cliente] => 
+    [id_equipo] => 82
+    [componentes] => Array
+        (
+            [0] => Array
+                (
+                    [tipo] => SER-01
+                    [cantidad] => 1
+                    [descripcion] => 
+                )
+
+        )
+
+    [fecha] => 2026-07-10
+    [tecnico] => 
+)
+
+2026-07-10 21:36:23 - POST: Array
+(
+    [accion] => agregar
+    [id_cliente] => 88
+    [telefono_cliente] => 
+    [contacto_cliente] => 
+    [id_equipo] => 82
+    [componentes] => Array
+        (
+            [0] => Array
+                (
+                    [tipo] => refaccion
+                    [componente] => ñkljo
+                    [cantidad] => 1
+                    [descripcion] => mlk
+                )
+
+        )
+
+    [fecha] => 2026-07-10
+    [tecnico] => 
+)
+
+2026-07-10 21:41:23 - POST: Array
+(
+    [accion] => agregar
+    [id_cliente] => 88
+    [telefono_cliente] => 
+    [contacto_cliente] => 
+    [id_equipo] => 82
+    [componentes] => Array
+        (
+            [0] => Array
+                (
+                    [tipo] => refaccion
+                    [nombre] => mjhko
+                    [cantidad] => 1
+                    [descripcion] => jkhj
+                )
+
+        )
+
+    [fecha] => 2026-07-10
+    [tecnico] => 
+)
+
+2026-07-10 21:51:49 - POST: Array
+(
+    [accion] => agregar
+    [id_cliente] => 88
+    [telefono_cliente] => 
+    [contacto_cliente] => 
+    [id_equipo] => 82
+    [componentes] => Array
+        (
+            [0] => Array
+                (
+                    [tipo] => SER-01
+                    [nombre] => Servicio Preventivo
+                    [cantidad] => 1
+                    [descripcion] => 
+                )
+
+            [1] => Array
+                (
+                    [tipo] => refaccion
+                    [nombre] => nkk
+                    [cantidad] => 1
+                    [descripcion] => bpkn
+                )
+
+        )
+
+    [fecha] => 2026-07-10
+    [tecnico] => 
+)
+
+2026-07-10 21:52:35 - POST: Array
+(
+    [accion] => agregar
+    [id_cliente] => 88
+    [telefono_cliente] => 
+    [contacto_cliente] => 
+    [id_equipo] => 82
+    [componentes] => Array
+        (
+            [0] => Array
+                (
+                    [tipo] => SER-01
+                    [nombre] => Servicio Preventivo
+                    [cantidad] => 1
+                    [descripcion] => 
+                )
+
+        )
+
+    [fecha] => 2026-07-10
+    [tecnico] => 
+)
+
+2026-07-10 21:52:53 - POST: Array
+(
+    [accion] => eliminar
+    [id_reporte] => 47
+)
+

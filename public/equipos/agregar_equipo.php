@@ -173,7 +173,11 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
                                 <label>Nombre</label>
                                 <input type="text" id="nuevo_nombre" class="form-control" required>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-3">
+                                <label>Encargado</label>
+                                <input type="text" id="nuevo_encargado" class="form-control" required>
+                            </div>
+                            <div class="col-md-3">
                                 <label>Número de Cuenta</label>
                                 <input type="text" id="nuevo_no_cuenta" class="form-control" required>
                             </div>
@@ -518,6 +522,7 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
 
                 const datosCliente = {
                     nombre: nombre,
+                    encargado : document.getElementById('nuevo_encargado').value.trim(),
                     no_cuenta: document.getElementById('nuevo_no_cuenta').value.trim(),
                     direccion: document.getElementById('nuevo_direccion').value.trim(),
                     telefonos: datosContacto.telefonos,

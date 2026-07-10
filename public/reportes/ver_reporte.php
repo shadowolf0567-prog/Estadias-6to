@@ -15,7 +15,7 @@ if(!isset($_GET['id']) || empty($_GET['id'])){
 $id_reporte = intval($_GET['id']);
 
 $sql = "SELECT r.*, 
-               c.id_cliente, c.nombre as cliente_nombre, c.no_cuenta as cliente_cuenta,
+               c.id_cliente, c.nombre as cliente_nombre, c.no_cuenta as cliente_cuenta, c.encargado as encargado,
                e.id_equipo, e.no_serie as equipo_serie, e.modelo as equipo_modelo 
         FROM reportes r
         LEFT JOIN clientes c ON r.id_cliente = c.id_cliente
@@ -30,9 +30,10 @@ $reporte = mysqli_fetch_assoc($resultado);
 
 $componentes_reporte = [];
             if($reporte['id_reporte']){
-                $sql_comp = "SELECT rc.*, c.componente as componente_nombre, c.descripcion as componente_descripcion
+                $sql_comp = "SELECT rc.*, rc.componente as componente_nombre,
+                            rc.descripcion as componente_descripcion,
+                            rc.cantidad as cantidad
                             FROM reportes_componentes rc
-                            INNER JOIN componentes c ON rc.id = c.id
                             WHERE rc.id_reporte = ?";
                 $stmt_comp = mysqli_prepare($conn,$sql_comp);
                 mysqli_stmt_bind_param($stmt_comp,'i',$reporte['id_reporte']);
@@ -135,17 +136,20 @@ mysqli_close($conn);
             <a href="reportes.php" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> Volver
             </a>
-            <a href="editar_reportes.php?id_reporte=<?= $reporte['id_reporte'] ?>" class="btn btn-warning">
-                <i class="bi bi-pencil"></i> Editar
-            </a>
             <?php if($reporte['estado'] == 'pendiente'): ?>
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAtender">
                     <i class="bi bi-check-circle"></i> Marcar Atendido
                 </button>
+                <a href="editar_reportes.php?id_reporte=<?= $reporte['id_reporte'] ?>" class="btn btn-warning">
+                    <i class="bi bi-pencil"></i> Editar
+                </a>
             <?php else: ?>
                 <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalReabrir">
                     <i class="bi bi-arrow-repeat"></i> Reabrir
                 </button>
+                <a href="editar_atendido.php?id_reporte=<?= $reporte['id_reporte'] ?>" class="btn btn-warning">
+                    <i class="bi bi-pencil"></i> Editar
+                </a>
             <?php endif; ?>
         </div>
         
@@ -167,11 +171,15 @@ mysqli_close($conn);
                     <div class="card-header">Cliente que reporta</div>
                     <div class="card-body">
                         <?php if($reporte['cliente_nombre']): ?>
-                            <p><span class="info-label">Nombre:</span> <?= htmlspecialchars($reporte['cliente_nombre']) ?></p>
+                            <p><span class="info-label">Empresa:</span> <?= htmlspecialchars($reporte['cliente_nombre']) ?></p>
+                            <p><span class="info-label">Encargado:</span> <?= htmlspecialchars($reporte['encargado']) ?? ''?></p>
                             <p><span class="info-label">Cuenta:</span> <?= htmlspecialchars($reporte['cliente_cuenta'] ?: 'No registrada') ?></p>
                         <?php else: ?>
                             <p class="text-muted">No se especificó cliente</p>
                         <?php endif; ?>
+                        <a href="../clientes/ver_cliente.php?id=<?= $reporte['id_cliente'] ?>" class="btn btn-info">
+                            <i class="bi bi-eye"></i> Ver Cliente
+                        </a>
                     </div>
                 </div>
             </div>
@@ -185,29 +193,35 @@ mysqli_close($conn);
                         <?php else: ?>
                             <p class="text-muted">No se especificó equipo</p>
                         <?php endif; ?>
+                        <a href="../equipos/ver_equipo.php?id=<?=$reporte['id_equipo'] ?>" class="btn btn-info">
+                            <i class="bi bi-eye"></i> Ver Equipo
+                        </a>
                     </div>
                 </div>
             </div>
             <?php if(count($componentes_reporte) > 0): ?>
                 <div class="col-md-12 mt-3">
                     <div class="card info-card">
-                        <div class="card-header">Componentes</div>
+                        <div class="card-header">Detalles del Reporte</div>
                         <div class="card-body">
+                            <p><span class="info-label">Fecha:</span> <?= date('d/m/Y', strtotime($reporte['fecha'])) ?></p>
                             <div class="table-responsive">
                                 <table class="table table-sm">
                                     <thead>
                                         <tr>
                                             <th>Componente</th>
-                                            <th>Cantidad</th>
                                             <th>Descripción</th>
+                                            <th>Técnico</th>
+                                            <th>Cantidad</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach($componentes_reporte as $comp): ?>
                                             <tr>
                                                 <td><strong><?= htmlspecialchars($comp['componente_nombre']) ?></strong></td>
-                                                <td><?= $comp['cantidad'] ?></td>
                                                 <td><?= htmlspecialchars($comp['componente_descripcion']) ?></td>
+                                                <td><?= htmlspecialchars($reporte['tecnico']) ?></td>
+                                                <td><?= $comp['cantidad'] ?></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
@@ -217,33 +231,25 @@ mysqli_close($conn);
                     </div>
                 </div>
             <?php endif; ?>
+            <?php if($reporte['estado'] == 'atendido'): ?>
             <div class="col-12">
                 <div class="card info-card">
                     <div class="card-header">Detalle del reporte</div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <p><span class="info-label">Fecha:</span> <?= date('d/m/Y', strtotime($reporte['fecha'])) ?></p>
-                                <p><span class="info-label">Técnico:</span> <?= htmlspecialchars($reporte['tecnico'] ?: 'No asignado') ?></p>
                             </div>
                         </div>
                         <hr>
-                        <p><span class="info-label">Descripción:</span></p>
-                        <div class="bg-light p-3 rounded"><?= nl2br(htmlspecialchars($reporte['descripcion'])) ?></div>
-                        
-                        <?php if($reporte['estado'] == 'atendido'): ?>
-                            <hr>
-                                <h6><i class="bi bi-check-circle"></i> Reporte Atendido</h6>
-                                <p><span class="info-label">Atendido por:</span> <?= htmlspecialchars($reporte['tecnico'] ?: 'No especificado') ?></p>
-                                <!-- <p><span class="info-label">Refacciones usadas: </span><?= htmlspecialchars($reporte['refaccion']) ?></p> -->
-                                <p><span class="info-label">Fecha Atención: </span><?= date('d/m/Y',strtotime($reporte['fecha_atencion'])) ?></p>
-                                <p><span class="info-label">¿Qué se hizo? </span><?= nl2br(htmlspecialchars($reporte['acciones'] ?: '')) ?></p>
-                                <p><span class="info-label">Observaciones</span></p>
-                                <div class="bg-white p-2 rounded"><?= nl2br(htmlspecialchars($reporte['observaciones_atencion'] ?: 'Sin observaciones')) ?></div>
-                        <?php endif; ?>
+                            <h6><i class="bi bi-check-circle"></i> Reporte Atendido</h6>
+                            <p><span class="info-label">Fecha Atención: </span><?= date('d/m/Y',strtotime($reporte['fecha_atencion'])) ?></p>
+                            <p><span class="info-label">¿Qué se hizo? </span><?= nl2br(htmlspecialchars($reporte['acciones'] ?: '')) ?></p>
+                            <p><span class="info-label">Observaciones</span></p>
+                            <div class="bg-white p-2 rounded"><?= nl2br(htmlspecialchars($reporte['observaciones_atencion'] ?: 'Sin observaciones')) ?></div>
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
         </div>
     </div>
     <div class="modal fade" id="modalAtender" tabindex="-1">
@@ -265,20 +271,12 @@ mysqli_close($conn);
                             <input type="date" name="fecha_atencion" class="form-control">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Técnico:</label>
-                            <input type="text" name="tecnico" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Refacciones:</label>
-                            <input type="text" name="refaccion" class="form-control">
-                        </div>
-                        <div class="mb-3">
                             <label class="form-label">¿Qué se hizo?:</label>
                             <textarea name="acciones" class="form-control" rows="4"></textarea>
                         </div>
                         <div class="mb-4">
                             <label class="form-label">Observaciones</label>
-                            <textarea name="observaciones_atencion" class="form-control"></textarea>
+                            <textarea name="observaciones_atencion" class="form-control" placeholder="Observaciones realizadas durante el servicio"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

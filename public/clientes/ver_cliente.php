@@ -13,8 +13,8 @@ if(!isset($_GET['id']) || empty($_GET['id'])){
 }
 $id_cliente = intval($_GET['id']);
 $sql = "SELECT c.*,
-                GROUP_CONCAT(DISTINCT CONCAT_WS('||', t.telefono, t.contacto, t.es_principal) SEPARATOR ';;') as telefonos_raw,
-                GROUP_CONCAT(DISTINCT CONCAT_WS('||', cc.correo, cc.contacto, cc.es_principal) SEPARATOR ';;') as correos_raw
+                GROUP_CONCAT(DISTINCT CONCAT_WS('||', t.telefono, t.contacto) SEPARATOR ';;') as telefonos_raw,
+                GROUP_CONCAT(DISTINCT CONCAT_WS('||', cc.correo, cc.contacto) SEPARATOR ';;') as correos_raw
         FROM clientes c
         LEFT JOIN telefonos t ON c.id_cliente = t.id_cliente
         LEFT JOIN correos cc ON c.id_cliente = cc.id_cliente
@@ -41,7 +41,6 @@ if(!empty($cliente['telefonos_raw'])){
             $telefonos[] = [
                 'telefono' => $parts[0],
                 'contacto' => $parts[1] ?: '',
-                'es_principal' => $parts[2] == '1'
             ];
         }
     }
@@ -57,7 +56,6 @@ if(!empty($cliente['correos_raw'])){
             $correos[] = [
                 'correo' => $parts[0],
                 'contacto' => $parts[1] ?: '',
-                'es_principal' => $parts[2] == '1'
             ];
         }
     }

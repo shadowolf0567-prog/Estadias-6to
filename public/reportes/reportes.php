@@ -247,6 +247,7 @@ $contadores = contar_reportes_por_estado();
                             <th>Cliente</th>
                             <th>No. Serie</th>
                             <th>Fecha</th>
+                            <th>Técnico</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
@@ -258,6 +259,7 @@ $contadores = contar_reportes_por_estado();
                                     <td><?= htmlspecialchars($reporte['cliente_nombre'] ?: '-') ?></td>
                                     <td><?= htmlspecialchars($reporte['equipo_serie'] ?: '-')  ?></td>
                                     <td><?= date('d/m/Y', strtotime($reporte['fecha'])) ?></td>
+                                    <td><?= htmlspecialchars($reporte['tecnico']) ?></td>
                                     <td>
                                         <span class="badge-estado badge-pendiente">
                                             <i class="bi bi-clock"></i> Pendiente
@@ -302,6 +304,7 @@ $contadores = contar_reportes_por_estado();
                             <th>Cliente</th>
                             <th>No. Serie</th>
                             <th>Fecha</th>
+                            <th>Fecha Atención</th>
                             <th>Técnico</th>
                             <th>Estado</th>
                             <th>Acciones</th>
@@ -322,6 +325,7 @@ $contadores = contar_reportes_por_estado();
                                         <?php endif; ?>        
                                     </td>
                                     <td><?= date('d/m/Y',strtotime($reporte['fecha'])) ?></td>
+                                    <td><?= date('d/m/Y', strtotime($reporte['fecha_atencion'])) ?></td>
                                     <td>
                                         <?php if($reporte['tecnico']): ?>
                                             <span class="tecnico-badge"><?= htmlspecialchars($reporte['tecnico']) ?></span>
