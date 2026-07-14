@@ -201,8 +201,6 @@ $total_resultados = count($equipos);
                         <th>Número de Serie</th>
                         <th>Modelo</th>
                         <th>Cliente</th>
-                        <th>Inicio Contrato</th>
-                        <th>Fin Contrato</th>
                         <th>Opciones</th>
                     </tr>
                 </thead>
@@ -221,8 +219,6 @@ $total_resultados = count($equipos);
                                         <span>Sin cliente</span>
                                     <?php endif; ?>
                                 </td>
-                                <td><?= !empty($equipo['inicio_contrato']) ? date('d/m/Y', strtotime($equipo['inicio_contrato'])) : '-' ?></td>
-                                <td><?= !empty($equipo['fin_contrato']) ? date('d/m/Y', strtotime($equipo['fin_contrato'])) : '-' ?></td>
                                 <td>
                                     <button type="button" class="btn btn-sm btn-danger"
                                     onclick="eliminarEquipo(<?= $equipo['id_equipo'] ?>, '<?= addslashes($equipo['no_serie']) ?>')">

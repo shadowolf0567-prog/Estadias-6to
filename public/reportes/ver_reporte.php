@@ -61,7 +61,7 @@ mysqli_close($conn);
     <title>Ver Reporte</title>
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
     <link rel="stylesheet" href="../assets/css/bootstrap-icons.css">
-    <link rel="stylesheet" href="../assets/css/responsives.css">
+    <link rel="stylesheet" href="../assets/css/responsibe.css">
     <style>
         body { background-color: #f4f6f9; }
         .reporte-header {
@@ -104,7 +104,6 @@ mysqli_close($conn);
             width: 140px;
             display: inline-block;
         }
-        /* Ajustes responsive */
         @media (max-width: 768px) {
             .info-label {
                 width: 100%;
@@ -199,61 +198,51 @@ mysqli_close($conn);
                     </div>
                 </div>
             </div>
-            <?php if(count($componentes_reporte) > 0): ?>
                 <div class="col-md-12 mt-3">
                     <div class="card info-card">
                         <div class="card-header">Detalles del Reporte</div>
                         <div class="card-body">
                             <p><span class="info-label">Fecha:</span> <?= date('d/m/Y', strtotime($reporte['fecha'])) ?></p>
-                            <div class="table-responsive">
-                                <table class="table table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Componente</th>
-                                            <th>Descripción</th>
-                                            <th>Técnico</th>
-                                            <th>Cantidad</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach($componentes_reporte as $comp): ?>
+                            <?php if(count($componentes_reporte) > 0): ?>
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
                                             <tr>
-                                                <td><strong><?= htmlspecialchars($comp['componente_nombre']) ?></strong></td>
-                                                <td><?= htmlspecialchars($comp['componente_descripcion']) ?></td>
-                                                <td><?= htmlspecialchars($reporte['tecnico']) ?></td>
-                                                <td><?= $comp['cantidad'] ?></td>
+                                                <th>Componente</th>
+                                                <th>Descripción</th>
+                                                <th>Técnico</th>
+                                                <th>Cantidad</th>
                                             </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php endif; ?>
-            <?php if($reporte['estado'] == 'atendido'): ?>
-            <div class="col-12">
-                <div class="card info-card">
-                    <div class="card-header">Detalle del reporte</div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                            </div>
-                        </div>
-                        <hr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach($componentes_reporte as $comp): ?>
+                                                <tr>
+                                                    <td><strong><?= htmlspecialchars($comp['componente_nombre']) ?></strong></td>
+                                                    <td><?= htmlspecialchars($comp['componente_descripcion']) ?></td>
+                                                    <td><?= htmlspecialchars($reporte['tecnico']) ?></td>
+                                                    <td><?= $comp['cantidad'] ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            <?php endif; ?>
+                        <?php if($reporte['estado'] == 'atendido'): ?>
+                        <div class="col-12">
+                            <hr>
                             <h6><i class="bi bi-check-circle"></i> Reporte Atendido</h6>
                             <p><span class="info-label">Fecha Atención: </span><?= date('d/m/Y',strtotime($reporte['fecha_atencion'])) ?></p>
-                            <p><span class="info-label">¿Qué se hizo? </span><?= nl2br(htmlspecialchars($reporte['acciones'] ?: '')) ?></p>
                             <p><span class="info-label">Observaciones</span></p>
                             <div class="bg-white p-2 rounded"><?= nl2br(htmlspecialchars($reporte['observaciones_atencion'] ?: 'Sin observaciones')) ?></div>
+                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
-            <?php endif; ?>
         </div>
     </div>
-    <div class="modal fade" id="modalAtender" tabindex="-1">
-        <div class="modal-dialog">
+    <div class="modal fade" id="modalAtender">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-success text-white">
                     <h5 class="modal-title">
@@ -270,10 +259,6 @@ mysqli_close($conn);
                             <label class="form-label">Fecha de atención:</label>
                             <input type="date" name="fecha_atencion" class="form-control">
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">¿Qué se hizo?:</label>
-                            <textarea name="acciones" class="form-control" rows="4"></textarea>
-                        </div>
                         <div class="mb-4">
                             <label class="form-label">Observaciones</label>
                             <textarea name="observaciones_atencion" class="form-control" placeholder="Observaciones realizadas durante el servicio"></textarea>
@@ -288,7 +273,7 @@ mysqli_close($conn);
         </div>
     </div>
     <div class="modal fade" id="modalReabrir" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-warning">
                     <h5 class="modal-title">

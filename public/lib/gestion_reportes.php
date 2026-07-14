@@ -26,8 +26,8 @@ function agregar_reportes_con_reportes($fecha,$tecnico,$id_cliente = null,$id_eq
         
     }
     if(!empty($componentes) && is_array($componentes)){
-        $sql_comp = "INSERT INTO reportes_componentes(id_reporte,componente,cantidad,descripcion)
-                    VALUES (?,?,?,?)";
+        $sql_comp = "INSERT INTO reportes_componentes(id_reporte,componente,cantidad,descripcion,tipo)
+                    VALUES (?,?,?,?,?)";
         $stmt_comp = mysqli_prepare($conn, $sql_comp);
         if(!$stmt_comp){
             return[
@@ -46,15 +46,29 @@ function agregar_reportes_con_reportes($fecha,$tecnico,$id_cliente = null,$id_eq
                     $componente = 'Servicio Preventivo';
                 } elseif($tipo == 'SER-02'){
                     $componente = 'Servicio Correctivo';
+                }elseif($tipo == 'SER-03'){
+                    $componente == 'Entrega Refacción/Consumible';
                 }
             }
+            if(empty($tipo)){
+                if(strpos($componente, 'Preventivo') !== false){
+                    $tipo = 'SER-01';
+                } elseif(strpos($componente, 'Correctivo') !== false){
+                    $tipo = 'SER-02';
+                } elseif(strpos($componente, 'Entrega Refacción/Consumible') !== false){
+                    $tipo = 'SER-03';
+                } else{
+                    $tipo = 'componente';
+                }
+            }
+            
             if(!empty($componente)){
-                mysqli_stmt_bind_param($stmt_comp,'isis',$id_reporte,$componente,$cantidad,$descripcion);
+                mysqli_stmt_bind_param($stmt_comp, 'isiss', $id_reporte, $componente, $cantidad, $descripcion, $tipo);
                 $result_comp = mysqli_stmt_execute($stmt_comp);
                 if(!$result_comp){
                     return[
                         'estatus' => 'error',
-                        'mensaje' => 'Error al guardar componente'
+                        'mensaje' => 'Error al guardar componente: ' . mysqli_stmt_error($stmt_comp)
                     ];
                 }
             }
@@ -93,20 +107,40 @@ function editar_reporte_con_componentes($id_reporte,$fecha,$tecnico,$id_cliente 
     mysqli_stmt_execute($stmt_delete);
     mysqli_stmt_close($stmt_delete);
     if(!empty($componentes) && is_array($componentes)){
-        $sql_comp = "INSERT INTO reportes_componentes (id_reporte,componente,cantidad,descripcion)
-                    VALUES (?,?,?,?)";
+        $sql_comp = "INSERT INTO reportes_componentes (id_reporte,componente,cantidad,descripcion,tipo)
+                    VALUES (?,?,?,?,?)";
         $stmt_comp = mysqli_prepare($conn, $sql_comp);
 
         if($stmt_comp){
             foreach($componentes as $comp){
-                if(!empty($comp['nombre'])){
                     $componente = trim($comp['nombre'] ?? $comp['componente']) ?? '';
+                    $tipo = trim($comp['tipo'] ?? '');
                     $cantidad = isset($comp['cantidad']) ? intval($comp['cantidad']) : 1;
                     $descripcion = trim($comp['descripcion']);
 
-                    mysqli_stmt_bind_param($stmt_comp,'isis',$id_reporte,$componente,$cantidad,$descripcion);
-                    mysqli_stmt_execute($stmt_comp);
-                }
+                    if(empty($componente)){
+                        if($tipo == 'SER-01'){
+                            $componente = 'Servicio Preventivo';
+                        }elseif($tipo == 'SER-02'){
+                            $componente = 'Servicio Correctivo';
+                        }elseif($tipo == 'SER-03'){
+                            $componente = 'Entrega Refacción/Consumible';
+                        }
+                    }if(empty($tipo)){
+                        if(strpos($componente, 'Preventivo') !== false){
+                            $tipo = 'SER-01';
+                        } elseif(strpos($componente, 'Correctivo') !== false){
+                            $tipo = 'SER-02';
+                        } elseif(strpos($componente, 'Entrega Refacción/Consumible') !== false){
+                            $tipo = 'SER-03';
+                        } else{
+                            $tipo = 'componente';
+                        }
+                    }
+                    if(!empty($componente)){
+                        mysqli_stmt_bind_param($stmt_comp,'isiss',$id_reporte,$componente,$cantidad,$descripcion,$tipo);
+                        mysqli_stmt_execute($stmt_comp);
+                    }
             }
             mysqli_stmt_close($stmt_comp);
         }
@@ -185,11 +219,11 @@ function mostrar_reportes(){
     mysqli_stmt_close($select_preparado);
     return $reportes;
 }
-function marcar_atendido($id_reporte, $observaciones = '',$fecha_atencion = '',$acciones = ''){
+function marcar_atendido($id_reporte, $observaciones = '',$fecha_atencion = ''){
     global $conn;
     $sql = "UPDATE reportes SET estado='atendido', 
             observaciones_atencion=?, 
-            fecha_atencion = ?, acciones= ? WHERE id_reporte=?";
+            fecha_atencion = ?WHERE id_reporte=?";
     $stmt = mysqli_prepare($conn,$sql);
     if(!$stmt){
         return[
@@ -197,7 +231,7 @@ function marcar_atendido($id_reporte, $observaciones = '',$fecha_atencion = '',$
             'mensaje' => 'Error en la preparación'.mysqli_error($conn)
         ];
     }
-    mysqli_stmt_bind_param($stmt, 'sssi', $observaciones, $fecha_atencion,$acciones,$id_reporte);
+    mysqli_stmt_bind_param($stmt, 'ssi', $observaciones, $fecha_atencion,$id_reporte);
     $query_ok = mysqli_stmt_execute($stmt);
     $rows_ok=mysqli_affected_rows($conn);
     mysqli_stmt_close($stmt);
@@ -240,9 +274,9 @@ function reabrir_reporte($id_reporte){
     }
 }
 
-function editar_atendidos($id_reporte,$fecha,$descripcion,$tecnico,$fecha_atencion,$observaciones_atencion,$acciones,$id_cliente = null,$id_equipo = null){
+function editar_atendidos($id_reporte,$fecha,$tecnico,$fecha_atencion,$observaciones_atencion,$id_cliente = null,$id_equipo = null,$componentes=[]){
     global $conn;
-    $sql = "UPDATE reportes SET fecha=?,descripcion=?,tecnico=?,fecha_atencion=?,observaciones_atencion = ?,acciones=?,
+    $sql = "UPDATE reportes SET fecha=?,tecnico=?,fecha_atencion=?,observaciones_atencion = ?,
             id_cliente = ?, id_equipo = ? WHERE id_reporte = ?";
     $update_preparado = mysqli_prepare($conn,$sql);
     if(!$update_preparado){
@@ -251,14 +285,13 @@ function editar_atendidos($id_reporte,$fecha,$descripcion,$tecnico,$fecha_atenci
             'mensaje' => 'Error en la ejecución de la base de datos'
         ];
     }
-    mysqli_stmt_bind_param($update_preparado,"ssssssiii",$fecha,$descripcion,$tecnico,$fecha_atencion,$observaciones_atencion,$acciones,$id_cliente,$id_equipo,$id_reporte);
+    mysqli_stmt_bind_param($update_preparado,"ssssiii",$fecha,$tecnico,$fecha_atencion,$observaciones_atencion,$id_cliente,$id_equipo,$id_reporte);
     $query_ok = mysqli_stmt_execute($update_preparado);
-    $rows_ok = mysqli_affected_rows($conn);
     mysqli_stmt_close($update_preparado);
-    if($query_ok && $rows_ok > 0){
+    if(!$query_ok){
         return[
-            'estatus' => 'msg',
-            'mensaje' => 'Reporte editado exitosamente'
+            'estatus' => 'error',
+            'mensaje' => 'Error al actualizar el reporte'
         ];
     }
     $sql_delete = "DELETE FROM reportes_componentes WHERE id_reporte = ?";
@@ -268,24 +301,47 @@ function editar_atendidos($id_reporte,$fecha,$descripcion,$tecnico,$fecha_atenci
     mysqli_stmt_close($stmt_delete);
 
     if(!empty($componentes) && is_array($componentes)){
-        $sql_comp = "INSERT INTO reportes_componentes (id_reporte,nombre_componente,cantidad,descripcion)
-                    VALUES (?,?,?,?)";
+        $sql_comp = "INSERT INTO reportes_componentes (id_reporte,componente,cantidad,descripcion,tipo)
+                    VALUES (?,?,?,?,?)";
         $stmt_comp = mysqli_prepare($conn,$sql_comp);
         if($stmt_comp){
             foreach($componentes as $comp){
-                $componente = trim($comp['nombre'] ?? $comp['componente']);
-                $cantidad = isset($comp['cantidad']) ? intval($comp['cantidad']) : 1;
-                $descripcion = trim($comp['descripcion']) ?? '';
+                    $componente = trim($comp['nombre'] ?? $comp['componente'] ?? '');
+                    $tipo = trim($comp['tipo'] ?? '');
+                    $cantidad = isset($comp['cantidad']) ? intval($comp['cantidad']) : 1;
+                    $descripcion = trim($comp['descripcion']);
 
-                mysqli_stmt_bind_param($stmt_comp,'isis',$id_reporte,$componente,$cantidad,$descripcion);
-                mysqli_stmt_execute($stmt_comp);
+                    if(empty($componente)){
+                        if($tipo == 'SER-01'){
+                            $componente = 'Servicio Preventivo';
+                        } elseif($tipo == 'SER-02'){
+                            $componente = 'Servicio Correctivo';
+                        } elseif($tipo == 'SER-03'){
+                            $componente = 'Entrega Refacción/Consumible';
+                        }
+                    }
+                    if(empty($tipo)){
+                        if(strpos($componente, 'Preventivo') !== false){
+                            $tipo = 'SER-01';
+                        } elseif(strpos($componente, 'Correctivo') !== false){
+                            $tipo = 'SER-02';
+                        } elseif(strpos($componente, 'Entrega Refacción/Consumible') !== false){
+                            $tipo = 'SER-03';
+                        } else{
+                            $tipo = 'componente';
+                        }
+                    }
+                    if(!empty($componente)){
+                        mysqli_stmt_bind_param($stmt_comp,'isiss',$id_reporte,$componente,$cantidad,$descripcion,$tipo);
+                        mysqli_stmt_execute($stmt_comp);
+                    }
             }
             mysqli_stmt_close($stmt_comp);
         }
     }
     return[
-        'estatus' => 'error',
-        'mensaje' => 'No se pudo editar el reporte'
+        'estatus' => 'msg',
+        'mensaje' => 'Reporte editado exitosamente'
     ];
 }
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -307,13 +363,13 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                             $cantidad = isset($comp['cantidad']) ? intval($comp['cantidad']) : 1;
                             $descripcion = trim($comp['descripcion'] ?? '');
 
-                            if(empty($nombre) && ($tipo == 'SER-01' || $tipo == 'SER-02')){
+                            if(empty($nombre)){
                                 if($tipo == 'SER-01'){
                                     $nombre = 'Servicio Preventivo';
                                 } elseif($tipo == 'SER-02'){
                                     $nombre = 'Servicio Correctivo';
                                 }elseif($tipo == 'SER-03'){
-                                    $nombre == 'Entrega Refacción/Consumible';
+                                    $nombre = 'Entrega Refacción/Consumible';
                                 }
                             }
                             
@@ -359,7 +415,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                                 } elseif($tipo == 'SER-02'){
                                     $componente = 'Servicio Correctivo';
                                 }elseif($tipo == 'SER-03'){
-                                    $componente == 'Entrega Refacción/Consumible';
+                                    $componente = 'Entrega Refacción/Consumible';
                                 }
                             }
                             if(!empty($componente)){
@@ -452,18 +508,16 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 if(isset($_POST['id_reporte'],$_POST['fecha'])){
                     $id_reporte = intval($_POST['id_reporte']);
                     $fecha = trim($_POST['fecha']);
-                    $descripcion = trim($_POST['descripcion']);
                     $tecnico = trim($_POST['tecnico']);
                     $fecha_atencion = trim($_POST['fecha_atencion']);
                     $observaciones_atencion = trim($_POST['observaciones_atencion']);
-                    $acciones = trim($_POST['acciones']);
                     $id_cliente = !empty($_POST['id_cliente']) ? intval($_POST['id_cliente']) : null;
                     $id_equipo = !empty($_POST['id_equipo']) ? intval($_POST['id_equipo']) : null;
                     
                     $componentes = [];
                     if(isset($_POST['componentes']) && is_array(($_POST['componentes']))){
                         foreach($_POST['componentes'] as $comp){
-                            $componente = trim($comp['nombre'] ?? $comp['componente']);
+                            $componente = trim($comp['nombre'] ?? $comp['componente'] ?? '');
                             $tipo = trim($comp['tipo'] ?? '');
                             $cantidad = isset($comp['cantidad']) ? intval($comp['cantidad']) : 1;
                             $descripcion = trim($comp['descripcion'] ?? '');
@@ -474,7 +528,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                                 } elseif($tipo == 'SER-02'){
                                     $componente = 'Servicio Correctivo';
                                 }elseif($tipo == 'SER-03'){
-                                    $componente == 'Entrega Refacción/Consumible';
+                                    $componente = 'Entrega Refacción/Consumible';
                                 }
                             }
                             if(!empty($componente)){
@@ -486,14 +540,15 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                             }
                         }
                     }
-                    $resultado = editar_atendidos($id_reporte,$fecha,$descripcion,$tecnico,$fecha_atencion,$observaciones_atencion,$acciones,$id_cliente,$id_equipo,$componentes);
+                    $resultado = editar_atendidos($id_reporte,$fecha,$tecnico,$fecha_atencion,$observaciones_atencion,$id_cliente,$id_equipo,$componentes);
                     if($resultado['estatus'] === 'msg'){
-                        header('Location: ../reportes/ver_reporte.php?id=' .$id_reporte.'&msg'.urlencode($resultado['mensaje']));
+                        header('Location: ../reportes/ver_reporte.php?id=' .$id_reporte.'&msg='.urlencode($resultado['mensaje']));
                     }else{
-                        header('Location: ../reportes/editar_reportes.php?id_reporte=' .$id_reporte. '&error=' .urlencode($resultado['mensaje']));
+                        header('Location: ../reportes/editar_atendido.php?id_reporte=' .$id_reporte. '&error=' .urlencode($resultado['mensaje']));
                     }
-                    break;
+                    exit;
                 }
+                break;
             default:
             header('Location: ../reportes/reportes.php?error='.urlencode('Acción no valida'));
             exit;

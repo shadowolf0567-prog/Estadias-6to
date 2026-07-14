@@ -24,7 +24,7 @@ if(!$reporte){
     exit;
 }
 $componentes = [];
-$sql_comp = "SELECT id_reporte_componente, componente, cantidad,descripcion
+$sql_comp = "SELECT id_reporte_componente, componente, cantidad,descripcion,tipo
             FROM reportes_componentes
             WHERE id_reporte = ?";
 $stmt_comp = mysqli_prepare($conn,$sql_comp);

@@ -23,15 +23,6 @@ if(!$reporte){
     header('Location: reportes.php?error=' .urlencode('Reporte no encontrado'));
     exit;
 }
-$clientes = [];
-$sql_clientes = "SELECT id_cliente,nombre,no_cuenta
-                FROM clientes ORDER BY nombre ASC";
-$result_clientes = mysqli_query($conn,$sql_clientes);
-if($result_clientes){
-    while($row = mysqli_fetch_assoc($result_clientes)){
-        $clientes[] = $row;
-    }
-}
 $todos_equipos = [];
 $sql_equipos = "SELECT e.id_equipo, e.no_serie, e.modelo, c.nombre as cliente_nombre, 
                 e.id_cliente FROM equipos e LEFT JOIN clientes c 
@@ -43,7 +34,7 @@ if($result_equipos){
     }
 }
 $componentes = [];
-$sql_comp = "SELECT id_reporte_componente as id, componente, cantidad,descripcion
+$sql_comp = "SELECT id_reporte_componente as id, componente, cantidad,descripcion,tipo
             FROM reportes_componentes
             WHERE id_reporte = ?";
 $stmt_comp = mysqli_prepare($conn,$sql_comp);
@@ -53,6 +44,8 @@ $result_comp = mysqli_stmt_get_result($stmt_comp);
 while($row = mysqli_fetch_assoc($result_comp)){
     $componentes[] = $row;
 }
+$total_componentes = count($componentes);
+
 $equipos_cliente_actual = [];
 if($reporte['id_cliente']){
     $sql_equipos_cliente = "SELECT id_equipo, no_serie, modelo FROM equipos
@@ -229,18 +222,21 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                     <span id="infoEquipoTexto"></span>
                 </div>
             </div>
+            <div class="form-section">
+                <h5>Componentes</h5>
+                <div id="componentesContainer">
                     <?php if(count($componentes) > 0): ?>
                         <?php foreach($componentes as $index => $comp): ?>
                             <div class="componente-item" id="componente_<?= $index ?>">
                                 <div class="row g-2">
                                     <div class="col-md-4">
                                         <label class="form-label">Tipo</label>
-                                        <select name="componentes[<?= $index ?>][tipo]" class="form-select" onchange="mostrarSeccion(this, <?= $index ?>">
+                                        <select name="componentes[<?= $index ?>][tipo]" class="form-select" onchange="mostrarSeccion(this, <?= $index ?>)">
                                             <option value="">-- Ninguno --</option>
-                                            <option value="SER-01" <?= (strpos($comp['componente'],'Preventivo') !== false) ? 'selected' : '' ?>>SER-01</option>
-                                            <option value="SER-02" <?= (strpos($comp['componente'],'Correctivo') !== false) ? 'selected' : '' ?>>SER-02</option>
-                                            <option value="SER-03" <?= (strpos($comp['componente'], 'Entrega Refacción/Consumible') !== false) ? 'selected' : '' ?>>SER-03</option>
-                                            <option value="componente" <?= (strpos($comp['componente'], 'Componente') !== false || strpos($comp['componente'],'componente') !== false ) ? 'selected' : '' ?>>Componente</option>
+                                            <option value="SER-01" <?= ($comp['tipo'] == 'SER-01') ? 'selected' : '' ?>>SER-01</option>
+                                            <option value="SER-02" <?= ($comp['tipo'] == 'SER-02') ? 'selected' : '' ?>>SER-02</option>
+                                            <option value="SER-03" <?= ($comp['tipo'] == 'SER-03') ? 'selected' : '' ?>>SER-03</option>
+                                            <option value="componente" <?= ($comp['tipo'] == 'componente') ? 'selected' : ''?>>Componente</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4">
@@ -256,20 +252,20 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                         <i class="bi bi-dash-circle btn-remover" onclick="removerComponente(this)" style="display: block; margin-top: 5px; font-size: 24px;"></i>
                                     </div>
                                 </div>
-                                <div class="row g-2 mt-2" id="seccionDescripcion_<?= $index ?>" style="display: <?= (strpos($comp['componente'], 'Refaccion') !== false || strpos($comp['componente'],'refaccion') !== false || strpos($comp['componente'],'componente') !== false || strpos($comp['componente'],'componente') !== false) ? 'block' : 'none' ?>;"></div>
+                                <div class="row g-2 mt-2" id="seccionDescripcion_<?= $index ?>" style="display: <?= (strpos($comp['componente'], 'Refaccion') !== false || strpos($comp['componente'],'refaccion') !== false || strpos($comp['componente'],'componente') !== false || strpos($comp['componente'],'componente') !== false) ? 'block' : 'none' ?>;">
                                     <div class="col-md-12">
                                         <label class="form-label">Descripción</label>
                                         <textarea name="componentes[<?= $index ?>][descripcion]" class="form-control"><?= htmlspecialchars($comp['descripcion']) ?></textarea>
                                     </div>
                                 </div>
                             </div>
-                    <?php endforeach; ?>
+                        <?php endforeach; ?>
                     <?php else: ?>
                         <div class="componente-item" id="componente_0">
                             <div class="row g-2">
                                 <div class="col-md-4">
                                     <label class="form-label">Tipo</label>
-                                    <select name="componentes[0][tipo]" class="form-select" onchange="mostrarSeccion(this,0)" id="id_comp">
+                                    <select name="componentes[0][tipo]" class="form-select" onchange="mostrarSeccion(this,0)">
                                         <option value="">-- Ninguno --</option>
                                         <option value="SER-01">SER-01</option>
                                         <option value="SER-02">SER-02</option>
@@ -297,10 +293,12 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                 </div>
                             </div>
                         </div>
-                    <?php endif; ?>            
+                    <?php endif; ?>
+                </div>          
                 <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="agregarComponente()">
                     <i class="bi bi-plus-circle"></i> Agregar componente
                 </button>
+            </div>
             <div class="form-section">
                 <h5>Detalles del Reporte</h5>
                 <div class="row g-3">
@@ -319,10 +317,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                     <div class="col-md-12">
                         <label class="form-label">Observaciones</label>
                         <textarea name="observaciones_atencion" class="form-control"><?= htmlspecialchars($reporte['observaciones_atencion']) ?></textarea>
-                    </div>
-                    <div class="col-md-12">
-                        <label class="form-label">Acciones</label>
-                        <textarea name="acciones" class="form-control"><?= htmlspecialchars($reporte['acciones']) ?></textarea>
                     </div>
                 </div>
             </div>
@@ -362,8 +356,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
         const clienteSeleccionadoDiv = document.getElementById('clienteSeleccionado');
         const nombreClienteSpan = document.getElementById('nombreClienteSeleccionado');
         const equipoSelect = document.getElementById('id_equipo');
-        const telefonoInput = document.getElementById('telefono_cliente');
-        const contactoInput = document.getElementById('contacto_cliente');
         const infoEquipoDiv = document.getElementById('infoEquipo');
         const infoEquipoTexto = document.getElementById('infoEquipoTexto');
         const btnGuardar = document.getElementById('btnGuardar');
@@ -398,22 +390,29 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                     case 'SER-03':
                         nombreInput.value = 'Entrega Refacción/Consumible';
                         nombreInput.readOnly = true;
-                    default:
-                        nombreInput.value = '';
-                        nombreInput.readOnly = false;
-                        nombreInput.placeholder = 'Nombre del componente/servicio';
                     break;
+                    default:
+                        if(nombreInput.value === 'Servicio Preventivo' || 
+                            nombreInput.value === 'Servicio Correctivo' ||
+                            nombreInput.value === 'Entrega Refacción/Consumible') {
+                                nombreInput.value = '';
+                            }
+                            nombreInput.readOnly = false;
+                            nombreInput.style.backgroundColor = '';
+                            nombreInput.placeholder = 'Nombre del componente/servicio';
+                        break;
                 }
             }
         }
         function agregarComponente(){
             const container = document.getElementById('componentesContainer');
+            const index = contadorComponentes;
             const html = `
-                <div class="componente-item" id="componente_${contadorComponentes}">
+                <div class="componente-item" id="componente_${index}">
                     <div class="row g-2">
                         <div class="col-md-4">
                             <label class="form-label">Tipo</label>
-                            <select name ="componentes[${contadorComponentes}][tipo]" class="form-select" onchange="mostrarSeccion(this,${contadorComponentes})">
+                            <select name ="componentes[${index}][tipo]" class="form-select" onchange="mostrarSeccion(this,${index})">
                                 <option value="">-- Ninguno --</option>
                                 <option value="SER-01">SER-01</option>
                                 <option value="SER-02">SER-02</option>
@@ -423,21 +422,21 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Nombre</label>
-                            <input type="text" id="nombre_${contadorComponentes}" name="componentes[${contadorComponentes}][nombre]" class="form-control" placeholder="Nombre del componente/servicio">
+                            <input type="text" id="nombre_${index}" name="componentes[${index}][nombre]" class="form-control" placeholder="Nombre del componente/servicio">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label">Cantidad</label>
-                            <input type="number" name="componentes[${contadorComponentes}][cantidad]" class="form-control" value="1" min="1">
+                            <input type="number" name="componentes[${index}][cantidad]" class="form-control" value="1" min="1">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label">&nbsp;</label>
                             <i class="bi bi-dash-circle btn-remover" onclick="removerComponente(this)" style="display: block; margin-top: 5px; font-size: 24px"></i>
                         </div>
                     </div>
-                    <div class="row g-2 mt-2" id="seccionDescripcion_${contadorComponentes}" style="display: none;">
+                    <div class="row g-2 mt-2" id="seccionDescripcion_${index}" style="display: none;">
                         <div class="col-md-12">
                             <label class="form-label">Descripción</label>
-                            <textarea name="componentes[${contadorComponentes}][descripcion]" class="form-control" rows="2" placeholder="Describe el componente o refacción..."></textarea>
+                            <textarea name="componentes[${index}][descripcion]" class="form-control" rows="2" placeholder="Describe el componente o refacción..."></textarea>
                         </div>
                     </div>
                 </div>
