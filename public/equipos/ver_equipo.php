@@ -80,8 +80,8 @@ if($equipo['id_equipo']){
                             <div class="col-md-12">
                                 <p><span class="info-label">Modelo: </span><?= htmlspecialchars($equipo['modelo']) ?></p>
                                 <p><span class="info-label">Número de Serie: </span><?= htmlspecialchars($equipo['no_serie']) ?></p>
-                                <p><span class="info-label">Inicio de Contrato: </span><?= htmlspecialchars($equipo['inicio_contrato']) ?></p>
-                                <p><span class="info-label">Fin de Contrato: </span><?= htmlspecialchars($equipo['fin_contrato']) ?></p>
+                                <p><span class="info-label">Inicio de Contrato: </span><?= !empty($equipo['inicio_contrato']) ? date('d/m/Y',strtotime($equipo['inicio_contrato'])) : '-' ?></p>
+                                <p><span class="info-label">Fin de Contrato: </span><?= !empty($equipo['fin_contrato']) ? date('d/m/Y',strtotime($equipo['fin_contrato'])) : '-' ?></p>
                             </div>
                         </div>
                     </div>

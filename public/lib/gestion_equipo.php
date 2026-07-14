@@ -112,6 +112,8 @@ function editar_equipo($id_equipo,$no_serie,$modelo,$inicio_contrato,$fin_contra
             'mensaje' => 'Error de conexión a la base de datos'
         ];
     }
+    $inicio_contrato = !empty($inicio_contrato) ? $inicio_contrato : null;
+    $fin_contrato = !empty($fin_contrato) ? $fin_contrato : null;
     if(empty($id_cliente)){
         $sql = "UPDATE equipos SET no_serie = ?,modelo=?, inicio_contrato=?, fin_contrato=?, id_cliente=NULL WHERE id_equipo=?";
         $stmt = mysqli_prepare($conn,$sql);

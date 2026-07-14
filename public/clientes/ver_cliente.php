@@ -37,7 +37,7 @@ if(!empty($cliente['telefonos_raw'])){
     $items = explode(';;',$cliente['telefonos_raw']);
     foreach($items as $item){
         $parts = explode('||',$item);
-        if(count($parts) >= 3){
+        if(count($parts) >= 2){
             $telefonos[] = [
                 'telefono' => $parts[0],
                 'contacto' => $parts[1] ?: '',
@@ -52,7 +52,7 @@ if(!empty($cliente['correos_raw'])){
     $items = explode(';;',$cliente['correos_raw']);
     foreach($items as $item){
         $parts = explode('||',$item);
-        if(count($parts) >= 3){
+        if(count($parts) >= 2){
             $correos[] = [
                 'correo' => $parts[0],
                 'contacto' => $parts[1] ?: '',
@@ -143,7 +143,7 @@ mysqli_close($conn);
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <p><span class="info-label">Nombre: </span><?= htmlspecialchars($cliente['nombre']) ?></p>
+                                <p><span class="info-label">Encargado: </span><?= htmlspecialchars($cliente['encargado']) ?: 'No registrado' ?></p>
                                 <p><span class="info-label">Número de Cuenta: </span><?= htmlspecialchars(($cliente['no_cuenta'] ?: 'No registrado')) ?></p>
                                 <p><span class="info-label">Dirección: </span><?= htmlspecialchars($cliente['direccion'] ?: 'No registrado') ?></p>
                             </div>
@@ -196,8 +196,8 @@ mysqli_close($conn);
                                     <div class="card-header"><?= htmlspecialchars($equipo['modelo'] ?: 'Sin modelo') ?></div>
                                     <div class="card-body">
                                         <p><span class="info-label">Número de Serie: </span><?= htmlspecialchars($equipo['no_serie']) ?></p>
-                                        <p><span class="info-label">Inicio de Contrato: </span><?= htmlspecialchars($equipo['inicio_contrato']) ?></p>
-                                        <p><span class="info-label">Fin de Contrato: </span><?= htmlspecialchars($equipo['fin_contrato']) ?></p>
+                                        <p><span class="info-label">Inicio de Contrato: </span><?= !empty($equipo['inicio_contrato']) ? date('d/m/Y',strtotime($equipo['inicio_contrato'])) : '-' ?></p>
+                                        <p><span class="info-label">Fin de Contrato: </span><?= !empty($equipo['fin_contrato']) ? date('d/m/Y',strtotime($equipo['fin_contrato'])) : '-' ?></p>
                                         <hr>
                                         <p>
                                             <span class="info-label">Reportes:</span>

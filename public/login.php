@@ -30,7 +30,7 @@ $mensaje=isset($_GET['error']) ? $_GET['error'] : '';
             <?php } ?>
             <div class="mb-3">
                 <label class="form-label">Correo electrónico</label>
-                <input type="email" class="form-control" id="mail" name="mail" required>
+                <input type="text" class="form-control" id="mail" name="mail" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Contraseña</label>

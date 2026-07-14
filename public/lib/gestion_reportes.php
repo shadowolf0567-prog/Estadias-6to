@@ -99,8 +99,8 @@ function editar_reporte_con_componentes($id_reporte,$fecha,$tecnico,$id_cliente 
 
         if($stmt_comp){
             foreach($componentes as $comp){
-                if(!empty($comp['componente'])){
-                    $componente = trim($comp['componente']);
+                if(!empty($comp['nombre'])){
+                    $componente = trim($comp['nombre'] ?? $comp['componente']) ?? '';
                     $cantidad = isset($comp['cantidad']) ? intval($comp['cantidad']) : 1;
                     $descripcion = trim($comp['descripcion']);
 
@@ -273,14 +273,12 @@ function editar_atendidos($id_reporte,$fecha,$descripcion,$tecnico,$fecha_atenci
         $stmt_comp = mysqli_prepare($conn,$sql_comp);
         if($stmt_comp){
             foreach($componentes as $comp){
-                if(!empty($comp['componente'])){
-                    $componente = trim($comp['componente']);
-                    $cantidad = isset($comp['cantidad']) ? intval($comp['cantidad']) : 1;
-                    $descripcion = trim($comp['descripcion']);
+                $componente = trim($comp['nombre'] ?? $comp['componente']);
+                $cantidad = isset($comp['cantidad']) ? intval($comp['cantidad']) : 1;
+                $descripcion = trim($comp['descripcion']) ?? '';
 
-                    mysqli_stmt_bind_param($stmt_comp,'isis',$id_reporte,$componente,$cantidad,$descripcion);
-                    mysqli_stmt_execute($stmt_comp);
-                }
+                mysqli_stmt_bind_param($stmt_comp,'isis',$id_reporte,$componente,$cantidad,$descripcion);
+                mysqli_stmt_execute($stmt_comp);
             }
             mysqli_stmt_close($stmt_comp);
         }
@@ -314,6 +312,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                                     $nombre = 'Servicio Preventivo';
                                 } elseif($tipo == 'SER-02'){
                                     $nombre = 'Servicio Correctivo';
+                                }elseif($tipo == 'SER-03'){
+                                    $nombre == 'Entrega Refacción/Consumible';
                                 }
                             }
                             
@@ -348,13 +348,30 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     $componentes = [];
                     if(isset($_POST['componentes']) && is_array(($_POST['componentes']))){
                         foreach($_POST['componentes'] as $comp){
-                            if(!empty($comp['nommbre'])){
-                                $nombre = trim($comp['nombre']);
-                                $cantidad = isset($comp['cantidad']) ? intval($comp['cantidad']) : 1;
+                            $componente = trim($comp['nombre'] ?? $comp['componente']);
+                            $tipo = trim($comp['tipo'] ?? '');
+                            $cantidad = isset($comp['cantidad']) ? intval($comp['cantidad']) : 1;
+                            $descripcion = trim($comp['descripcion'] ?? '');
+
+                            if(empty($componente)){
+                                if($tipo == 'SER-01'){
+                                    $componente = 'Servicio Preventivo';
+                                } elseif($tipo == 'SER-02'){
+                                    $componente = 'Servicio Correctivo';
+                                }elseif($tipo == 'SER-03'){
+                                    $componente == 'Entrega Refacción/Consumible';
+                                }
+                            }
+                            if(!empty($componente)){
+                                $componentes[] = [
+                                    'nombre' => $componente,
+                                    'cantidad' => $cantidad,
+                                    'descripcion' => $descripcion
+                                ];
                             }
                         }
                     }
-
+                    
                     $resultado=editar_reporte_con_componentes($id_reporte,$fecha,$tecnico,$id_cliente,$id_equipo,$componentes);
                     header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.'&'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
                     if($resultado['estatus'] === 'msg'){
@@ -387,7 +404,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     }
                     exit;
                 }
-                break;
                 break;
             case 'eliminar2':
                 if(isset($_POST['id_reporte'])){
@@ -433,7 +449,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 }
                 break;
             case 'editar_atendido':
-                if(isset($_POST['id_reporte'],$_POST['fecha'],$_POST['descripcion'])){
+                if(isset($_POST['id_reporte'],$_POST['fecha'])){
                     $id_reporte = intval($_POST['id_reporte']);
                     $fecha = trim($_POST['fecha']);
                     $descripcion = trim($_POST['descripcion']);
@@ -445,11 +461,28 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     $id_equipo = !empty($_POST['id_equipo']) ? intval($_POST['id_equipo']) : null;
                     
                     $componentes = [];
-                    if(isset($_POST['componentes']) && is_array($_POST['componentes'])){
+                    if(isset($_POST['componentes']) && is_array(($_POST['componentes']))){
                         foreach($_POST['componentes'] as $comp){
-                            if(!empty($comp['nombre']) && !empty($comp['tipo'])){
-                                $componente = trim($comp['componente']);
-                                $cantidad = isset($comp['cantidad']) ? intval($comp['cantidad']) : 1;
+                            $componente = trim($comp['nombre'] ?? $comp['componente']);
+                            $tipo = trim($comp['tipo'] ?? '');
+                            $cantidad = isset($comp['cantidad']) ? intval($comp['cantidad']) : 1;
+                            $descripcion = trim($comp['descripcion'] ?? '');
+
+                            if(empty($componente)){
+                                if($tipo == 'SER-01'){
+                                    $componente = 'Servicio Preventivo';
+                                } elseif($tipo == 'SER-02'){
+                                    $componente = 'Servicio Correctivo';
+                                }elseif($tipo == 'SER-03'){
+                                    $componente == 'Entrega Refacción/Consumible';
+                                }
+                            }
+                            if(!empty($componente)){
+                                $componentes[] = [
+                                    'nombre' => $componente,
+                                    'cantidad' => $cantidad,
+                                    'descripcion' => $descripcion
+                                ];
                             }
                         }
                     }
@@ -459,7 +492,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     }else{
                         header('Location: ../reportes/editar_reportes.php?id_reporte=' .$id_reporte. '&error=' .urlencode($resultado['mensaje']));
                     }
-                    exit;
+                    break;
                 }
             default:
             header('Location: ../reportes/reportes.php?error='.urlencode('Acción no valida'));

@@ -169,17 +169,17 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
                 </div>
                 <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label>Nombre</label>
                                 <input type="text" id="nuevo_nombre" class="form-control" required>
                             </div>
-                            <div class="col-md-3">
-                                <label>Encargado</label>
-                                <input type="text" id="nuevo_encargado" class="form-control" required>
-                            </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label>Número de Cuenta</label>
                                 <input type="text" id="nuevo_no_cuenta" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Encargado</label>
+                                <input type="text" id="nuevo_encargado" class="form-control" required>
                             </div>
                             <div class="col-md-12">
                                 <label>Dirección</label>

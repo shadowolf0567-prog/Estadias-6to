@@ -1,0 +1,169 @@
+-- Backup de Base de Datos Emipac
+-- Fecha: 2026-07-14 00:00:38
+DROP DATABASE IF EXISTS emipac;
+CREATE DATABASE emipac;
+USE emipac;
+SET FOREIGN_KEY_CHECKS=0;
+
+-- Estructura de tabla: clientes
+DROP TABLE IF EXISTS `clientes`;
+CREATE TABLE `clientes` (
+  `id_cliente` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(255) DEFAULT NULL,
+  `no_cuenta` varchar(100) NOT NULL,
+  `direccion` varchar(255) DEFAULT NULL,
+  `encargado` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id_cliente`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--Datos de tabla: clientes
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`) VALUES ('1', 'Intelligence Berau and Laborator', '291901', 'Av. Antea #1032 Int. 404 Jurica', 'Roberto Alfaro');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`) VALUES ('2', 'Nachi Technologies México', '2987201', 'Tequisquiapan No.2 Galerias Aerotech Industrial Park Colón', 'Benito Sanchez');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`) VALUES ('3', 'Industrial Powder Coatings Mex', '130701', 'Av. de la Noria No. 104 Parque Qro.', 'Norma Luna');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`) VALUES ('4', 'GNS Automotive México', '268501', 'Av. Ing Antonio Gutierrez Cortina No. 14 Parque Opcion SJI', 'Oscar Nazareth');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`) VALUES ('5', 'SEPSA SA de CV.', '232301', 'Espuela del Ferrocarril No. 204 Carrillo Puerto', 'Sarahí Bustamante');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`) VALUES ('6', 'María Magdalena Mejía Ruíz', '172401', 'Puente de Alvarado No. 210 Carretas.', 'Erika Gudiño');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`) VALUES ('7', 'GW Plastics Mexicana S de RL', '294901', 'Circuito Marques #23A Parque IND El Marques', 'Mariana Martínez');
+
+-- Estructura de tabla: componentes
+DROP TABLE IF EXISTS `componentes`;
+CREATE TABLE `componentes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `componente` varchar(100) DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--Datos de tabla: componentes
+INSERT INTO `componentes` (`id`, `componente`, `descripcion`) VALUES ('1', 'SER-01', 'Servicio Preventivo');
+INSERT INTO `componentes` (`id`, `componente`, `descripcion`) VALUES ('2', 'SER-02', 'Servicio Correctivo');
+INSERT INTO `componentes` (`id`, `componente`, `descripcion`) VALUES ('3', 'refaccion', '');
+INSERT INTO `componentes` (`id`, `componente`, `descripcion`) VALUES ('4', 'componente', '');
+
+-- Estructura de tabla: correos
+DROP TABLE IF EXISTS `correos`;
+CREATE TABLE `correos` (
+  `correo` varchar(200) DEFAULT NULL,
+  `es_principal` tinyint(1) DEFAULT 0,
+  `id_cliente` int(11) DEFAULT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `contacto` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_cliente` (`id_cliente`),
+  CONSTRAINT `correos_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Estructura de tabla: equipos
+DROP TABLE IF EXISTS `equipos`;
+CREATE TABLE `equipos` (
+  `id_equipo` int(11) NOT NULL AUTO_INCREMENT,
+  `no_serie` varchar(100) NOT NULL,
+  `modelo` varchar(255) DEFAULT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
+  `inicio_contrato` date DEFAULT NULL,
+  `fin_contrato` date DEFAULT NULL,
+  PRIMARY KEY (`id_equipo`),
+  KEY `id_cliente` (`id_cliente`),
+  CONSTRAINT `equipos_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--Datos de tabla: equipos
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `inicio_contrato`, `fin_contrato`) VALUES ('1', 'C757M500195', 'S-11MPC6004T+', '1', NULL, NULL);
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `inicio_contrato`, `fin_contrato`) VALUES ('2', '3353P254701', 'S-110430F', '2', '2026-07-08', '2026-07-08');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `inicio_contrato`, `fin_contrato`) VALUES ('3', 'G746R510164', 'S-11C2004R+', '2', '2026-07-08', '2026-07-08');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `inicio_contrato`, `fin_contrato`) VALUES ('4', 'G145R600271', 'S-117008', '3', '2026-07-08', '2026-07-08');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `inicio_contrato`, `fin_contrato`) VALUES ('5', 'Y177HB01092', 'S-11402SPF', '4', '2026-07-08', '2026-07-08');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `inicio_contrato`, `fin_contrato`) VALUES ('6', '3353PA50400', 'S-110430F', '4', '2026-07-08', '2026-07-08');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `inicio_contrato`, `fin_contrato`) VALUES ('7', '3353P352683', 'S-1104', '5', '2026-07-10', '2026-07-10');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `inicio_contrato`, `fin_contrato`) VALUES ('8', '3353P350596', 'S-110430F', '6', NULL, NULL);
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `inicio_contrato`, `fin_contrato`) VALUES ('9', '9264P600643', 'S-11IM460F', '7', NULL, NULL);
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `inicio_contrato`, `fin_contrato`) VALUES ('10', '9264P600645', 'S-11IM460F', '7', NULL, NULL);
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `inicio_contrato`, `fin_contrato`) VALUES ('11', '3148MB00315', 'S-11IMC6000R+', '7', NULL, NULL);
+
+-- Estructura de tabla: reportes
+DROP TABLE IF EXISTS `reportes`;
+CREATE TABLE `reportes` (
+  `id_reporte` int(11) NOT NULL AUTO_INCREMENT,
+  `fecha` date DEFAULT NULL,
+  `tecnico` varchar(100) DEFAULT NULL,
+  `estado` enum('pendiente','atendido') DEFAULT 'pendiente',
+  `fecha_atencion` date DEFAULT NULL,
+  `observaciones_atencion` text DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
+  `id_equipo` int(11) DEFAULT NULL,
+  `acciones` text DEFAULT NULL,
+  PRIMARY KEY (`id_reporte`),
+  KEY `idx_cliente` (`id_cliente`),
+  KEY `idx_equipo` (`id_equipo`),
+  CONSTRAINT `reportes_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE SET NULL,
+  CONSTRAINT `reportes_ibfk_2` FOREIGN KEY (`id_equipo`) REFERENCES `equipos` (`id_equipo`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--Datos de tabla: reportes
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `descripcion`, `id_cliente`, `id_equipo`, `acciones`) VALUES ('1', '2026-07-08', 'Damian', 'atendido', '2026-07-10', '', '', '1', '1', 'entrega de tone');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `descripcion`, `id_cliente`, `id_equipo`, `acciones`) VALUES ('2', '2026-07-07', '', 'pendiente', NULL, NULL, 'Servicios preventivos', '2', '2', NULL);
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `descripcion`, `id_cliente`, `id_equipo`, `acciones`) VALUES ('3', '2026-07-07', '', 'pendiente', NULL, NULL, 'Servicio Preventivo', '4', '6', NULL);
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `descripcion`, `id_cliente`, `id_equipo`, `acciones`) VALUES ('4', '2026-07-10', 'Irving', 'atendido', '2026-07-10', '', NULL, '5', '7', 'pinobh');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `descripcion`, `id_cliente`, `id_equipo`, `acciones`) VALUES ('5', '2026-07-09', 'Jose Luis', 'atendido', '2026-07-09', '', NULL, '7', '9', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `descripcion`, `id_cliente`, `id_equipo`, `acciones`) VALUES ('6', '2026-07-09', '', 'pendiente', NULL, NULL, NULL, '7', '11', NULL);
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `descripcion`, `id_cliente`, `id_equipo`, `acciones`) VALUES ('7', '2026-07-09', '', 'pendiente', NULL, NULL, NULL, '7', '10', NULL);
+
+-- Estructura de tabla: reportes_componentes
+DROP TABLE IF EXISTS `reportes_componentes`;
+CREATE TABLE `reportes_componentes` (
+  `id_reporte_componente` int(11) NOT NULL AUTO_INCREMENT,
+  `id_reporte` int(11) DEFAULT NULL,
+  `componente` varchar(100) DEFAULT NULL,
+  `cantidad` int(11) DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  PRIMARY KEY (`id_reporte_componente`),
+  KEY `id_reporte` (`id_reporte`),
+  CONSTRAINT `1` FOREIGN KEY (`id_reporte`) REFERENCES `reportes` (`id_reporte`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--Datos de tabla: reportes_componentes
+INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `cantidad`, `descripcion`) VALUES ('1', '4', 'Servicio Correctivo', '1', '');
+INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `cantidad`, `descripcion`) VALUES ('2', '4', '130948', '1', 'Unidad de Imagen 501/ IM430');
+INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `cantidad`, `descripcion`) VALUES ('3', '5', 'Servicio Preventivo', '1', '');
+INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `cantidad`, `descripcion`) VALUES ('4', '6', 'Servicio Preventivo', '1', '');
+INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `cantidad`, `descripcion`) VALUES ('5', '7', 'Servicio Preventivo', '1', 'moino');
+
+-- Estructura de tabla: telefonos
+DROP TABLE IF EXISTS `telefonos`;
+CREATE TABLE `telefonos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `telefono` varchar(25) DEFAULT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
+  `contacto` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_cliente` (`id_cliente`),
+  CONSTRAINT `telefonos_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--Datos de tabla: telefonos
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('5', '4422199244', '5', 'Sarahí Bustamante');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('7', '4423948804', '4', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('8', '4422389600', '3', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('9', '4421532410', '2', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('10', '4422133388', '1', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('11', '4421338069', '6', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('12', '4422531069', '7', '');
+
+-- Estructura de tabla: usuarios
+DROP TABLE IF EXISTS `usuarios`;
+CREATE TABLE `usuarios` (
+  `id_usr` int(11) NOT NULL AUTO_INCREMENT,
+  `nom_usr` varchar(255) NOT NULL,
+  `mail` varchar(255) DEFAULT NULL,
+  `pass` varchar(255) DEFAULT NULL,
+  `tip_usr` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_usr`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--Datos de tabla: usuarios
+INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`) VALUES ('1', 'a', 'Servicio tecnico', '1234', '1');
+INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`) VALUES ('2', 'b', 'Administracion', '1234', '2');
+INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`) VALUES ('3', 'c', 'yo', '1234', '1');
+
+SET FOREIGN_KEY_CHECKS=1;

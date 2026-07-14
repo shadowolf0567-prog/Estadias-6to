@@ -129,15 +129,17 @@ function agregar_equipo_con_cliente($no_serie,$modelo,$inicio_contrato,$fin_cont
             'mensaje' => 'Error de conexión a la base de datos'
         ];
     }
+    $inicio_contrato = !empty($inicio_contrato) ? $inicio_contrato : null;
+    $fin_contrato = !empty($fin_contrato) ? $fin_contrato : null;
     if(empty($id_cliente) || $id_cliente == 0){
         $sql = 'INSERT INTO equipos(no_serie,modelo,inicio_contrato,fin_contrato) VALUES (?,?,?,?)';
         $stmt = mysqli_prepare($conn,$sql);
         mysqli_stmt_bind_param($stmt,'ssss',$no_serie,$modelo,$inicio_contrato,$fin_contrato);
         $mensaje= 'Equipo agregado correctamente';
-    }else{
-        $sql = 'INSERT INTO equipos (no_serie,modelo,inicio_contrato,fin_contrato,id_cliente) VALUES (?,?,?,?,?)';
-        $stmt = mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt,'ssssi',$no_serie,$modelo,$inicio_contrato,$fin_contrato,$id_cliente);
+    } else {
+        $sql = 'INSERT INTO equipos (no_serie, modelo, inicio_contrato, fin_contrato, id_cliente) VALUES (?, ?, ?, ?, ?)';
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, 'ssssi', $no_serie, $modelo, $inicio_contrato, $fin_contrato, $id_cliente);
         $mensaje = 'Equipo agregado correctamente y vinculado al cliente';
     }
     if(!$stmt){
@@ -234,7 +236,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                             }
                         }
                     }
-                    $resultado = guardar_cliente_completo(null,$nombre,$no_cuenta,$encargado,$direccion,$telefonos,$correos);
+                    $resultado = guardar_cliente_completo(null,$nombre,$encargado,$no_cuenta,$direccion,$telefonos,$correos);
 
                     if($resultado['estatus'] === 'msg'){
                         header('Location: ../clientes/clientes.php?msg='.urlencode($resultado['mensaje']));
@@ -249,7 +251,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     $id_cliente = intval($_POST['id_cliente']);
                     $nombre = trim($_POST['nombre']);
                     $no_cuenta = trim($_POST['no_cuenta'] ?? '');
-                    $encargado = trim($_POST['encargaado'] ?? '');
+                    $encargado = trim($_POST['encargado'] ?? '');
                     $direccion = trim($_POST['direccion'] ?? '');
 
                     $telefonos = [];
@@ -275,7 +277,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                             }
                         }
                     }
-                    $resultado = guardar_cliente_completo($id_cliente,$nombre,$no_cuenta,$encargado,$direccion,$telefonos,$correos);
+                    $resultado = guardar_cliente_completo($id_cliente,$nombre,$encargado,$no_cuenta,$direccion,$telefonos,$correos);
 
                     if($resultado['estatus'] === 'msg'){
                         header('Location: ../clientes/ver_cliente.php?id='.$id_cliente.'msg='.urlencode($resultado['mensaje']));

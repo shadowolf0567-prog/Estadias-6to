@@ -221,8 +221,8 @@ $total_resultados = count($equipos);
                                         <span>Sin cliente</span>
                                     <?php endif; ?>
                                 </td>
-                                <td><?= date('d/m/Y',strtotime($equipo['inicio_contrato'])) ?></td>
-                                <td><?= date('d/m/Y',strtotime($equipo['fin_contrato'])) ?></td>
+                                <td><?= !empty($equipo['inicio_contrato']) ? date('d/m/Y', strtotime($equipo['inicio_contrato'])) : '-' ?></td>
+                                <td><?= !empty($equipo['fin_contrato']) ? date('d/m/Y', strtotime($equipo['fin_contrato'])) : '-' ?></td>
                                 <td>
                                     <button type="button" class="btn btn-sm btn-danger"
                                     onclick="eliminarEquipo(<?= $equipo['id_equipo'] ?>, '<?= addslashes($equipo['no_serie']) ?>')">
@@ -239,7 +239,7 @@ $total_resultados = count($equipos);
                             <td colspan="6" class="text-center">
                                 <div class="alert alert-warning m-3">
                                     <i class="bi bi-exclamation-triangle"></i>
-                                    No se encontraaron clientes
+                                    No se encontraron clientes
                                     <?php if(!empty($busqueda)): ?>
                                         para "<strong><?php echo htmlspecialchars($busqueda) ?></strong>"
                                     <?php endif; ?>

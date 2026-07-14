@@ -28,7 +28,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                         exit;
                     case 3:
                         mysqli_close($conn);
-                        header("Location: ../clientes/agregar_clientes.php");
+                        header("Location: ../clientes/clientes.php");
                         exit;
                     default:
                         mysqli_close($conn);
@@ -48,29 +48,4 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
             exit;
         }
     }
-//                 if($usuario['tip_usr']==1){
-//                     mysqli_close($conn);
-//                     header("Location: ../gestion/dashboard.php");
-//                     exit;
-//                 }else{
-//                     mysqli_close($conn);
-//                     header('Location: ../login.php?error=' . urldecode('Usuario no encontrado'));
-//                     exit;
-//                 }
-//             }else{
-//                 header('Location: ../login.php?error='.urldecode('Credenciales incorrectas'));
-//                 exit;
-//             }
-//         }else{
-//             header('Location: ../login.php?error='.urldecode('Correo no registrado'));
-//             exit;
-//         }
-//     }else{
-//         header('Location: ../login.php?error='.urldecode('Completa el formulario'));
-//         exit;
-//     }
-// }else{
-//     header('Location: ../login.php?error='.urldecode('Acceso no permitido'));
-//     exit;
-// }
 ?>
