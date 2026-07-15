@@ -135,16 +135,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         <input type="text" name="modelo" id="modelo" class="form-control"
                                 value="<?= htmlspecialchars($equipo['modelo']) ?>">
                     </div>
-                    <div class="col-md-6">
-                        <label>Inicio Contrato</label>
-                        <input type="date" name="inicio_contrato" id="inicio_contrato" class="form-control"
-                        value="<?= htmlspecialchars($equipo['inicio_contrato']) ?>">
-                    </div>
-                    <div class="col-md-6">
-                        <label>Fin Contrato</label>
-                        <input type="date" name="fin_contrato" id="fin_contrato" class="form-control"
-                        value="<?= htmlspecialchars($equipo['fin_contrato']) ?>">
-                    </div>
                 </div>
             </div>
             <div class="form-section">

@@ -156,6 +156,7 @@ mysqli_close($conn);
             <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <div>
                     <h2 class="mb-0">Reporte</h2>
+                    <span class="text-muted">Referencia: <?= htmlspecialchars($reporte['referencia']) ?></span>
                 </div>
                 <div class="text-end mt-2 mt-md-0">
                     <div class="estado-badge estado-<?= $reporte['estado'] ?>">

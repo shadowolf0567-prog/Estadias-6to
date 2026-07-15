@@ -20,7 +20,7 @@ function mostrar_equipos(){
     mysqli_stmt_close($select_preparado);
     return $equipos;
 }
-function agregar_equipo($no_serie,$modelo,$accesorios,$inicio_contrato,$fin_contrato){
+function agregar_equipo($no_serie,$modelo,$accesorios){
     global $conn;
     if(!$conn){
         return[
@@ -28,7 +28,7 @@ function agregar_equipo($no_serie,$modelo,$accesorios,$inicio_contrato,$fin_cont
             'mensaje' => 'Error de conexión a la base de datos'
         ];
     }
-    $sql='INSERT INTO equipos (no_serie,modelo,accesorios,inicio_contrato,fin_contrato) VALUES (?,?,?,?,?)';
+    $sql='INSERT INTO equipos (no_serie,modelo,accesorios) VALUES (?,?,?,?,?)';
     $insert_preparado=mysqli_prepare($conn,$sql);
     if(!$insert_preparado){
         return[
@@ -36,7 +36,7 @@ function agregar_equipo($no_serie,$modelo,$accesorios,$inicio_contrato,$fin_cont
             'mensaje'=>'Error en la preparación:'.mysqli_error($conn)
             ];
     }
-    mysqli_stmt_bind_param($insert_preparado,'sssss',$no_serie,$modelo,$accesorios,$inicio_contrato,$fin_contrato);
+    mysqli_stmt_bind_param($insert_preparado,'sss',$no_serie,$modelo,$accesorios);
     $query_ok=mysqli_stmt_execute($insert_preparado);
     if(!$query_ok){
         $error=mysqli_stmt_error($insert_preparado);
@@ -60,7 +60,7 @@ function agregar_equipo($no_serie,$modelo,$accesorios,$inicio_contrato,$fin_cont
         ];
     }
 }
-function agregar_cliente_completo($nombre,$no_cuenta,$direccion,$inicio_contrato,$fin_contrato,$telefonos = [],$correos=[]){
+function agregar_cliente_completo($nombre,$no_cuenta,$direccion,$telefonos = [],$correos=[]){
     global $conn;
     if(!$conn){
         return[
@@ -68,10 +68,10 @@ function agregar_cliente_completo($nombre,$no_cuenta,$direccion,$inicio_contrato
             'mensaje' => 'Error de conexión a la base de datos'
         ];
     }
-    $sql = "INSERT INTO clientes(nombre,no_cuenta,direccion,inicio_contrato,fin_contrato)
-            VALUES (?,?,?,?,?)";
+    $sql = "INSERT INTO clientes(nombre,no_cuenta,direccion)
+            VALUES (?,?,?)";
     $stmt = mysqli_prepare($conn,$sql);
-    mysqli_stmt_bind_param($stmt,'sssss',$nombre,$no_cuenta,$direccion,$inicio_contrato,$fin_contrato);
+    mysqli_stmt_bind_param($stmt,'sss',$nombre,$no_cuenta,$direccion);
     if(!mysqli_stmt_execute($stmt)){
         return[
             'estatus' => 'error',
@@ -104,7 +104,7 @@ function agregar_cliente_completo($nombre,$no_cuenta,$direccion,$inicio_contrato
         'id_cliente' => $id_cliente
     ];
 }
-function editar_equipo($id_equipo,$no_serie,$modelo,$inicio_contrato,$fin_contrato,$id_cliente = null){
+function editar_equipo($id_equipo,$no_serie,$modelo,$id_cliente = null){
     global $conn;
     if(!$conn){
         return[
@@ -112,16 +112,14 @@ function editar_equipo($id_equipo,$no_serie,$modelo,$inicio_contrato,$fin_contra
             'mensaje' => 'Error de conexión a la base de datos'
         ];
     }
-    $inicio_contrato = !empty($inicio_contrato) ? $inicio_contrato : null;
-    $fin_contrato = !empty($fin_contrato) ? $fin_contrato : null;
     if(empty($id_cliente)){
-        $sql = "UPDATE equipos SET no_serie = ?,modelo=?, inicio_contrato=?, fin_contrato=?, id_cliente=NULL WHERE id_equipo=?";
+        $sql = "UPDATE equipos SET no_serie = ?,modelo=?, id_cliente=NULL WHERE id_equipo=?";
         $stmt = mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt, 'ssssi',$no_serie,$modelo,$inicio_contrato,$fin_contrato,$id_equipo);
+        mysqli_stmt_bind_param($stmt, 'ssi',$no_serie,$modelo,$id_equipo);
     }else{
-        $sql = "UPDATE equipos SET no_serie=?,modelo=?,inicio_contrato=?,fin_contrato=?,id_cliente=? WHERE id_equipo = ?";
+        $sql = "UPDATE equipos SET no_serie=?,modelo=?,id_cliente=? WHERE id_equipo = ?";
         $stmt = mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt,'ssssii',$no_serie, $modelo,$inicio_contrato,$fin_contrato, $id_cliente, $id_equipo);
+        mysqli_stmt_bind_param($stmt,'ssii',$no_serie, $modelo, $id_cliente, $id_equipo);
     }
     if(!$stmt){
         return[
@@ -180,7 +178,7 @@ function eliminar_equipo($id_equipo){
         ];
     }
 }
-function agregar_equipo_con_cliente($no_serie,$modelo,$accesorios, $inicio_contrato, $fin_contrato,$id_cliente = null){
+function agregar_equipo_con_cliente($no_serie,$modelo,$accesorios,$id_cliente = null){
     global $conn;
     if(!$conn){
         return[
@@ -189,13 +187,13 @@ function agregar_equipo_con_cliente($no_serie,$modelo,$accesorios, $inicio_contr
         ];
     }
     if(empty($id_cliente) || $id_cliente == 0){
-        $sql='INSERT INTO equipos (no_serie,modelo,accesorios,inicio_contrato,fin_contrato) VALUES(?,?,?,?,?)';
+        $sql='INSERT INTO equipos (no_serie,modelo,accesorios) VALUES(?,?,?,?,?)';
         $stmt=mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt, 'sssss', $no_serie,$modelo,$accesorios,$inicio_contrato,$fin_contrato);
+        mysqli_stmt_bind_param($stmt, 'sss', $no_serie,$modelo,$accesorios);
     }else{
-        $sql = 'INSERT INTO equipos(no_serie,modelo,accesorios,inicio_contrato,fin_contrato,id_cliente) VALUES(?,?,?,?,?,?)';
+        $sql = 'INSERT INTO equipos(no_serie,modelo,accesorios,id_cliente) VALUES(?,?,?,?)';
         $stmt = mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt, 'sssssi', $no_serie,$modelo,$accesorios,$inicio_contrato,$fin_contrato,$id_cliente);
+        mysqli_stmt_bind_param($stmt, 'sssi', $no_serie,$modelo,$accesorios,$id_cliente);
         $mensaje = 'Equipo agregado correctamente';
     }
     if(!$stmt){
@@ -231,7 +229,7 @@ function agregar_equipo_con_cliente($no_serie,$modelo,$accesorios, $inicio_contr
         ];
     }
 }
-function editar_cliente_completo($id_cliente,$nombre,$no_cuenta,$direccion,$inicio_contrato,$fin_contrato,$telefonos=[],$correos=[]){
+function editar_cliente_completo($id_cliente,$nombre,$no_cuenta,$direccion,$telefonos=[],$correos=[]){
     global $conn;
     if(!$conn){
         return[
@@ -239,9 +237,9 @@ function editar_cliente_completo($id_cliente,$nombre,$no_cuenta,$direccion,$inic
             'mensaje' => 'Error de conexión a la base de datos'
         ];
     }
-    $sql = "UPDATE clientes SET nombres = ?,no_cuenta=?,direcciones=?,inicio_contrato =?,fin_contrato = ? WHERE id_cliente = ?";
+    $sql = "UPDATE clientes SET nombres = ?,no_cuenta=?,direcciones=? WHERE id_cliente = ?";
     $stmt = mysqli_prepare($conn,$sql);
-    mysqli_stmt_bind_param($stmt,'sssssi',$nombre,$no_cuenta,$direccion,$inicio_contrato,$fin_contrato,$id_cliente);
+    mysqli_stmt_bind_param($stmt,'sssi',$nombre,$no_cuenta,$direccion,$id_cliente);
 
     if(!mysqli_stmt_execute($stmt)){
         return[
@@ -284,21 +282,17 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                     $no_serie=trim($_POST['no_serie']);
                     $modelo=trim($_POST['modelo']);
                     $accesorios=trim($_POST['accesorios']);
-                    $inicio_contrato=trim($_POST['inicio_contrato']);
-                    $fin_contrato=trim($_POST['fin_contrato']);
 
-                    $resultado=agregar_equipo($no_serie,$modelo,$accesorios,$inicio_contrato,$fin_contrato);
+                    $resultado=agregar_equipo($no_serie,$modelo,$accesorios);
                     header('Location: ../equipos/agregar_equipo.php?'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
                     exit;
                 }
                 break;
                 case 'editar':
-                    if(isset($_POST['id_equipo'],$_POST['no_serie'],$_POST['modelo'],$_POST['inicio_contrato'],$_POST['fin_contrato'])){
+                    if(isset($_POST['id_equipo'],$_POST['no_serie'],$_POST['modelo'])){
                         $id_equipo=intval($_POST['id_equipo']);
                         $no_serie=trim($_POST['no_serie']);
                         $modelo=trim($_POST['modelo']);
-                        $inicio_contrato=trim($_POST['inicio_contrato']);
-                        $fin_contrato=trim($_POST['fin_contrato']);
                         $id_cliente=isset($_POST['id_cliente']) && !empty($_POST['id_cliente']) ? intval($_POST['id_cliente']) : null;
 
                         if(empty($no_serie)){
@@ -306,7 +300,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                             exit;
                         }
 
-                        $resultado=editar_equipo($id_equipo,$no_serie,$modelo,$inicio_contrato,$fin_contrato,$id_cliente);
+                        $resultado=editar_equipo($id_equipo,$no_serie,$modelo,$id_cliente);
                         if($resultado['estatus'] === 'msg' || $resultado['estatus'] === 'info'){
                             header('Location: ../equipos/editar_equipo.php?id_equipo='.$id_equipo.'&msg='.urlencode($resultado['mensaje']));
                         }else{
@@ -324,12 +318,10 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                     }
                     break;
                 case 'agregar_con_cliente':
-                    if(isset($_POST['no_serie'],$_POST['modelo'],$_POST['accesorios'],$_POST['inicio_contrato'],$_POST['fin_contrato'])){
+                    if(isset($_POST['no_serie'],$_POST['modelo'],$_POST['accesorios'])){
                         $no_serie=trim($_POST['no_serie']);
                         $modelo=trim($_POST['modelo']);
                         $accesorios=trim($_POST['accesorios']);
-                        $inicio_contrato=trim($_POST['inicio_contrato']);
-                        $fin_contrato=trim($_POST['fin_contrato']);
                         $modo_cliente=$_POST['modo_cliente'] ?? 'existente';
 
                         $id_cliente=null;
@@ -340,7 +332,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                             header('Location: ../equipos/agregar_equipo.php?error='.urlencode('El número de serie es obligatorio'));
                             exit;
                         }
-                        $resultado = agregar_equipo_con_cliente($no_serie,$modelo,$accesorios,$inicio_contrato,$fin_contrato,$id_cliente);
+                        $resultado = agregar_equipo_con_cliente($no_serie,$modelo,$accesorios,$id_cliente);
                         if($resultado['estatus']==='msg'){
                             header('Location: ../equipos/agregar_equipo.php?msg='.urlencode($resultado['mensaje']));
                         }else{

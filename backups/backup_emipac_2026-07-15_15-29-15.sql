@@ -1,5 +1,5 @@
 -- Backup de Base de Datos Emipac
--- Fecha: 2026-07-14 19:28:55
+-- Fecha: 2026-07-15 15:29:15
 DROP DATABASE IF EXISTS emipac;
 CREATE DATABASE emipac;
 USE emipac;
@@ -14,16 +14,16 @@ CREATE TABLE `clientes` (
   `direccion` varchar(255) DEFAULT NULL,
   `encargado` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_cliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: clientes
 INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`) VALUES ('1', 'Intelligence Berau and Laborator', '291901', 'Av. Antea #1032 Int. 404 Jurica', 'Roberto Alfaro');
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`) VALUES ('2', 'Nachi Technologies México', '2987201', 'Tequisquiapan No.2 Galerias Aerotech Industrial Park Colón', 'Benito Sanchez');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`) VALUES ('2', 'Nachi Technologies México', '287201', 'Tequisquiapan No.2 Galerias Aerotech Industrial Park Colón', 'Benito Sanchez');
 INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`) VALUES ('3', 'Industrial Powder Coatings Mex', '130701', 'Av. de la Noria No. 104 Parque Qro.', 'Norma Luna');
 INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`) VALUES ('4', 'GNS Automotive México', '268501', 'Av. Ing Antonio Gutierrez Cortina No. 14 Parque Opcion SJI', 'Oscar Nazareth');
 INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`) VALUES ('5', 'SEPSA SA de CV.', '232301', 'Espuela del Ferrocarril No. 204 Carrillo Puerto', 'Sarahí Bustamante');
 INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`) VALUES ('6', 'María Magdalena Mejía Ruíz', '172401', 'Puente de Alvarado No. 210 Carretas.', 'Erika Gudiño');
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`) VALUES ('7', 'GW Plastics Mexicana S de RL', '294901', 'Circuito Marques #23A Parque IND El Marques', 'Mariana Martínez');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`) VALUES ('7', 'GW Plastics Mexicana S de RL', '294901', 'Circuito Marques #23A Parque IND El Marqués', 'Mariana Martínez');
 
 -- Estructura de tabla: componentes
 DROP TABLE IF EXISTS `componentes`;
@@ -65,7 +65,7 @@ CREATE TABLE `equipos` (
   PRIMARY KEY (`id_equipo`),
   KEY `id_cliente` (`id_cliente`),
   CONSTRAINT `equipos_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: equipos
 INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `inicio_contrato`, `fin_contrato`) VALUES ('1', 'C757M500195', 'S-11MPC6004R+', '1', NULL, NULL);
@@ -98,7 +98,7 @@ CREATE TABLE `reportes` (
   KEY `idx_equipo` (`id_equipo`),
   CONSTRAINT `reportes_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE SET NULL,
   CONSTRAINT `reportes_ibfk_2` FOREIGN KEY (`id_equipo`) REFERENCES `equipos` (`id_equipo`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: reportes
 INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `descripcion`, `id_cliente`, `id_equipo`, `acciones`) VALUES ('1', '2026-07-08', 'Damian', 'atendido', '2026-07-08', '', '', '1', '1', 'entrega de tone');
@@ -124,7 +124,7 @@ CREATE TABLE `reportes_componentes` (
   PRIMARY KEY (`id_reporte_componente`),
   KEY `id_reporte` (`id_reporte`),
   CONSTRAINT `1` FOREIGN KEY (`id_reporte`) REFERENCES `reportes` (`id_reporte`)
-) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --Datos de tabla: reportes_componentes
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('1', '4', 'Servicio Correctivo', NULL, '1', '');
@@ -151,16 +151,16 @@ CREATE TABLE `telefonos` (
   PRIMARY KEY (`id`),
   KEY `id_cliente` (`id_cliente`),
   CONSTRAINT `telefonos_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: telefonos
 INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('5', '4422199244', '5', 'Sarahí Bustamante');
 INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('7', '4423948804', '4', '');
 INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('8', '4422389600', '3', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('9', '4421532410', '2', '');
 INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('10', '4422133388', '1', '');
 INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('11', '4421338069', '6', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('12', '4422531069', '7', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('15', '4422531069', '7', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('17', '4421532410', '2', '');
 
 -- Estructura de tabla: usuarios
 DROP TABLE IF EXISTS `usuarios`;

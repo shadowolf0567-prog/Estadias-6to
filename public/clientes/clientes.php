@@ -68,7 +68,7 @@ function resaltar_coincidencia($texto,$busqueda){
                             <input type="text"
                             class="form-control form-control-md"
                             name="buscar" id="buscarInput"
-                            placeholder="Buscar por Nombre, Número de cuenta, Telefono. Correo o Dirección"
+                            placeholder="Buscar por Nombre, Número de Cuenta o Dirección"
                             value="<?php echo htmlspecialchars($busqueda); ?>"
                             autocomplete="off">
                             <?php if(!empty($busqueda)): ?>

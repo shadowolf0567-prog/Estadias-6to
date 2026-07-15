@@ -77,13 +77,17 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         <label class="form-label">Nombre</label>
                         <input type="text" name="nombre" class="form-control" required value="<?= htmlspecialchars($cliente['nombre']) ?>">
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label>Número de Cuenta</label>
                         <input type="text" name="no_cuenta" class="form-control" value="<?= htmlspecialchars($cliente['no_cuenta']) ?>" required>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label>Encargado</label>
                         <input type="text" name="encargado" class="form-control" value="<?= htmlspecialchars($cliente['encargado']) ?>">
+                    </div>
+                    <div class="col-md-2">
+                        <label>Contrato</label>
+                        <input type="text" name="contrato" class="form-control" value="<?= htmlspecialchars($cliente['contrato']) ?>">
                     </div>
                     <div class="col-md-12">
                         <label>Dirección</label>

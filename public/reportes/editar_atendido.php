@@ -303,6 +303,10 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 <h5>Detalles del Reporte</h5>
                 <div class="row g-3">
                     <div class="col-md-6">
+                        <label class="form-label">Referencia</label>
+                        <input type="text" name="referencia" id="" class="form-control" value="<?= htmlspecialchars($reporte['referencia']) ?>">
+                    </div>
+                    <div class="col-md-6">
                         <label class="form-label">Fecha de creación del Reporte</label>
                         <input type="date" name="fecha" class="form-control" value="<?= htmlspecialchars($reporte['fecha']) ?>">
                     </div>
@@ -371,7 +375,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             const seccion = document.getElementById('seccionDescripcion_' + index);
             const nombreInput = document.getElementById('nombre_' + index);
             if(seccion){
-                if(select.value === 'componente' || select.value === 'SER-03'){
+                if(select.value === 'componente'){
                     seccion.style.display = 'block';
                 }else{
                     seccion.style.display = 'none';

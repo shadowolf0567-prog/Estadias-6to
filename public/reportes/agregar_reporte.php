@@ -175,7 +175,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                     <option value="">-- Ninguno --</option>
                                     <option value="SER-01">SER-01</option>
                                     <option value="SER-02">SER-02</option>
-                                    <option value="refaccion">Refacción</option>
+                                    <option value="SER-03">SER-03</option>
                                     <option value="componente">Componente</option>
                                 </select>
                             </div>
@@ -207,11 +207,15 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             <div class="form-section">
                 <h5>Detalles del Reporte</h5>
                 <div class="row g-3">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                        <label class="form-label">Referencia</label>
+                        <input type="text" name="referencia" id="" class="form-control">
+                    </div>
+                    <div class="col-md-4">
                         <label class="form-label">Fecha</label>
                         <input type="date" name="fecha" class="form-control" value="<?= date('Y-m-d') ?>">
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label">Técnico</label>
                         <input type="text" name="tecnico" class="form-control">
                     </div>
@@ -268,7 +272,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             const seccion = document.getElementById('seccionDescripcion_' + index);
             const nombreInput = document.getElementById('nombre_' + index);
             if(seccion){
-                if(select.value === 'componente' || select.value === 'refaccion'){
+                if(select.value === 'componente'){
                     seccion.style.display = 'block';
                 }else{
                     seccion.style.display = 'none';
@@ -284,11 +288,20 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         nombreInput.value = 'Servicio Correctivo';
                         nombreInput.readOnly=true;
                     break;
-                    default:
-                        nombreInput.value = '';
-                        nombreInput.readOnly = false;
-                        nombreInput.placeholder = 'Nombre del componente/servicio';
+                    case 'SER-03':
+                        nombreInput.value = 'Entrega Refacción/Consumible';
+                        nombreInput.readOnly = true;
                     break;
+                    default:
+                        if(nombreInput.value === 'Servicio Preventivo' || 
+                            nombreInput.value === 'Servicio Correctivo' ||
+                            nombreInput.value === 'Entrega Refacción/Consumible') {
+                                nombreInput.value = '';
+                            }
+                            nombreInput.readOnly = false;
+                            nombreInput.style.backgroundColor = '';
+                            nombreInput.placeholder = 'Nombre del componente/servicio';
+                            break;
                 }
             }
         }
@@ -303,7 +316,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                 <option value="">-- Ninguno --</option>
                                 <option value="SER-01">SER-01</option>
                                 <option value="SER-02">SER-02</option>
-                                <option value="refaccion">Refaccion</option>
+                                <option value="SER-03">SER-03</option>
                                 <option value="componente">Componente</option>
                             </select>
                         </div>

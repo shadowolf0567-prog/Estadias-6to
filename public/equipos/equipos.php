@@ -235,7 +235,7 @@ $total_resultados = count($equipos);
                             <td colspan="6" class="text-center">
                                 <div class="alert alert-warning m-3">
                                     <i class="bi bi-exclamation-triangle"></i>
-                                    No se encontraron clientes
+                                    No se encontraron equipos
                                     <?php if(!empty($busqueda)): ?>
                                         para "<strong><?php echo htmlspecialchars($busqueda) ?></strong>"
                                     <?php endif; ?>

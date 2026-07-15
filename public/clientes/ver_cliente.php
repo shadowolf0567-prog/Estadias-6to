@@ -65,7 +65,7 @@ $cliente['correos'] = $correos;
 
 $equipos_cliente = [];
 if($cliente['id_cliente']){
-    $sql_equipos_cliente = "SELECT id_equipo, modelo, inicio_contrato,fin_contrato,no_serie,
+    $sql_equipos_cliente = "SELECT id_equipo, modelo,no_serie,
                                     (SELECT COUNT(*) FROM reportes r WHERE r.id_equipo = e.id_equipo) as total_reportes
                             FROM equipos e
                             WHERE id_cliente = ?
@@ -145,6 +145,7 @@ mysqli_close($conn);
                             <div class="col-md-12">
                                 <p><span class="info-label">Encargado: </span><?= htmlspecialchars($cliente['encargado']) ?: 'No registrado' ?></p>
                                 <p><span class="info-label">Número de Cuenta: </span><?= htmlspecialchars(($cliente['no_cuenta'] ?: 'No registrado')) ?></p>
+                                <p><span class="info-label">Contrato: </span><?= htmlspecialchars($cliente['contrato'] ?: 'No registrado') ?></p>
                                 <p><span class="info-label">Dirección: </span><?= htmlspecialchars($cliente['direccion'] ?: 'No registrado') ?></p>
                             </div>
                         </div>
@@ -193,11 +194,10 @@ mysqli_close($conn);
                             <?php $total_reportes = intval($equipo['total_reportes'] ?? 0); ?>
                             <div class="col-md-6 col-lg-4">
                                 <div class="card info-card equipo-card h-100">
-                                    <div class="card-header"><?= htmlspecialchars($equipo['modelo'] ?: 'Sin modelo') ?></div>
+                                    <div class="card-header"></div>
                                     <div class="card-body">
+                                        <p><span class="info-label">Modelo: </span><?= htmlspecialchars($equipo['modelo'] ?: 'Sin modelo') ?></p>
                                         <p><span class="info-label">Número de Serie: </span><?= htmlspecialchars($equipo['no_serie']) ?></p>
-                                        <p><span class="info-label">Inicio de Contrato: </span><?= !empty($equipo['inicio_contrato']) ? date('d/m/Y',strtotime($equipo['inicio_contrato'])) : '-' ?></p>
-                                        <p><span class="info-label">Fin de Contrato: </span><?= !empty($equipo['fin_contrato']) ? date('d/m/Y',strtotime($equipo['fin_contrato'])) : '-' ?></p>
                                         <hr>
                                         <p>
                                             <span class="info-label">Reportes:</span>

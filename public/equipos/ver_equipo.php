@@ -29,7 +29,7 @@ if(!$equipo){
 
 $reportes_equipos = [];
 if($equipo['id_equipo']){
-    $sql_reportes_equipos = "SELECT id_reporte, fecha, estado, fecha_atencion
+    $sql_reportes_equipos = "SELECT id_reporte, fecha, estado, fecha_atencion, referencia
                                 FROM reportes r
                                 WHERE id_equipo = ?";
     $stmt_re = mysqli_prepare($conn,$sql_reportes_equipos);
@@ -80,8 +80,6 @@ if($equipo['id_equipo']){
                             <div class="col-md-12">
                                 <p><span class="info-label">Modelo: </span><?= htmlspecialchars($equipo['modelo']) ?></p>
                                 <p><span class="info-label">Número de Serie: </span><?= htmlspecialchars($equipo['no_serie']) ?></p>
-                                <p><span class="info-label">Inicio de Contrato: </span><?= !empty($equipo['inicio_contrato']) ? date('d/m/Y',strtotime($equipo['inicio_contrato'])) : '-' ?></p>
-                                <p><span class="info-label">Fin de Contrato: </span><?= !empty($equipo['fin_contrato']) ? date('d/m/Y',strtotime($equipo['fin_contrato'])) : '-' ?></p>
                             </div>
                         </div>
                     </div>
@@ -112,11 +110,12 @@ if($equipo['id_equipo']){
                                 <div class="card info-card equipo-card h-100">
                                     <div class="card-header">Información del Reporte</div>
                                     <div class="card-body">
+                                        <p><span class="info-label">Referencia: </span><?= htmlspecialchars($reportes['referencia']) ?></p>
                                         <p><span class="info-label">Fecha: </span><?= htmlspecialchars($reportes['fecha']) ?></p>
+                                        <p><span class="info-label">Estado: </span><?= htmlspecialchars($reportes['estado']) ?></p>
                                         <?php if($reportes['estado'] == 'atendido'): ?>
                                             <p><span class="info-label">Fecha de Atención: </span><?= htmlspecialchars($reportes['fecha_atencion']) ?></p>
                                         <?php endif; ?>
-                                        <p><span class="info-label">Estado: </span><?= htmlspecialchars($reportes['estado']) ?></p>
                                         <a href="../reportes/ver_reporte.php?id=<?= $reportes['id_reporte'] ?>" class="btn btn-info">
                                             <i class="bi bi-eye"></i> Ver Reporte
                                         </a>

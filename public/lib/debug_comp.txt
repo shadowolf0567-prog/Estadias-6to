@@ -1,3 +1,0 @@
-2026-07-10 21:52:35 - Recibido: nombre='Servicio Preventivo', tipo='SER-01', cantidad=1, desc=''
-2026-07-10 21:52:35 - Total componentes a guardar: 1
-2026-07-10 21:52:35 - Procesando: componente='Servicio Preventivo', tipo='', cantidad=1

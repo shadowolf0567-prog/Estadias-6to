@@ -173,13 +173,17 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
                                 <label>Nombre</label>
                                 <input type="text" id="nuevo_nombre" class="form-control" required>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label>Número de Cuenta</label>
                                 <input type="text" id="nuevo_no_cuenta" class="form-control" required>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label>Encargado</label>
                                 <input type="text" id="nuevo_encargado" class="form-control" required>
+                            </div>
+                            <div class="col-md-2">
+                                <label>Contrato</label>
+                                <input type="text" name="" id="nuevo_contrato" class="form-control">
                             </div>
                             <div class="col-md-12">
                                 <label>Dirección</label>
@@ -257,14 +261,6 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
                     <div class="col-md-6">
                         <label>Modelo</label>
                         <input type="text" name="modelo" id="modelo" class="form-control">
-                    </div>
-                    <div class="col-md-6">
-                        <label>Inicio de Contrato</label>
-                        <input type="date" name="inicio_contrato" id="inicio_contrato" class="form-control">
-                    </div>
-                    <div class="col-md-6">
-                        <label>Fin de Contrato</label>
-                        <input type="date" name="fin_contrato" id="fin_contrato" class="form-control">
                     </div>
                 </div>
             </div>
@@ -468,12 +464,10 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
             document.querySelectorAll('#telefonosContainer .telefono-item').forEach(item => {
                 const numero = item.querySelector('input[data-tipo="telefono"]');
                 const contacto = item.querySelector('input[data-tipo="telefono-contacto"]');
-                const principal = item.querySelector('input[data-tipo="telefono-principal"]');
                 if(numero && numero.value.trim() !== ''){
                     telefonos.push({
                         numero: numero.value.trim(),
                         contacto: contacto ? contacto.value.trim() : '',
-                        es_principal: principal ? principal.checked : false
                     });
                 }
             });
@@ -482,12 +476,10 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
             document.querySelectorAll('#correosContainer .correo-item').forEach(item => {
                 const correo = item.querySelector('input[data-tipo="correo"]');
                 const contacto = item.querySelector('input[data-tipo="correo-contacto"]');
-                const principal = item.querySelector('input[data-tipo="correo-principal"]');
                 if(correo && correo.value.trim() !== ''){
                     correos.push({
                         direccion: correo.value.trim(),
                         contacto: contacto ? contacto.value.trim() : '',
-                        es_principal: principal ? principal.checked : false
                     });
                 }
             });
@@ -524,6 +516,7 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
                     nombre: nombre,
                     encargado : document.getElementById('nuevo_encargado').value.trim(),
                     no_cuenta: document.getElementById('nuevo_no_cuenta').value.trim(),
+                    contrato: document.getElementById('nuevo_contrato').value.trim(),
                     direccion: document.getElementById('nuevo_direccion').value.trim(),
                     telefonos: datosContacto.telefonos,
                     correos: datosContacto.correos

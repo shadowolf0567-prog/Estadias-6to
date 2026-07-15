@@ -99,7 +99,7 @@ if(is_dir($ruta_backups)){
             $backups[] = [
                 'nombre' => $archivo,
                 'tamaño' => round(filesize($ruta_completa) / 1024, 2),
-                'fecha' => date('Y-m-d H:i:s',filemtime($ruta_completa)),
+                'fecha' => date('Y-m-d',filemtime($ruta_completa)),
                 'ruta' => $ruta_completa
             ];
         }
@@ -141,6 +141,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
         <h2 class="mb-4">
             <i class="bi bi-database"></i> Respaldo de Base de Datos
         </h2>
+        <p class="text-muted">Recomendación: Hacer un respaldo al final del día</p>
         <?php if($mensaje): ?>
             <div class="alert alert-success alert-dismissible fade show">
                 <i class="bi bi-check-circle"></i> <?= htmlspecialchars($mensaje) ?>

@@ -24,9 +24,9 @@ function buscar_reportes_filtros($filtros = [], $estado = 'pendiente'){
     $params = [$estado];
     $types = "s";
 
-    if(!empty($filtros['reporte'])){
-        $sql .= " AND r.reporte LIKE ?";
-        $params[] = "%" . $filtros['reporte'] . "%";
+    if(!empty($filtros['tecnico'])){
+        $sql .= " AND r.tecnico LIKE ?";
+        $params[] = "%" . $filtros['tecnico'] . "%";
         $types .= "s";
     }
     if(!empty($filtros['cliente'])){
@@ -89,10 +89,6 @@ while($row = mysqli_fetch_assoc($result_equipos)){
 
 $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'pendiente';
 $filtros = [
-    'reporte' => isset($_GET['reporte']) ? trim($_GET['reporte']) : '',
-    'descripcion' => isset($_GET['descripcion']) ? trim($_GET['descripcion']) : '',
-    'fecha_desde' => isset($_GET['fecha_desde']) ? trim($_GET['fecha_desde']) : '',
-    'fecha_hasta' => isset($_GET['fecha_hasta']) ? trim($_GET['fecha_hasta']) : '',
     'tecnico' => isset($_GET['tecnico']) ? trim($_GET['tecnico']) : '',
     'cliente' => isset($_GET['cliente']) ? trim($_GET['cliente']) : '',
     'no_serie' => isset($_GET['no_serie']) ? trim($_GET['no_serie']) : ''
@@ -187,6 +183,11 @@ $contadores = contar_reportes_por_estado();
                         <input type="text" name="no_serie" class="form-control"
                         value="<?= htmlspecialchars($filtros['no_serie']) ?>">
                     </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Técnico</label>
+                        <input type="text" name="tecnico" class="form-control"
+                        value="<?= htmlspecialchars($filtros['tecnico']) ?>">
+                    </div>
                     <div class="col-12 mt-3">
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-search"></i> Buscar
@@ -197,27 +198,14 @@ $contadores = contar_reportes_por_estado();
                     </div>
                 </div>
             </form>
-            <?php if(!empty($filtros['reporte']) || !empty($filtros['descripcion']) || !empty($filtros['fecha_desde']) ||
-                    !empty($filtros['fecha_hasta']) || !empty($filtros['tecnico']) || !empty($filtros['cliente']) ||
+            <?php if(!empty($filtros['tecnico']) || !empty($filtros['cliente']) ||
                     !empty($filtros['no_serie'])): ?>
                 <div class="mt-3 pt-2 border-top">
                     <span class="text-muted me-2">Filtros activos:</span>
-                    <?php if(!empty($filtros['reporte'])): ?>
-                        <span class="badge-filtro">Titulo: 
-                            <?= htmlspecialchars($filtros['reporte']) ?>
-                            <i class="bi bi-x-circle" onclick="removerFiltro('reporte')"></i>
-                        </span>
-                    <?php endif; ?>
-                    <?php if(!empty($filtros['descripcion'])): ?>
-                        <span class="badge-filtro">Descripción: 
-                            <?= htmlspecialchars($filtros['descripcion']) ?>
-                            <i class="bi bi-x-circle" onclick="removerFiltro('descripcion')"></i>
-                        </span>
-                    <?php endif; ?>
                     <?php if(!empty($filtros['tecnico'])): ?>
                         <span class="badge-filtro">Técnico: 
                             <?= htmlspecialchars($filtros['tecnico']) ?>
-                            <i class="bi bi-c-circle" onclick="removerFiltro('tecnico')"></i>
+                            <i class="bi bi-x-circle" onclick="removerFiltro('tecnico')"></i>
                         </span>
                     <?php endif; ?>
                     <?php if(!empty($filtros['cliente'])): ?>
@@ -285,7 +273,7 @@ $contadores = contar_reportes_por_estado();
                                 <td colspan="7" class="text-center">
                                     <div class="alert alert-warning m-3">
                                         <i class="bi bi-exclamation-triangle"></i>
-                                        No se encontraron clientes
+                                        No se encontraron reportes
                                         <?php if(!empty($buqueda)): ?>
                                             para "<strong><?php echo htmlspecialchars($buqueda) ?></strong>"
                                         <?php endif; ?>
@@ -366,7 +354,7 @@ $contadores = contar_reportes_por_estado();
                                 <td colspan="9" class="text-center">
                                     <div class="alert alert-warning m-3">
                                         <i class="bi bi-exclamation-triangle"></i>
-                                        No se encontraron clientes
+                                        No se encontraron reportes
                                         <?php if(!empty($buqueda)): ?>
                                             para "<strong><?php echo htmlspecialchars($buqueda) ?></strong>"
                                         <?php endif; ?>

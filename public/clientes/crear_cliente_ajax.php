@@ -16,12 +16,13 @@ if(!$data || empty($data['nombre'])){
 
 $nombre=trim($data['nombre']);
 $no_cuenta=trim($data['no_cuenta'] ?? '');
+$contrato=trim($data['contrato'] ?? '');
 $encargado = trim($data['encargado'] ?? '');
 $direccion=trim($data['direccion'] ?? '');
 
-$sql="INSERT INTO clientes (nombre,no_cuenta,encargado,direccion) VALUES (?,?,?,?)";
+$sql="INSERT INTO clientes (nombre,no_cuenta,contrato,encargado,direccion) VALUES (?,?,?,?,?)";
 $stmt=mysqli_prepare($conn,$sql);
-mysqli_stmt_bind_param($stmt, 'ssss', $nombre,$no_cuenta,$encargado,$direccion);
+mysqli_stmt_bind_param($stmt, 'sssss', $nombre,$no_cuenta,$contrato,$encargado,$direccion);
 
 if(!mysqli_stmt_execute($stmt)){
     echo json_encode(['success' => false, 'error' => mysqli_error($conn)]);
