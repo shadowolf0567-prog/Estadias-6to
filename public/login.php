@@ -7,8 +7,10 @@ $mensaje=isset($_GET['error']) ? $_GET['error'] : '';
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="./assets/css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="./assets/css/responsives.css">
+    <link rel="stylesheet" href="./assets/css/bootstrap-icons.css">
     <style>
         .login_form{
             width: 40%;
