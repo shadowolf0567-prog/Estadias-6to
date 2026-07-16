@@ -239,10 +239,10 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                         <label class="form-label">Tipo</label>
                                         <select name="componentes[<?= $index ?>][tipo]" class="form-select" onchange="mostrarSeccion(this, <?= $index ?>)">
                                             <option value="">-- Ninguno --</option>
-                                            <option value="SER-01" <?= (strpos($comp['componente'],'Preventivo') !== false) ? 'selected' : '' ?>>SER-01</option>
-                                            <option value="SER-02" <?= (strpos($comp['componente'],'Correctivo') !== false) ? 'selected' : '' ?>>SER-02</option>
-                                            <option value="SER-03" <?= (strpos($comp['componente'], 'Entrega Refacción/Consumible') !== false) ? 'selected' : '' ?>>SER-03</option>
-                                            <option value="componente" <?= (strpos($comp['componente'], 'Componente') !== false || strpos($comp['componente'],'componente') !== false ) ? 'selected' : '' ?>>Componente</option>
+                                            <option value="SER-01" <?= ($comp['tipo'] == 'SER-01') ? 'selected' : '' ?>>SER-01</option>
+                                            <option value="SER-02" <?= ($comp['tipo'] == 'SER-02') ? 'selected' : '' ?>>SER-02</option>
+                                            <option value="SER-03" <?= ($comp['tipo'] == 'SER-03') ? 'selected' : '' ?>>SER-03</option>
+                                            <option value="componente" <?= ($comp['tipo'] == 'componente')  ? 'selected' : '' ?>>Componente</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4">
@@ -258,7 +258,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                         <i class="bi bi-dash-circle btn-remover" onclick="removerComponente(this)" style="display: block; margin-top: 5px; font-size: 24px;"></i>
                                     </div>
                                 </div>
-                                <div class="row g-2 mt-2" id="seccionDescripcion_<?= $index ?>" style="display: <?= (strpos($comp['componente'], 'Refaccion') !== false || strpos($comp['componente'],'SER-03') !== false || strpos($comp['componente'],'componente') !== false || strpos($comp['componente'],'Componente') !== false) ? 'block' : 'none' ?>;">
+                                <div class="row g-2 mt-2" id="seccionDescripcion_<?= $index ?>" style="display: <?= (strpos($comp['componente'],'componente') !== false || strpos($comp['componente'],'Componente') !== false) ? 'block' : 'none' ?>;">
                                     <div class="col-md-12">
                                         <label class="form-label">Descripción</label>
                                         <textarea name="componentes[<?= $index ?>][descripcion]" class="form-control"><?= htmlspecialchars($comp['descripcion']) ?></textarea>
@@ -502,8 +502,13 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                         Cuenta: ${escapeHtml(cliente.no_cuenta)}
                                     </p>
                                 `:''}
+                                ${cliente.contrato ? `
+                                    <p class="card-text small mb-1">
+                                        Contrato: ${escapeHtml(cliente.contrato)}
+                                    </p>
+                                `:''}
                                 ${cliente.telefonos ? `
-                                    <p class="card-text-small mb-1">
+                                    <p class="card-text small mb-1">
                                         <i class="bi bi-telephone"></i> ${escapeHtml(cliente.telefonos)}
                                     </p>
                                 `:''}

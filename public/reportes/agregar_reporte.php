@@ -32,6 +32,9 @@ if($result_clientes){
         $clientes[] = $row;
     }
 }
+$cliente = "SELECT c.*,r.* FROM clientes c
+            INNER JOIN reportes r
+            ON r.id_cliente = c.id_cliente";
 $componentes = [];
 $sql_comp = "SELECT id, componente, descripcion
             FROM componentes
@@ -128,7 +131,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                 </button>
                             </div>
                         </div>
-                        <div class="resultados-busqueda" id="resultadosBusqueda" style="overflow-y: auto; max-height: 400px;" >
+                        <div class="resultados-busqueda" id="resultadosBusqueda" style="overflow-y: auto; max-height: 400px; " >
                             <div class="alert alert-info">
                                 <i class="bi bi-info-circle"> Escribe al menos 2 caracteres para comenzar a buscar</i>
                             </div>
@@ -330,7 +333,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         </div>
                         <div class="col-md-2">
                             <label class="form-label">&nbsp;</label>
-                            <i class="bi bi-dash-circle btn-remover" onclick="removerComponente(this)" style="display: block; margin-top: 5px;"></i>
+                            <i class="bi bi-dash-circle btn-remover" onclick="removerComponente(this)" style="display: block; margin-top: 5px; font-size: 24px"></i>
                         </div>
                     </div>
                     <div class="row g-2 mt-2" id="seccionDescripcion_${contadorComponentes}" style="display: none;">
@@ -396,12 +399,17 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                     ${isSelected ? '<i class="bi bi-check-circle-fill text-success"></i>' : ''}
                                 </div>
                                 ${cliente.no_cuenta ? `
-                                    <p class="card-text-small mb-1">
+                                    <p class="card-text small mb-1">
                                         Cuenta: ${escapeHtml(cliente.no_cuenta)}
                                     </p>
                                 `:''}
+                                ${cliente.contrato ? `
+                                    <p class="card-text small mb-1">
+                                        Contrato: ${escapeHtml(cliente.contrato)}
+                                    </p>
+                                `:''}
                                 ${cliente.telefonos ? `
-                                    <p class="card-text-small mb-1">
+                                    <p class="card-text small mb-1">
                                         <i class="bi bi-telephone"></i> ${escapeHtml(cliente.telefonos)}
                                     </p>
                                 `:''}

@@ -194,7 +194,7 @@ mysqli_close($conn);
                             <?php $total_reportes = intval($equipo['total_reportes'] ?? 0); ?>
                             <div class="col-md-6 col-lg-4">
                                 <div class="card info-card equipo-card h-100">
-                                    <div class="card-header"></div>
+                                    <div class="card-header">Información del Equipo</div>
                                     <div class="card-body">
                                         <p><span class="info-label">Modelo: </span><?= htmlspecialchars($equipo['modelo'] ?: 'Sin modelo') ?></p>
                                         <p><span class="info-label">Número de Serie: </span><?= htmlspecialchars($equipo['no_serie']) ?></p>
@@ -212,7 +212,7 @@ mysqli_close($conn);
                                     </div>
                                     <div class="card-footer">
                                         <a href="../equipos/ver_equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-sm btn-info">
-                                            <i class="bi bi-eye"></i> Ver
+                                            <i class="bi bi-eye"></i> Ver Equipo
                                         </a>
                                     </div>
                                 </div>

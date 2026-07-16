@@ -252,7 +252,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                         <i class="bi bi-dash-circle btn-remover" onclick="removerComponente(this)" style="display: block; margin-top: 5px; font-size: 24px;"></i>
                                     </div>
                                 </div>
-                                <div class="row g-2 mt-2" id="seccionDescripcion_<?= $index ?>" style="display: <?= (strpos($comp['componente'], 'Refaccion') !== false || strpos($comp['componente'],'refaccion') !== false || strpos($comp['componente'],'componente') !== false || strpos($comp['componente'],'componente') !== false) ? 'block' : 'none' ?>;">
+                                <div class="row g-2 mt-2" id="seccionDescripcion_<?= $index ?>" style="display: <?= (strpos($comp['componente'],'componente') !== false || strpos($comp['componente'],'Componente') !== false) ? 'block' : 'none' ?>;">
                                     <div class="col-md-12">
                                         <label class="form-label">Descripción</label>
                                         <textarea name="componentes[<?= $index ?>][descripcion]" class="form-control"><?= htmlspecialchars($comp['descripcion']) ?></textarea>
@@ -503,6 +503,11 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                         Cuenta: ${escapeHtml(cliente.no_cuenta)}
                                     </p>
                                 ` : ''}
+                                ${cliente.contrato ? `
+                                    <p class="card-text small mb-1">
+                                        Contrato: ${escapeHtml(cliente.contrato)}
+                                    </p>
+                                `:''}
                                 ${cliente.telefonos ? `
                                     <p class="card-text small mb-1">
                                         <i class="bi bi-telephone"></i> ${escapeHtml(cliente.telefonos)}
