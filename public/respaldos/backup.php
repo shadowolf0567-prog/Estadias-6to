@@ -7,6 +7,8 @@ if(!isset($_SESSION['tip_usr']) || $_SESSION['tip_usr'] != 1 && $_SESSION['tip_u
     exit;
 }
 
+// Establecer zona horaria a UTC-6
+date_default_timezone_set('Etc/GMT+6');
 function crear_backup(){
     global $conn;
 
@@ -99,7 +101,7 @@ if(is_dir($ruta_backups)){
             $backups[] = [
                 'nombre' => $archivo,
                 'tamaño' => round(filesize($ruta_completa) / 1024, 2),
-                'fecha' => date('Y-m-d',filemtime($ruta_completa)),
+                'fecha' => date('Y-m-d H:i:s',filemtime($ruta_completa)),
                 'ruta' => $ruta_completa
             ];
         }

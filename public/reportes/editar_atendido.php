@@ -42,6 +42,17 @@ mysqli_stmt_bind_param($stmt_comp,"i",$id_reporte);
 mysqli_stmt_execute($stmt_comp);
 $result_comp = mysqli_stmt_get_result($stmt_comp);
 while($row = mysqli_fetch_assoc($result_comp)){
+    if(empty($row['tipo'])){
+        if(strpos($row['componente'], 'Preventivo') !== false){
+            $row['tipo'] = 'SER-01';
+        }elseif(strpos($row['componente'], 'Correctivo') !== false){
+            $row['tipo'] = 'SER-02';
+        }elseif(strpos($row['componente'], 'Entrega Refacción/Consumible') !== false){
+            $row['tipo'] = 'SER-03';
+        }elseif(strpos($row['componente'],'Componente') !== false || strpos($row['componente'], 'componente') !== false){
+            $row['tipo'] = 'componente';
+        }
+    }
     $componentes[] = $row;
 }
 $total_componentes = count($componentes);
@@ -236,7 +247,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                             <option value="SER-01" <?= ($comp['tipo'] == 'SER-01') ? 'selected' : '' ?>>SER-01</option>
                                             <option value="SER-02" <?= ($comp['tipo'] == 'SER-02') ? 'selected' : '' ?>>SER-02</option>
                                             <option value="SER-03" <?= ($comp['tipo'] == 'SER-03') ? 'selected' : '' ?>>SER-03</option>
-                                            <option value="componente" <?= ($comp['tipo'] == 'componente') ? 'selected' : ''?>>Componente</option>
+                                            <option value="componente" <?= ($comp['tipo'] == 'componente') || empty($comp['tipo']) ? 'selected' : ''?>>Componente</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4">
@@ -458,6 +469,16 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 alert('Debe haber al menos un componente');
             }
         }
+        document.addEventListener('DOMContentLoaded',function() {
+            setTimeout(function() {
+                document.querySelectorAll('.componente-item select[name*="[tipo]"]').forEach(function(select){
+                    var index = select.name.match(/\[(\d+)\]/);
+                    if(index){
+                        mostrarSeccion(select, parseInt(index[1]));
+                    }
+                });
+            }, 100);
+        });
         function buscarClientes(termino){
             if(!resultadosDiv) return;
             if(termino.length < 2){

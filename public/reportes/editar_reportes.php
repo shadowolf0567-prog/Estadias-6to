@@ -32,6 +32,17 @@ mysqli_stmt_bind_param($stmt_comp,"i",$id_reporte);
 mysqli_stmt_execute($stmt_comp);
 $result_comp = mysqli_stmt_get_result($stmt_comp);
 while($row = mysqli_fetch_assoc($result_comp)){
+    if(empty($row['tipo'])){
+        if(strpos($row['componente'], 'Preventivo') !== false){
+            $row['tipo'] = 'SER-01';
+        }elseif(strpos($row['componente'],'Correctivo') !== false){
+            $row['tipo'] = 'SER-02';
+        }elseif(strpos($row['componente'], 'Entrega Refacción/Consumible') !== false){
+            $row['tipo'] = 'SER-03';
+        }elseif(strpos($row['componente'], 'Componente') !== false || strpos($row['componente'],'componente') !== false){
+            $row['tipo'] = 'componente';
+        }
+    }
     $componentes[] = $row;
 }
 $total_componentes = count($componentes);
@@ -258,7 +269,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                         <i class="bi bi-dash-circle btn-remover" onclick="removerComponente(this)" style="display: block; margin-top: 5px; font-size: 24px;"></i>
                                     </div>
                                 </div>
-                                <div class="row g-2 mt-2" id="seccionDescripcion_<?= $index ?>" style="display: <?= (strpos($comp['componente'],'componente') !== false || strpos($comp['componente'],'Componente') !== false) ? 'block' : 'none' ?>;">
+                                <div class="row g-2 mt-2" id="seccionDescripcion_<?= $index ?>" style="display: <?= ($comp['tipo'] == 'componente' || empty($comp['tipo'])) ? 'block' : 'none' ?>;">
                                     <div class="col-md-12">
                                         <label class="form-label">Descripción</label>
                                         <textarea name="componentes[<?= $index ?>][descripcion]" class="form-control"><?= htmlspecialchars($comp['descripcion']) ?></textarea>
@@ -457,6 +468,16 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 alert('Debe haber al menos un componente');
             }
         }
+        document.addEventListener('DOMContentLoaded',function() {
+            setTimeout(function() {
+                document.querySelectorAll('.componente-item select[name*="[tipo]"]').forEach(function(select) {
+                    var index = select.name.match(/\[\d+)\]/);
+                    if(index){
+                        mostrarSeccion(select, parseInt(index[1]));
+                    }
+                });
+            }, 100);
+        });
         function buscarClientes(termino){
             if(!resultadosDiv) return;
             if(termino.length < 2){

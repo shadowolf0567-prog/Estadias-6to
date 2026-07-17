@@ -1,16 +1,12 @@
-<!-- menu.php - Menú con hamburguesa -->
 <nav class="navbar navbar-expand-lg navbar-dark" style="background: #808080;">
     <div class="container">
-        <!-- Logo a la izquierda -->
         <img src="../assets/img/Logo.png" alt="Logo" style="height: 44px; width: auto;">
         
-        <!-- Botón hamburguesa -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         
-        <!-- Menú -->
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">

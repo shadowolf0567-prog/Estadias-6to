@@ -440,6 +440,29 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     exit;
                 }
                 break;
+            case 'eliminar':
+                if(isset($_POST['id_reporte'])){
+                    $id_reporte = intval($_POST['id_reporte']);
+
+                    $sql_delete = "DELETE FROM reportes_componentes WHERE id_reporte = ?";
+                    $stmt_delete = mysqli_prepare($conn,$sql_delete);
+                    mysqli_stmt_bind_param($stmt_delete,'i',$id_reporte);
+                    mysqli_stmt_execute($stmt_delete);
+                    mysqli_stmt_close($stmt_delete);
+
+                    $sql = "DELETE FROM reportes WHERE id_reporte = ?";
+                    $stmt = mysqli_prepare($conn, $sql);
+                    mysqli_stmt_bind_param($stmt,'i',$id_reporte);
+                    $query_ok = mysqli_stmt_execute($stmt);
+                    mysqli_stmt_close($stmt);
+                    if($query_ok){
+                        header('Location: ../reportes/reportes.php?msg='.urlencode('Reporte eliminado correctamente'));
+                    }else{
+                        header('Location: ../reportes/reportes.php?error='.urlencode('Error al eliminar reporte'));
+                    }
+                    exit;
+                }
+                break;
             case 'eliminar2':
                 if(isset($_POST['id_reporte'])){
                     $id_reporte = intval($_POST['id_reporte']);
