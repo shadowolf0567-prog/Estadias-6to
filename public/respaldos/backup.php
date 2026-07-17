@@ -13,7 +13,7 @@ function crear_backup(){
     global $conn;
 
     $fecha = date('Y-m-d_H-i-s');
-    $nombre_archivo = "backup_emipac_{$fecha}.sql";
+    $nombre_archivo = "respaldo_{$fecha}.sql";
     $ruta_backup = __DIR__ . "/../../backups/".$nombre_archivo;
 
     if(!is_dir(__DIR__ . "/../../backups")){
