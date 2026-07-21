@@ -121,7 +121,7 @@ function guardar_cliente_completo($id_cliente, $nombre, $encargado, $no_cuenta,$
         'id_cliente' => $id_cliente
     ];
 }
-function agregar_equipo_con_cliente($no_serie,$modelo,$id_cliente = null){
+function agregar_equipo_con_cliente($equipos, $id_cliente = null){
     global $conn;
     if(!$conn){
         return[
@@ -129,45 +129,45 @@ function agregar_equipo_con_cliente($no_serie,$modelo,$id_cliente = null){
             'mensaje' => 'Error de conexión a la base de datos'
         ];
     }
-    if(empty($id_cliente) || $id_cliente == 0){
-        $sql = 'INSERT INTO equipos(no_serie,modelo) VALUES (?,?)';
+    $equipos_registrados = 0;
+    $errores = [];
+    foreach($equipos as $equipo){
+        if(empty($equipo['no_serie'])){
+            $errores[]='Número de serie vacío en uno de los equipos';
+            continue;
+        }
+        $no_serie = trim($equipo['no_serie']);
+        $modelo = trim($equipo['modelo']);
+
+        $sql='INSERT INTO equipos(no_serie,modelo,id_cliente) VALUES (?,?,?)';
         $stmt = mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt,'ss',$no_serie,$modelo);
-        $mensaje= 'Equipo agregado correctamente';
-    } else {
-        $sql = 'INSERT INTO equipos (no_serie, modelo,id_cliente) VALUES (?, ?, ?)';
-        $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, 'ssi', $no_serie, $modelo, $id_cliente);
-        $mensaje = 'Equipo agregado correctamente y vinculado al cliente';
-    }
-    if(!$stmt){
-        return[
-            'estatus' => 'error',
-            'mensaje' => 'Error en la preparación'
-        ];
-    }
-    $query_ok = mysqli_stmt_execute($stmt);
-
-    if(!$query_ok){
-        $error = mysqli_stmt_error($stmt);
+        mysqli_stmt_bind_param($stmt,'ssi',$no_serie,$modelo,$id_cliente);
+            if(!$stmt){
+            $errores[] = 'Error en la preparación';
+            continue;
+        }
+        if(mysqli_stmt_execute($stmt)){
+            $equipos_registrados++;
+        }else{
+            $errores[] = 'Error al insertar equipos';
+        }
         mysqli_stmt_close($stmt);
-        return[
-            'estatus' => 'error',
-            'mensaje' => 'Error al insertar'
-        ];
     }
-    $rows_ok = mysqli_affected_rows($conn);
-    mysqli_stmt_close($stmt);
-
-    if($rows_ok > 0){
+    if($equipos_registrados > 0){
+        $mensaje = $equipos_registrados . ' equipo(s) registrado(s) correctamente';
+        if(!empty($errores)){
+            $mensaje .= '. Errores: ' . implode(', ' , $errores);
+        }
         return[
             'estatus' => 'msg',
-            'mensaje' => $mensaje
+            'mensaje' => $mensaje,
+            'registrados' => $equipos_registrados,
+            'errores' => $errores
         ];
     }else{
         return[
             'estatus' => 'error',
-            'mensaje' => 'No se pudo insertar el equipo'
+            'mensaje' => 'No se pudo registrar ningún equipo'
         ];
     }
 }
@@ -295,29 +295,42 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     if($resultado['estatus'] === 'msg'){
                         header('Location: ../clientes/clientes.php?msg='.urlencode($resultado['mensaje']));
                     }else{
-                        header('Location: ../cliente(clientes.php?error='.urlencode($resultado['mensaje']));
+                        header('Location: ../cliente/clientes.php?error='.urlencode($resultado['mensaje']));
                     }
                     exit;
                 }
                 break;
             case 'agregar_con_cliente':
-                if(isset($_POST['no_serie']) && !empty($_POST['no_serie'])){
-                    $no_serie = trim($_POST['no_serie']);
-                    $modelo = trim($_POST['modelo'] ?? '');
+                if(isset($_POST['equipos']) && is_array($_POST['equipos']) && !empty($_POST['equipos'])){
                     $id_cliente = null;
                     if(isset($_POST['id_cliente']) && !empty($_POST['id_cliente']) && $_POST['id_cliente'] > 0){
                         $id_cliente = intval($_POST['id_cliente']);
                     }
-                    $resultado = agregar_equipo_con_cliente($no_serie,$modelo,$id_cliente);
-
-                    if($resultado['estatus'] === 'msg'){
-                        header('Location: ../equipos/agregar_equipo.php?msg='.urlencode($resultado['mensaje']));
-                    }else{
-                        header('Location: ../equipos/agregar_equipo.php?error='.urlencode($resultado['mensaje']));
+                    $equipos = [];
+                    foreach($_POST['equipos'] as $equipo){
+                        if(!empty($equipo['no_serie'])){
+                            $equipos[] = [
+                                'no_serie' => trim($equipo['no_serie']),
+                                'modelo' => trim($equipo['modelo'])
+                            ];
+                        }
+                    }
+                    if(empty($equipos)){
+                        header('Location: ../equipos/agregar_equipo.php?error=' . urlencode('Debe ingresar al menos un equipo'));
                         exit;
                     }
-                    break;
+                    $resultado = agregar_equipo_con_cliente($equipos,$id_cliente);
+                    if($resultado['estatus'] === 'msg'){
+                        header('Location: ../equipos/agregar_equipo.php?msg=' . urlencode($resultado['mensaje']));
+                    }else{
+                        header('Location: ../equipos/agregar_equipo.php?error=' . urlencode($resultado['mensaje']));
+                    }
+                    exit;
+                }else{
+                    header('Location: ../equipos/agregar_equipo.php?error= ' . urlencode('No se recibieron datos de equipos'));
+                    exit;
                 }
+                break;
             default:
                 header('Location: ../clientes/clientes.php?error='.urlencode('Accion no válida'));
                 exit;

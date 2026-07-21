@@ -272,7 +272,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                 <div class="row g-2 mt-2" id="seccionDescripcion_<?= $index ?>" style="display: <?= ($comp['tipo'] == 'componente' || empty($comp['tipo'])) ? 'block' : 'none' ?>;">
                                     <div class="col-md-12">
                                         <label class="form-label">Descripción</label>
-                                        <textarea name="componentes[<?= $index ?>][descripcion]" class="form-control"><?= htmlspecialchars($comp['descripcion']) ?></textarea>
+                                        <textarea name="componentes[<?= $index ?>][descripcion]" class="form-control" placeholder="Escribe el nombre del componente o refacción"><?= htmlspecialchars($comp['descripcion']) ?></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -306,7 +306,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                             <div class="row g-2 mt-2" id="seccionDescripcion_0" style="display: none;">
                                 <div class="col-md-12">
                                     <label class="form-label">Descripción</label>
-                                    <textarea name="componentes[0][descripcion]" class="form-control" rows="2"></textarea>
+                                    <textarea name="componentes[0][descripcion]" class="form-control" rows="2" placeholder="Escribe el nombre del componente o refacción"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -385,7 +385,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             const seccion = document.getElementById('seccionDescripcion_' + index);
             const nombreInput = document.getElementById('nombre_' + index);
             if(seccion){
-                if(select.value === 'componente'){
+                if(select.value === 'componente' || select.value === 'SER-03'){
                     seccion.style.display = 'block';
                 }else{
                     seccion.style.display = 'none';
@@ -450,7 +450,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                     <div class="row g-2 mt-2" id="seccionDescripcion_${index}" style="display: none;">
                         <div class="col-md-12">
                             <label class="form-label">Descripción</label>
-                            <textarea name="componentes[${index}][descripcion]" class="form-control" rows="2" placeholder="Describe el componente o refacción..."></textarea>
+                            <textarea name="componentes[${index}][descripcion]" class="form-control" rows="2" placeholder="Escribe el nombre del componente o refacción"></textarea>
                         </div>
                     </div>
                 </div>

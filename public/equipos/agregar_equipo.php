@@ -252,22 +252,27 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
             <div class="card-header bg-info text-white">
                 <h5 class="mb-0">Datos del Equipo</h5>
             </div>
-            <div class="card-body">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label>Número de Serie</label>
-                        <input type="text" name="no_serie" id="no_serie" class="form-control" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label>Modelo</label>
-                        <input type="text" name="modelo" id="modelo" class="form-control">
+            <div class="card-body" id="equiposContainer">
+                <div class="equipo-item" id="equipo_0">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label>Número de Serie</label>
+                            <input type="text" name="equipos[0][no_serie]" id="no_serie" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Modelo</label>
+                            <input type="text" name="equipos[0][modelo]" id="modelo" class="form-control">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="mt-4 mb-4">
+            <button type="button" class="btn btn-sm btn-success" onclick="agregarOtro()">
+                <i class="bi bi-plus-circle"></i> Agregar Equipo
+            </button>
             <button type="button" class="btn btn-primary" id="btnGuardar">
-                <i class="bi bi-save"></i> Agregar Equipo
+                <i class="bi bi-save"></i> Guardar Equipo
             </button>
             <a href="./equipos.php" class="btn btn-secondary">
                 <i class="bi bi-x-circle"></i> Cancelar
@@ -281,6 +286,7 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
         let clienteIDSeleccionado = null;
         let clientesData = <?= json_encode($clientes) ?>;
         let elementoSeleccionado = null;
+        let ContadorEquipos = 1;
         const buscarClienteInput = document.getElementById('buscarCliente');
         const idClienteInput = document.getElementById('idCliente');
         const resultadosDiv = document.getElementById('resultadosBusqueda');
@@ -300,6 +306,26 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
                 });
             }
         });
+        function agregarOtro(){
+            const container = document.getElementById('equiposContainer');
+            const index = ContadorEquipos;
+            const html= `
+                <div class="equipo-item" id="equipo_${index}">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label>Número de Serie</label>
+                            <input type="text" name="equipos[${index}][no_serie]" id="no_serie" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Modelo</label>
+                            <input type="text" name="equipos[${index}][modelo]" id="modelo" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend',html);
+            ContadorEquipos ++;
+        }
 
         function agregarItem(containerId){
             const container = document.getElementById(containerId);

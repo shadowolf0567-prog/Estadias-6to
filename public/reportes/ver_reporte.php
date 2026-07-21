@@ -61,7 +61,7 @@ mysqli_close($conn);
     <title>Ver Reporte</title>
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
     <link rel="stylesheet" href="../assets/css/bootstrap-icons.css">
-    <link rel="stylesheet" href="../assets/css/responsibe.css">
+    <link rel="stylesheet" href="../assets/css/ressponsibe.css">
     <style>
         body { background-color: #f4f6f9; }
         .reporte-header {

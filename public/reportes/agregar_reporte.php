@@ -101,6 +101,9 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
     <?php require_once __DIR__ . '/../gestion/menu.php'; ?>
     <div class="container mt-4">
         <h2 class="mb-4">Nuevo Reporte</h2>
+        <a href="reportar_muchos.php" class="btn btn-sm btn-primary">
+            <i class="bi bi-arrow-left"></i> Reportar Muchos
+        </a>
         <?php if($mensaje): ?>
             <div class="alert alert-success alert-dismissible fade show">
                 <i class="bi bi-check-circle"></i> <?= htmlspecialchars($mensaje) ?>
@@ -198,7 +201,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         <div class="row g-2 mt-2" id="seccionDescripcion_0" style="display: none;">
                             <div class="col-md-12">
                                 <label class="form-label">Descripción</label>
-                                <textarea name="componentes[0][descripcion]" class="form-control" rows="2"></textarea>
+                                <textarea name="componentes[0][descripcion]" class="form-control" rows="2" placeholder="Escribe el nombre del componente o refacción"></textarea>
                             </div>
                         </div>
                     </div>
@@ -275,7 +278,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             const seccion = document.getElementById('seccionDescripcion_' + index);
             const nombreInput = document.getElementById('nombre_' + index);
             if(seccion){
-                if(select.value === 'componente'){
+                if(select.value === 'componente' || select.value === 'SER-03'){
                     seccion.style.display = 'block';
                 }else{
                     seccion.style.display = 'none';
@@ -339,7 +342,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                     <div class="row g-2 mt-2" id="seccionDescripcion_${contadorComponentes}" style="display: none;">
                         <div class="col-md-12">
                             <label class="form-label">Descripción</label>
-                            <textarea name="componentes[${contadorComponentes}][descripcion]" class="form-control" rows="2" placeholder="Describe el componente o refacción..."></textarea>
+                            <textarea name="componentes[${contadorComponentes}][descripcion]" class="form-control" rows="2" placeholder="Escribe el nombre del componente o refacción"></textarea>
                         </div>
                     </div>
                 </div>
