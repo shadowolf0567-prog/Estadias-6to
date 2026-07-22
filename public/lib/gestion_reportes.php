@@ -47,7 +47,7 @@ function agregar_reportes_con_reportes($fecha,$tecnico,$referencia,$id_cliente =
                 } elseif($tipo == 'SER-02'){
                     $componente = 'Servicio Correctivo';
                 }elseif($tipo == 'SER-03'){
-                    $componente == 'Entrega Refacción/Consumible';
+                    $componente = 'Entrega Refacción/Consumible';
                 }
             }
             if(empty($tipo)){
@@ -344,6 +344,72 @@ function editar_atendidos($id_reporte,$fecha,$tecnico,$referencia,$fecha_atencio
         'mensaje' => 'Reporte editado exitosamente'
     ];
 }
+function agregar_en_masa($reportes,$id_cliente = null){
+    global $conn;
+    if(!$conn){
+        return[
+            'estatus' => 'error',
+            'mensaje' => 'Error de conexión a la base de datos'
+        ];
+    }
+    $reportes_registrados = 0;
+    $errores =[];
+    foreach($reportes as $reporte){
+        if(empty($reporte['fecha']) || empty($reporte['id_equipo'])){
+            $errores[] = 'Fecha o equipo vacío en uno de los reportes';
+            continue;
+        }
+        $fecha = trim($reporte['fecha']);
+        $tecnico = trim($reporte['tecnico']);
+        $id_equipo = intval($reporte['id_equipo']);
+        $servicio = trim($reporte['servicio'] ?? 'SER-01');
+
+        if($servicio == 'SER-01'){
+            $nombre_servicio = 'Servicio Preventivo';
+        }else{
+            $nombre_servicio = 'Servicio Correctivo';
+        }
+
+        $sql="INSERT INTO reportes(fecha,tecnico,id_equipo,id_cliente,estado)
+                VALUES (?,?,?,?,'pendiente')";
+        $stmt = mysqli_prepare($conn,$sql);
+        mysqli_stmt_bind_param($stmt,'ssii',$fecha,$tecnico,$id_equipo,$id_cliente);
+        if(!$stmt){
+            $errores[] = 'Error en la preparación';
+            continue;
+        }
+        if(mysqli_stmt_execute($stmt)){
+            $id_reporte = mysqli_insert_id($conn);
+            $sql_comp = "INSERT INTO reportes_componentes(id_reporte, componente,cantidad,tipo)
+                            VALUES (?,?,1,?)";
+            $stmt_comp = mysqli_prepare($conn,$sql_comp);
+            mysqli_stmt_bind_param($stmt_comp,'iss',$id_reporte,$nombre_servicio,$servicio);
+            mysqli_stmt_execute($stmt_comp);
+            mysqli_stmt_close($stmt_comp);
+            $reportes_registrados++;
+        }else{
+            $errores[] = 'Error al insertar reporte para equipo ID ' . $id_equipo;
+        }
+        mysqli_stmt_close($stmt);
+    }
+    if($reportes_registrados > 0){
+        $mensaje = $reportes_registrados . ' reporte(s) registrado(s) correctamente';
+        if(!empty($errores)){
+            $mensaje .= '. Errores: ' . implode(', ', $errores);
+        }
+        return[
+            'estatus' => 'msg',
+            'mensaje' => $mensaje,
+            'registrados' => $reportes_registrados,
+            'errores' => $errores
+        ];
+    }else{
+        return[
+            'estatus' => 'error',
+            'mensaje' => 'No se pudo registrar nungún reporte'
+        ];
+    }
+}
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     if(isset($_POST['accion'])){
         $accion=$_POST['accion'];
@@ -548,6 +614,43 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     }else{
                         header('Location: ../reportes/editar_atendido.php?id_reporte=' .$id_reporte. '&error=' .urlencode($resultado['mensaje']));
                     }
+                    exit;
+                }
+                break;
+            case 'agregar_muchos':
+                if(isset($_POST['equipos']) && is_array($_POST['equipos']) && !empty($_POST['equipos'])){
+                    $id_cliente = null;
+                    if(isset($_POST['id_cliente']) && !empty($_POST['id_cliente']) && $_POST['id_cliente'] > 0){
+                        $id_cliente = intval($_POST['id_cliente']);
+                    }
+                    $fecha  = trim($_POST['fecha'] ?? date('Y-m-d'));
+                    $tecnico = trim($_POST['tecnico'] ?? '');
+                    $servicio = trim($_POST['servicio'] ?? 'SER-01');
+
+                    $reportes = [];
+                    foreach($_POST['equipos'] as $equipo){
+                        if(!empty($equipo['id_equipo'])){
+                            $reportes[] = [
+                                'fecha' => $fecha,
+                                'tecnico' => $tecnico,
+                                'id_equipo' => intval($equipo['id_equipo']),
+                                'servicio' => $servicio,
+                            ];
+                        }
+                    }
+                    if(empty($reportes)){
+                        header('Location: ../reportes/reportar_muchos.php?error='.urlencode('Debe seleccionar al menos un equipo'));
+                        exit;
+                    }
+                    $resultado = agregar_en_masa($reportes,$id_cliente);
+                    if($resultado['estatus'] === 'msg'){
+                        header('Location: ../reportes/reportar_muchos.php?msg=' .urlencode($resultado['mensaje']));
+                    }else{
+                        header('Location: ../reportes/reportar_muchos.php?error='.urlencode($resultado['mensaje']));
+                    }
+                    exit;
+                }else{
+                    header('Location: ../reportes/reportar_muchos.php?error='.urlencode('No se recibieron equipos para reportar'));
                     exit;
                 }
                 break;

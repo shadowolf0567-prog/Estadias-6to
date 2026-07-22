@@ -110,7 +110,7 @@ if($equipo['id_equipo']){
                                 <div class="card info-card equipo-card h-100">
                                     <div class="card-header">Información del Reporte</div>
                                     <div class="card-body">
-                                        <p><span class="info-label">Referencia: </span><?= htmlspecialchars($reportes['referencia']) ?></p>
+                                        <p><span class="info-label">Referencia: </span><?= htmlspecialchars($reportes['referencia'] ?? '-') ?></p>
                                         <p><span class="info-label">Fecha: </span><?= htmlspecialchars($reportes['fecha']) ?></p>
                                         <p><span class="info-label">Estado: </span><?= htmlspecialchars($reportes['estado']) ?></p>
                                         <?php if($reportes['estado'] == 'atendido'): ?>

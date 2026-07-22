@@ -117,7 +117,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
-        <form action="../lib/gestion_reportes.php" method="post">
+        <form action="../lib/gestion_reportes.php" method="post" id="formReporte">
             <input type="hidden" name="accion" value="agregar_muchos">
             <input type="hidden" name="id_cliente" id="idCliente" value="0">
             <div class="form-section">
@@ -129,7 +129,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-search"></i></span>
                                 <input type="text" class="form-control"  id="buscarCliente">
-                                <button type="button" class="btn btn-outline-secondary">
+                                <button type="button" id="btnLimpiarBusqueda" class="btn btn-outline-secondary">
                                     <i class="bi bi-x-circle"></i> Limpiar
                                 </button>
                             </div>
@@ -156,7 +156,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 </div>
                 <div class="form-section">
                     <h5>Detalles de los Reportes</h5>
-                    <div class="row g-2">
+                    <div class="row g-3">
                         <div class="col-md-4">
                             <label class="form-label">Servicio</label>
                             <select name="servicio" class="form-select">
@@ -179,19 +179,18 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                     <div id="equiposContainer">
                         <div class="equipo-item" id="equipo_0">
                             <div class="row g-3">
-                                <div class="col-md-12">
-                                    <select name="id_equipo" id="id_equipo" class="form-select">
+                                <div class="col-md-11">
+                                    <select name="equipos[0][id_equipo]" class="form-select equipo-select">
                                         <option value="">-- Seleccione un cliente primero --</option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="info-equipo" id="infoEquipo" style="display: none;">
-                                <strong><i class="bi bi-info-circle"></i> Información del Equipo:</strong>
-                                <span id="infoEquipoTexto"></span>
+                                <div class="col-md-1 d-flex align-items-end">
+                                    <i class="bi bi-dash-circle btn-remover" onclick="removerEquipo(0)" style="display: none"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-sm btn-primary">
+                    <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="agregarOtro()">
                             <i class="bi bi-plus-circle"></i> Agregar Equipo
                     </button>
                 </div>
@@ -225,14 +224,12 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
         let clienteIDSeleccionado = null;
         let clientesData = <?= json_encode($clientes) ?>;
         let elementoSeleccionado = null;
-        let contadorComponentes = 1;
+        let contadorReportes = 1;
         const buscarClienteInput = document.getElementById('buscarCliente');
         const idClienteInput = document.getElementById('idCliente');
         const resultadosDiv = document.getElementById('resultadosBusqueda');
         const clienteSeleccionadoDiv = document.getElementById('clienteSeleccionado');
         const nombreClienteSpan = document.getElementById('nombreClienteSeleccionado');
-        const equipoSelect = document.getElementById('id_equipo');
-        const infoEquipoDiv = document.getElementById('infoEquipoTexto');
         const btnGuardar = document.getElementById('btnGuardar');
 
         function escapeHtml(text){
@@ -240,6 +237,39 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+        function agregarOtro(){
+            const container = document.getElementById('equiposContainer');
+            const index = contadorReportes;
+            const html = `
+                <div class="equipo-item" id="equipo_${index}">
+                    <div class="row g-3">
+                        <div class="col-md-11">
+                            <select name="equipos[${index}][id_equipo]" class="form-select equipo-select">
+                                <option value="">-- Ninguno --</option>
+                            </select>
+                        </div>
+                        <div class="col-md-1 d-flex align-items-end">
+                            <i class="bi bi-dash-circle btn-remover" onclick="removerEquipo(${index})" style="font-size: 24px;"></i>
+                        </div>
+                    </div>
+                <div>
+            `;
+            container.insertAdjacentHTML('beforeend',html);
+            if(clienteIDSeleccionado){
+                filtrarEquiposPorCliente(clienteIDSeleccionado, index);
+            }
+            contadorReportes++;
+        }
+        function removerEquipo(index){
+            const item = document.getElementById('equipo_'+index);
+            const container = document.getElementById('equiposContainer');
+
+            if(container.querySelectorAll('.equipo-item').length > 1){
+                item.remove();
+            }else{
+                alert('Debe haber al menos un equipo.');
+            }
         }
         function buscarClientes(termino){
             if(!resultadosDiv) return;
@@ -254,8 +284,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             const terminoLower = termino.toLowerCase();
             const resultados = clientesData.filter(cliente =>
                 cliente.nombre.toLowerCase().includes(terminoLower) ||
-                (cliente.no_cuenta && cliente.no_cuenta.toLowerCase().includes(terminoLower)) ||
-                (cliente.correo && cliente.correo.toLowerCase().includes(terminoLower))
+                (cliente.no_cuenta && cliente.no_cuenta.toLowerCase().includes(terminoLower))
             );
             if(resultados.length === 0){
                 resultadosDiv.innerHTML = `
@@ -265,8 +294,9 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 `;
                 return;
             }
+            
             let html = `<div class="row">`;
-            resultados.foreach(cliente =>{
+            resultados.forEach(cliente =>{
                 const isSelected = (clienteIDSeleccionado === cliente.id_cliente);
                 html += `
                     <div class="col-md-6 mb-3">
@@ -296,9 +326,107 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                     </div>
                 `;
             });
-            html += '<7div>';
+            html += '</div>';
             resultadosDiv.innerHTML = html;
         }
+        function filtrarEquiposPorCliente(clienteId,index){
+            const select = document.querySelector(`#equipo_${index} .equipo-select`);
+            if(!select) return;
+            select.innerHTML = '<option value="">-- Ninguno --</option>';
+            if(!clienteId){
+                select.innerHTML = '<option value="">-- Seleccione un cliente primero --</option>';
+                return;
+            }
+            const equiposFiltrados = todosEquipos.filter(equipo => equipo.id_cliente == clienteId);
+            if(equiposFiltrados.length === 0){
+                select.innerHTML = '<option value="">-- Este cliente no tiene equipos registrados --</option>';
+                return;
+            }
+            equiposFiltrados.forEach(equipo => {
+                select.innerHTML += `<option value="${equipo.id_equipo}"
+                            data-serie="${escapeHtml(equipo.no_serie)}"
+                            data-modelo = "${escapeHtml(equipo.modelo)}">
+                            Serie: ${escapeHtml(equipo.no_serie)} - Modelo: ${escapeHtml(equipo.modelo)}
+                         </option>`;
+            });
+        }
+        function filtrarTodosEquipos(clienteId){
+            document.querySelectorAll('.equipo-select').forEach((select,index) => {
+                const item = select.closest('.equipo-item');
+                const id = item ? item.id.replace('equipo_','') : index;
+                filtrarEquiposPorCliente(clienteId,parseInt(id));
+            });
+        }
+        window.seleccionarCliente = function(id,nombre){
+            clienteIDSeleccionado = id;
+            if(idClienteInput) idClienteInput.value=id; 
+            if(nombreClienteSpan) nombreClienteSpan.textContent = nombre;
+            if(clienteSeleccionadoDiv) clienteSeleccionadoDiv.style.display='block';
+            if(elementoSeleccionado){
+                elementoSeleccionado.classList.remove('cliente-seleccionado');
+                const iconAntiguo = elementoSeleccionado.querySelector('.bi-check-circle-fill');
+                if(iconAntiguo) iconAntiguo.remove();
+            }
+            const selectedCard = document.querySelector(`.cliente-card[data-cliente-id="${id}"]`);
+            if(selectedCard){
+                selectedCard.classList.add('cliente-seleccionado');
+                elementoSeleccionado = selectedCard;
+                const headerDiv = selectedCard.querySelector('.d-flex');
+                if(headerDiv && !selectedCard.querySelector('.bi-check-circle-fill')){
+                    const checkIcon = document.createElement('i');
+                    checkIcon.className = 'bi bi-check-fill text-success';
+                    headerDiv.appendChild(checkIcon);
+                }
+            }
+            filtrarTodosEquipos(id);
+        };
+        window.limpiarSeleccion = function(){
+            if(elementoSeleccionado){
+                elementoSeleccionado.classList.remove('cliente-seleccionado');
+                const icon = elementoSeleccionado.querySelector('.bi-check-circle-fill');
+                if(icon){
+                    icon.remove();
+                }
+                elementoSeleccionado = null;
+            }
+            clienteIDSeleccionado = null;
+            if(clienteSeleccionadoDiv) clienteSeleccionadoDiv.style.display = 'none';
+            if(idClienteInput) idClienteInput.value=0;
+            if(nombreClienteSpan) nombreClienteSpan.textContent = '';
+            if(equipoSelect){
+                equipoSelect.innerHTML = '<option value = "">-- Seleccione un cliente primero --</option>';
+            }
+            if(infoEquipoDiv) infoEquipoDiv.style.display = 'none';
+        };
+        function validarFormulario(){
+            const titulo = document.querySelector('input[name="reporte"]');
+            if(btnGuardar){
+                btnGuardar.disabled = (titulo && titulo.value.trim() === '');
+            }
+        }
+        let timeoutId = null;
+        if(buscarClienteInput){
+            buscarClienteInput.addEventListener('input',function() {
+                clearTimeout(timeoutId);
+                const termino = this.value.trim();
+                timeoutId = setTimeout(() => {
+                    buscarClientes(termino);
+                }, 300);
+            });
+        }
+        document.getElementById('btnLimpiarBusqueda').addEventListener('click',function(){
+            buscarClienteInput.value = '';
+            resultadosDiv.innerHTML = `
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"> Escribe al menos 2 caracteres para comenzar a buscar </option>
+                </div>
+            `;
+        })
+        const tituloInput = document.querySelector('input[name="reporte"]');
+        if(tituloInput){
+            tituloInput.addEventListener('input',validarFormulario);
+        }
+        validarFormulario();
     </script>
 </body>
 </html>

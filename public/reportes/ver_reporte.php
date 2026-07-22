@@ -156,7 +156,7 @@ mysqli_close($conn);
             <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <div>
                     <h2 class="mb-0">Reporte</h2>
-                    <span class="text-muted">Referencia: <?= htmlspecialchars($reporte['referencia']) ?></span>
+                    <span class="text-muted">Referencia: <?= htmlspecialchars($reporte['referencia'] ?? '-') ?></span>
                 </div>
                 <div class="text-end mt-2 mt-md-0">
                     <div class="estado-badge estado-<?= $reporte['estado'] ?>">
@@ -219,7 +219,7 @@ mysqli_close($conn);
                                             <?php foreach($componentes_reporte as $comp): ?>
                                                 <tr>
                                                     <td><strong><?= htmlspecialchars($comp['componente_nombre']) ?></strong></td>
-                                                    <td><?= htmlspecialchars($comp['componente_descripcion']) ?></td>
+                                                    <td><?= htmlspecialchars($comp['componente_descripcion'] ?? '-') ?></td>
                                                     <td><?= htmlspecialchars($reporte['tecnico']) ?></td>
                                                     <td><?= $comp['cantidad'] ?></td>
                                                 </tr>

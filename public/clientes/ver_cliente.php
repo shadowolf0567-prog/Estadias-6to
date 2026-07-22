@@ -113,6 +113,35 @@ if($id_cliente){
 }
 $total_componentes = count($componentes);
 $componentes_distintos = count(array_unique(array_column($componentes, 'componente')));
+
+$reportes = [];
+if($id_cliente){
+    $sql_reportes = "SELECT modelo, no_serie,
+                            COUNT(r.id_equipo) as reportes_mes,
+                            (SELECT COUNT(*) FROM reportes r2 WHERE r2.id_equipo = e.id_equipo) as total_reportes
+                    FROM equipos e
+                    LEFT JOIN reportes r ON e.id_equipo = r.id_equipo
+                    WHERE e.id_cliente= ?";
+    $params = [$cliente['id_cliente']];
+    $types = "i";
+
+    if(!empty($mes)){
+        $sql_reportes .= " AND MONTH(r.fecha) = ? AND YEAR(r.fecha) = YEAR(CURDATE())";
+        $params[] = $mes;
+        $types .= "i";
+    }
+    $sql_reportes .= " GROUP BY e.id_equipo
+                        ORDER BY r.fecha DESC";
+    $stmt_re = mysqli_prepare($conn,$sql_reportes);
+    mysqli_stmt_bind_param($stmt_re,$types, ...$params);
+    mysqli_stmt_execute($stmt_re);
+    $result_re = mysqli_stmt_get_result($stmt_re);
+    while($row = mysqli_fetch_assoc($result_re)){
+        $reportes[] = $row;
+    }
+    mysqli_stmt_close($stmt_re);
+}
+$total_reportes = count($reportes);
 mysqli_close($conn);
 ?>
 <!DOCTYPE html>
@@ -303,45 +332,49 @@ mysqli_close($conn);
                     <?php endif; ?>
                 </div>
             </div>
-            <div class="col-md-12 mt-3">
-                <h3 class="mb-3">Equipos del Cliente</h3>
-                <?php if(count($equipos_cliente) > 0): ?>
-                    <div class="row">
-                        <?php foreach($equipos_cliente as $equipo): ?>
-                            <?php $total_reportes = intval($equipo['total_reportes'] ?? 0); ?>
-                            <div class="col-md-6 col-lg-4">
-                                <div class="card info-card equipo-card h-100">
-                                    <div class="card-header">Información del Equipo</div>
-                                    <div class="card-body">
-                                        <p><span class="info-label">Modelo:</span><?= htmlspecialchars($equipo['modelo'] ?: 'Sin modelo') ?></p>
-                                        <p><span class="info-label">Número de Serie: </span><?= htmlspecialchars($equipo['no_serie']) ?></p>
-                                        <hr>
-                                        <p>
-                                            <span class="info-label">Reportes:</span>
-                                            <?php if($total_reportes > 0): ?>
-                                                <a href="../reportes/reportes.php?tab=pendiente&id_equipo=<?= $equipo['id_equipo'] ?>">
-                                                    <?= $total_reportes ?>
-                                                </a>
+            <div class="card md-12 mt-3">
+                <div class="card-info-card">
+                    <div class="card-header"><h5>Reportes del Cliente</h5></div>
+                </div>
+                <div class="card-body p-0">
+                    <?php if(count($reportes)  > 0): ?>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Modelo</th>
+                                        <th>No. Serie</th>
+                                        <th>Reportes del mes</th>
+                                        <th>Reportes totales</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach($reportes as $reporte): ?>
+                                        <?php $total_reportes = intval($reporte['total_reportes'] ?? 0) ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($reporte['modelo']) ?></td>
+                                            <td><?= htmlspecialchars($reporte['no_serie']) ?></td>
+                                            <td><span><?= htmlspecialchars($reporte['reportes_mes'])?> reporte(s)</span></td>
+                                            <td><?php if($total_reportes > 0): ?>
+                                                    <span><?= $total_reportes ?> reporte(s)</span>
                                             <?php else: ?>
                                                 <span>0 reportes</span>
                                             <?php endif; ?>
-                                        </p>
-                                    </div>
-                                    <div class="card-footer">
-                                        <a href="../equipos/ver_equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-sm btn-info">
-                                            <i class="bi bi-eye"></i> Ver Equipo
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php else: ?>
-                    <div class="alert alert-info text-center">
-                        <i class="bi bi-info-circle" style="font-size: 36px;"></i>
-                        <h5>No hay equipos registrados para este cliente</h5>
-                    </div>
-                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php else: ?>
+                        <div class="text-center p-4">
+                            <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+                            <p class="mt-2 text-muted">
+                                No hay reportes registrados en este mes
+                            </p>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>
