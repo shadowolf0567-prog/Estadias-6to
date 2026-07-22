@@ -35,16 +35,6 @@ if($result_clientes){
 $cliente = "SELECT c.*,r.* FROM clientes c
             INNER JOIN reportes r
             ON r.id_cliente = c.id_cliente";
-$componentes = [];
-$sql_comp = "SELECT id, componente, descripcion
-            FROM componentes
-            ORDER BY componente ASC";
-$result_comp = mysqli_query($conn,$sql_comp);
-if($result_comp){
-    while($row = mysqli_fetch_assoc($result_comp)){
-        $componentes[] = $row;
-    }
-}
 $error=isset($_GET['error']) ? $_GET['error'] : '';
 $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
 ?>
