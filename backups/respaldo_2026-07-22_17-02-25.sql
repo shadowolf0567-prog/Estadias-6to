@@ -1,5 +1,5 @@
 -- Backup de Base de Datos Emipac
--- Fecha: 2026-07-22 13:11:56
+-- Fecha: 2026-07-22 17:02:25
 DROP DATABASE IF EXISTS emipac;
 CREATE DATABASE emipac;
 USE emipac;
@@ -28,21 +28,6 @@ INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encar
 INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`) VALUES ('12', 'Clarton Horn México', '271301', 'Av. de la Cruz 103 Col. Buenavista', 'Abigail Cabrera', 'C-0020');
 INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`) VALUES ('13', 'Gerresheimer Querétaro', '230001', 'Av. Coahuila No. 9 Industrial Benito Juarez', 'Luis Culebro', 'C-0046');
 INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`) VALUES ('14', 'Flex N Gate México S de RL de CV', '246401', 'Principal No. 1 Parque Industrial Opción SJI', 'Nathanael Torres', 'C-0213');
-
--- Estructura de tabla: componentes
-DROP TABLE IF EXISTS `componentes`;
-CREATE TABLE `componentes` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `componente` varchar(100) DEFAULT NULL,
-  `descripcion` text DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---Datos de tabla: componentes
-INSERT INTO `componentes` (`id`, `componente`, `descripcion`) VALUES ('1', 'SER-01', 'Servicio Preventivo');
-INSERT INTO `componentes` (`id`, `componente`, `descripcion`) VALUES ('2', 'SER-02', 'Servicio Correctivo');
-INSERT INTO `componentes` (`id`, `componente`, `descripcion`) VALUES ('3', 'refaccion', '');
-INSERT INTO `componentes` (`id`, `componente`, `descripcion`) VALUES ('4', 'componente', '');
 
 -- Estructura de tabla: correos
 DROP TABLE IF EXISTS `correos`;
@@ -162,7 +147,7 @@ CREATE TABLE `reportes` (
   KEY `idx_equipo` (`id_equipo`),
   CONSTRAINT `reportes_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE SET NULL,
   CONSTRAINT `reportes_ibfk_2` FOREIGN KEY (`id_equipo`) REFERENCES `equipos` (`id_equipo`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: reportes
 INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('1', '2026-07-08', 'Damian', 'atendido', '2026-07-08', '', '1', '1', '291901-0399-0001');

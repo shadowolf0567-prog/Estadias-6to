@@ -28,12 +28,33 @@ if(!$equipo){
 }
 
 $reportes_equipos = [];
-if($equipo['id_equipo']){
-    $sql_reportes_equipos = "SELECT id_reporte, fecha, estado, fecha_atencion, referencia
+$mes = isset($_GET['mes']) ? intval($_GET['mes']) : null;
+if($equipo){
+    $sql_reportes_equipos = "SELECT r.id_reporte, r.fecha, r.estado,
+                                (SELECT COUNT(*) FROM reportes_componentes rc
+                                WHERE rc.id_reporte = r.id_reporte) as total_componentes,
+                                (SELECT COUNT(*) FROM reportes_componentes rc
+                                WHERE rc.id_reporte = r.id_reporte
+                                AND (rc.tipo = 'SER-01')) as preventivos,
+                                (SELECT COUNT(*) FROM reportes_componentes rc
+                                WHERE rc.id_reporte = r.id_reporte
+                                AND (rc.tipo = 'SER-02')) as correctivos,
+                                (SELECT COUNT(*) FROM reportes_componentes rc
+                                WHERE rc.id_reporte = r.id_reporte
+                                AND (rc.tipo = 'SER-03' OR rc.tipo = 'componente')) as total_componentes
                                 FROM reportes r
                                 WHERE id_equipo = ?";
+    $params = [$equipo['id_equipo']];
+    $types = "i";
+    if(!empty($mes)){
+        $sql_reportes_equipos .= " AND month(r.fecha) = ? and year(r.fecha) = year(curdate())";
+        $params[] = $mes;
+        $types .= "i";
+    }
+    $sql_reportes_equipos .= " ORDER BY r.fecha DESC";
+
     $stmt_re = mysqli_prepare($conn,$sql_reportes_equipos);
-    mysqli_stmt_bind_param($stmt_re,"i",$equipo['id_equipo']);
+    mysqli_stmt_bind_param($stmt_re,$types, ...$params);
     mysqli_stmt_execute($stmt_re);
     $result_re = mysqli_stmt_get_result($stmt_re);
     while($row = mysqli_fetch_assoc($result_re)){
@@ -41,7 +62,6 @@ if($equipo['id_equipo']){
     }
     mysqli_stmt_close($stmt_re);
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,7 +71,7 @@ if($equipo['id_equipo']){
     <title>Ver Equipo</title>
     <link rel="stylesheet" href="../assets/css/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
-    <link rel="stylesheet" href="../assets/css/responsives.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
     <?php require_once __DIR__ . '/../gestion/menu.php'; ?>
@@ -101,35 +121,90 @@ if($equipo['id_equipo']){
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 mt-3">
-                <h3 class="mb-3">Reportes del Equipo</h3>
-                <?php if(count($reportes_equipos) > 0): ?>
-                    <div class="row">
-                        <?php foreach($reportes_equipos as $reportes): ?>
-                            <div class="col-md-6 col-lg-4">
-                                <div class="card info-card equipo-card h-100">
-                                    <div class="card-header">Información del Reporte</div>
-                                    <div class="card-body">
-                                        <p><span class="info-label">Referencia: </span><?= htmlspecialchars($reportes['referencia'] ?? '-') ?></p>
-                                        <p><span class="info-label">Fecha: </span><?= htmlspecialchars($reportes['fecha']) ?></p>
-                                        <p><span class="info-label">Estado: </span><?= htmlspecialchars($reportes['estado']) ?></p>
-                                        <?php if($reportes['estado'] == 'atendido'): ?>
-                                            <p><span class="info-label">Fecha de Atención: </span><?= htmlspecialchars($reportes['fecha_atencion']) ?></p>
-                                        <?php endif; ?>
-                                        <a href="../reportes/ver_reporte.php?id=<?= $reportes['id_reporte'] ?>" class="btn btn-info">
-                                            <i class="bi bi-eye"></i> Ver Reporte
-                                        </a>
-                                    </div>
-                                </div>
+            <div class="col-md-12">
+                <form action="" method="get" class="mb-3">
+                    <input type="hidden" name="id" value="<?= $equipo['id_equipo'] ?>">
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-3">
+                            <label for="" class="form-label">Filtrar por mes</label>
+                            <select name="mes" class="form-select" onchange="this.form.submit()">
+                                <option value="">-- Todos --</option>
+                                <option value="1"<?= ($mes == 1) ? 'selected' : '' ?>>Enero</option>
+                                <option value="2"<?= ($mes == 2) ? 'selected' : '' ?>>Febrero</option>
+                                <option value="3"<?= ($mes == 3) ? 'selected' : '' ?>>Marzo</option>
+                                <option value="4"<?= ($mes == 4) ? 'selected' : '' ?>>Abril</option>
+                                <option value="5"<?= ($mes == 5) ? 'selected' : '' ?>>Mayo</option>
+                                <option value="6"<?= ($mes == 6) ? 'selected' : '' ?>>Junio</option>
+                                <option value="7"<?= ($mes == 7) ? 'selected' : '' ?>>Julio</option>
+                                <option value="8"<?= ($mes == 8) ? 'selected' : '' ?>>Agosto</option>
+                                <option value="9"<?= ($mes == 9) ? 'selected' : '' ?>>Septiembre</option>
+                                <option value="10"<?= ($mes == 10) ? 'selected' : '' ?>>Octubre</option>
+                                <option value="11"<?= ($mes == 11) ? 'selected' : '' ?>>Noviembre</option>
+                                <option value="12"<?= ($mes == 12) ? 'selected' : '' ?>>Diciembre</option>
+                            </select>
+                        </div>
+                        <?php if(!empty($mes)): ?>
+                            <div class="col-md-2">
+                                <a href="ver_equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Limpiar
+                                </a>
                             </div>
-                        <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
-                <?php else: ?>
-                    <div class="alert alert-info text-center">
-                        <i class="bi bi-info-circle" style="font-size: 36px;"></i>
-                        <h5>Este equipo no tiene ningún reporte</h5>
+                </form>
+            </div>
+            <div class="col-md-12">
+                <div class="card info-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            Reportes del Equipo
+                            <span class="badge bg-light text-dark ms-2">
+                                <?= count($reportes_equipos) ?> reporte(s)
+                            </span>
+                        </h5>
                     </div>
-                <?php endif; ?>
+                    <div class="card-body p-0">
+                        <?php if(count($reportes_equipos) > 0): ?>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-striped table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Componentes/Refacciones</th>
+                                            <th>Preventivos</th>
+                                            <th>Correctivos</th>
+                                            <th>Estado</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($reportes_equipos as $reporte): ?>
+                                            <tr>
+                                                <td><?= date('d/m/Y', strtotime($reporte['fecha'])) ?></td>
+                                                <td><?= htmlspecialchars($reporte['total_componentes']) ?></td>
+                                                <td><?= htmlspecialchars($reporte['preventivos']) ?></td>
+                                                <td><?= htmlspecialchars($reporte['correctivos']) ?></td>
+                                                <td><?= htmlspecialchars($reporte['estado']) ?></td>
+                                                <td>
+                                                    <a href="../reportes/ver_reporte.php?id=<?= $reporte['id_reporte'] ?>" class="btn btn-sm btn-info">
+                                                        <i class="bi bi-eye"></i> Ver Reporte
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php else: ?>
+                            <div class="text-center p-4">
+                                <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+                                <p class="mt-2 text-muted">
+                                    No hay reportes registrados en este mes
+                                </p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

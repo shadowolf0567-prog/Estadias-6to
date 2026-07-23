@@ -35,16 +35,6 @@ if($result_clientes){
 $cliente = "SELECT c.*,r.* FROM clientes c
             INNER JOIN reportes r
             ON r.id_cliente = c.id_cliente";
-$componentes = [];
-$sql_comp = "SELECT id, componente, descripcion
-            FROM componentes
-            ORDER BY componente ASC";
-$result_comp = mysqli_query($conn,$sql_comp);
-if($result_comp){
-    while($row = mysqli_fetch_assoc($result_comp)){
-        $componentes[] = $row;
-    }
-}
 $error=isset($_GET['error']) ? $_GET['error'] : '';
 $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
 ?>
@@ -139,7 +129,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                 <i class="bi bi-info-circle"> Escribe al menos 2 caracteres para comenzar a buscar</i>
                             </div>
                         </div>
-                        <div class="alert alert-succcess mt-3" id="clienteSeleccionado" style="display:none;">
+                        <div class="alert alert-success mt-3" id="clienteSeleccionado" style="display:none;">
                             <div class="d-flex justify-content-between align-item-center">
                                 <div>
                                     <i class="bi bi-check-circle"></i>

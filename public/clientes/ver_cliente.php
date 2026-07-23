@@ -112,11 +112,10 @@ if($id_cliente){
     mysqli_stmt_close($stmt_rc);
 }
 $total_componentes = count($componentes);
-$componentes_distintos = count(array_unique(array_column($componentes, 'componente')));
 
 $reportes = [];
 if($id_cliente){
-    $sql_reportes = "SELECT modelo, no_serie,
+    $sql_reportes = "SELECT e.id_equipo,  modelo, no_serie,
                             COUNT(r.id_equipo) as reportes_mes,
                             (SELECT COUNT(*) FROM reportes r2 WHERE r2.id_equipo = e.id_equipo) as total_reportes
                     FROM equipos e
@@ -334,7 +333,13 @@ mysqli_close($conn);
             </div>
             <div class="card md-12 mt-3">
                 <div class="card-info-card">
-                    <div class="card-header"><h5>Reportes del Cliente</h5></div>
+                    <div class="card-header">
+                        <h5>Reportes del Cliente
+                            <span class="badge bg-light text-dark ms-2">
+                                <?= count($reportes) ?> reporte(s)
+                            </span>
+                        </h5>
+                    </div>    
                 </div>
                 <div class="card-body p-0">
                     <?php if(count($reportes)  > 0): ?>
@@ -346,6 +351,7 @@ mysqli_close($conn);
                                         <th>No. Serie</th>
                                         <th>Reportes del mes</th>
                                         <th>Reportes totales</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -361,6 +367,9 @@ mysqli_close($conn);
                                                 <span>0 reportes</span>
                                             <?php endif; ?>
                                             </td>
+                                            <td><a href="../equipos/ver_equipo.php?id=<?= $reporte['id_equipo'] ?>" class="btn btn-info">
+                                                <i class="bi bi-eye"></i> Ver Equipo
+                                            </a></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
