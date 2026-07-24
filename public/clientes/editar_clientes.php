@@ -93,6 +93,12 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         <label>Dirección</label>
                         <textarea name="direccion" class="form-control" required><?= htmlspecialchars($cliente['direccion']) ?></textarea>
                     </div>
+                    <?php if(!empty($cliente['subdireccion'])): ?>
+                        <div class="col-md-12">
+                            <label>Ubicación</label>
+                            <textarea class="form-control" name="subdireccion"><?= htmlspecialchars($cliente['subdireccion']) ?></textarea>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="form-section">

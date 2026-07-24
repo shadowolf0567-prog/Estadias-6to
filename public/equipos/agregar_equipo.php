@@ -189,6 +189,10 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
                                 <label>Dirección</label>
                                 <textarea id="nuevo_direccion" class="form-control"></textarea>                
                             </div>
+                            <div class="col-md-12">
+                                <label>Ubicación (Opcional)</label>
+                                <textarea name="" id="nuevo_subdireccion" class="form-control"></textarea>
+                            </div>
                         </div>
                         <div class="mt-3">
                             <label>Teléfono</label>
@@ -544,6 +548,7 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
                     no_cuenta: document.getElementById('nuevo_no_cuenta').value.trim(),
                     contrato: document.getElementById('nuevo_contrato').value.trim(),
                     direccion: document.getElementById('nuevo_direccion').value.trim(),
+                    subdireccion: document.getElementById('nuevo_subdireccion').value.trim(),
                     telefonos: datosContacto.telefonos,
                     correos: datosContacto.correos
                 };

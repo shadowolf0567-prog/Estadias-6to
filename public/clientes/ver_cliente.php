@@ -199,7 +199,7 @@ mysqli_close($conn);
             </div>
         </div>
         <div class="row mt-4">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <div class="card info-card">
                     <div class="card-header">Información del Cliente</div>
                     <div class="card-body">
@@ -209,42 +209,43 @@ mysqli_close($conn);
                                 <p><span class="info-label">Número de Cuenta: </span><?= htmlspecialchars(($cliente['no_cuenta'] ?: 'No registrado')) ?></p>
                                 <p><span class="info-label">Contrato: </span><?= htmlspecialchars($cliente['contrato'] ?: 'No registrado') ?></p>
                                 <p><span class="info-label">Dirección: </span><?= htmlspecialchars($cliente['direccion'] ?: 'No registrado') ?></p>
-                                <div class="col-md-12">
-                                    <div class="card info-card">
-                                        <div class="card-header">Teléfonos</div>
-                                        <div class="card-body">
-                                            <?php if(count($cliente['telefonos']) > 0): ?>
-                                                <?php foreach($cliente['telefonos'] as $telefono): ?>
-                                                        <i class="bi bi-telephone"></i> <?= htmlspecialchars($telefono['telefono']) ?>  
-                                                        <?php if(!empty($telefono['contacto'])): ?>
-                                                            <i class="bi bi-person-circle"></i> <?= htmlspecialchars($telefono['contacto']) ?>
-                                                        <?php endif; ?>
-                                                <?php endforeach; ?>
-                                            <?php else: ?>
-                                                <p class="text-muted">No hay teléfonos registrados</p>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="card info-card">
-                                        <div class="card-header">Correos Electrónicos</div>
-                                        <div class="card-body">
-                                            <?php if(count($cliente['correos']) > 0): ?>
-                                                <?php foreach($cliente['correos'] as $correo): ?>
-                                                    <i class="bi bi-envelope"></i> <?= htmlspecialchars($correo['correo']) ?>
-                                                    <?php if(!empty($correo['contacto'])): ?>
-                                                        <i class="bi bi-person-circle"></i><?= htmlspecialchars($correo['contacto']) ?>
-                                                    <?php endif; ?>
-                                                <?php endforeach; ?>
-                                            <?php else: ?>
-                                                <p class="text-muted">No hay correos registrados</p>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
-                                </div>
+                                <?php if(!empty($cliente['subdireccion'])): ?>
+                                    <p><span class="info-label">Ubicación: </span><?= htmlspecialchars($cliente['subdireccion']) ?></p>
+                                <?php endif; ?>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card info-card">
+                    <div class="card-header">Teléfonos</div>
+                    <div class="card-body">
+                        <?php if(count($cliente['telefonos']) > 0): ?>
+                            <?php foreach($cliente['telefonos'] as $telefono): ?>
+                                    <i class="bi bi-telephone"></i> <?= htmlspecialchars($telefono['telefono']) ?>  
+                                    <?php if(!empty($telefono['contacto'])): ?>
+                                        <i class="bi bi-person-circle"></i> <?= htmlspecialchars($telefono['contacto']) ?>
+                                    <?php endif; ?>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p class="text-muted">No hay teléfonos registrados</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <div class="card info-card">
+                    <div class="card-header">Correos Electrónicos</div>
+                    <div class="card-body">
+                        <?php if(count($cliente['correos']) > 0): ?>
+                            <?php foreach($cliente['correos'] as $correo): ?>
+                                <i class="bi bi-envelope"></i> <?= htmlspecialchars($correo['correo']) ?>
+                                <?php if(!empty($correo['contacto'])): ?>
+                                    <i class="bi bi-person-circle"></i><?= htmlspecialchars($correo['contacto']) ?>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p class="text-muted">No hay correos registrados</p>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -270,11 +271,6 @@ mysqli_close($conn);
                             <option value="11"<?= ($mes == 11) ? 'selected' : '' ?>>Noviembre</option>
                             <option value="12"<?= ($mes == 12) ? 'selected' : '' ?>>Diciembre</option>
                         </select>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-filter"></i> Filtrar
-                        </button>
                     </div>
                     <?php if(!empty($mes)): ?>
                         <div class="col-md-2">
@@ -334,7 +330,7 @@ mysqli_close($conn);
             <div class="card md-12 mt-3">
                 <div class="card-info-card">
                     <div class="card-header">
-                        <h5>Reportes del Cliente
+                        <h5>Equipos del Cliente
                             <span class="badge bg-light text-dark ms-2">
                                 <?= count($reportes) ?> reporte(s)
                             </span>

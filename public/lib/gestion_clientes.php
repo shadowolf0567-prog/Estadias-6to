@@ -41,7 +41,7 @@ function obtener_cliente_completo($id_cliente){
     return $cliente;
 }
 
-function guardar_cliente_completo($id_cliente, $nombre, $encargado, $no_cuenta,$contrato, $direccion, $telefonos = [], $correos = []){
+function guardar_cliente_completo($id_cliente, $nombre, $encargado, $no_cuenta,$contrato, $direccion,$subdireccion, $telefonos = [], $correos = []){
     global $conn;
     if(!$conn){
         return[
@@ -51,10 +51,10 @@ function guardar_cliente_completo($id_cliente, $nombre, $encargado, $no_cuenta,$
     }
     $es_nuevo = empty($id_cliente);
     if($es_nuevo){
-        $sql = "INSERT INTO clientes(nombre,encargado,no_cuenta,contrato,direccion)
-                VALUES (?,?,?,?)";
+        $sql = "INSERT INTO clientes(nombre,encargado,no_cuenta,contrato,direccion,subdireccion)
+                VALUES (?,?,?,?,?)";
         $stmt = mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt, 'sssss', $nombre,$encargado, $no_cuenta,$contrato, $direccion);
+        mysqli_stmt_bind_param($stmt, 'ssssss', $nombre,$encargado, $no_cuenta,$contrato, $direccion,$subdireccion );
         if(!mysqli_stmt_execute($stmt)){
             return[
                 'estatus' => 'error',
@@ -64,9 +64,9 @@ function guardar_cliente_completo($id_cliente, $nombre, $encargado, $no_cuenta,$
         $id_cliente = mysqli_insert_id($conn);
         mysqli_stmt_close($stmt);
     }else{
-        $sql = "UPDATE clientes SET nombre = ?,encargado=?, no_cuenta = ?,contrato=?, direccion=? WHERE id_cliente = ?";
+        $sql = "UPDATE clientes SET nombre = ?,encargado=?, no_cuenta = ?,contrato=?, direccion=?,subdireccion = ? WHERE id_cliente = ?";
         $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt,'sssssi',$nombre,$encargado, $no_cuenta,$contrato, $direccion, $id_cliente);
+        mysqli_stmt_bind_param($stmt,'ssssssi',$nombre,$encargado, $no_cuenta,$contrato, $direccion,$subdireccion, $id_cliente);
 
         if(!mysqli_stmt_execute($stmt)){
             return[
@@ -211,6 +211,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     $encargado = trim($_POST['encargado'] ?? '');
                     $contrato = trim($_POST['contrato'] ?? '');
                     $direccion = trim($_POST['direccion'] ?? '');
+                    $subdireccion = trim($_POST['subdireccion'] ?? '');
 
                     $telefonos = [];
                     if(isset($_POST['telefonos']) && is_array($_POST['telefonos'])){
@@ -235,7 +236,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                             }
                         }
                     }
-                    $resultado = guardar_cliente_completo(null,$nombre,$encargado,$contrato,$no_cuenta,$direccion,$telefonos,$correos);
+                    $resultado = guardar_cliente_completo(null,$nombre,$encargado,$contrato,$no_cuenta,$direccion,$subdireccion,$telefonos,$correos);
 
                     if($resultado['estatus'] === 'msg'){
                         header('Location: ../clientes/clientes.php?msg='.urlencode($resultado['mensaje']));
@@ -253,6 +254,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     $encargado = trim($_POST['encargado'] ?? '');
                     $contrato = trim($_POST['contrato'] ?? '');
                     $direccion = trim($_POST['direccion'] ?? '');
+                    $subdireccion = trim($_POST['subdireccion'] ?? '');
 
                     $telefonos = [];
                     if(isset($_POST['telefonos']) && is_array($_POST['telefonos'])){
@@ -277,7 +279,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                             }
                         }
                     }
-                    $resultado = guardar_cliente_completo($id_cliente,$nombre,$encargado,$no_cuenta,$contrato,$direccion,$telefonos,$correos);
+                    $resultado = guardar_cliente_completo($id_cliente,$nombre,$encargado,$no_cuenta,$contrato,$direccion,$subdireccion,$telefonos,$correos);
 
                     if($resultado['estatus'] === 'msg'){
                         header('Location: ../clientes/ver_cliente.php?id='.$id_cliente.'msg='.urlencode($resultado['mensaje']));
