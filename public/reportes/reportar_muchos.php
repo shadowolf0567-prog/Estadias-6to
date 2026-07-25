@@ -169,18 +169,32 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                     <div id="equiposContainer">
                         <div class="equipo-item" id="equipo_0">
                             <div class="row g-3">
-                                <div class="col-md-11">
-                                    <select name="equipos[0][id_equipo]" class="form-select equipo-select">
-                                        <option value="">-- Seleccione un cliente primero --</option>
-                                    </select>
+                                <div class="col-md-10">
+                                    <label for="" class="form-label">Buscar Equipo</label>
+                                    <input type="text" id="buscarEquipo_0" class="form-control" onkeyup="buscarEquipos(this.value, 0)">
+                                    <input type="hidden" name="equipos[0][id_equipo]" id="equipoId_0" value="">
                                 </div>
-                                <div class="col-md-1 d-flex align-items-end">
-                                    <i class="bi bi-dash-circle btn-remover" onclick="removerEquipo(0)" style="display: none"></i>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="removerEquipo(0)" style="display: none;">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                                <div class="col-md-12" id="resultadosEquipos_0"></div>
+                                <div class="alert alert-success" id="equipoSeleccionado_0" style="display: none;">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <i class="bi bi-check-circle"></i>
+                                            <strong>Equipo seleccionado:</strong><span id="equipoInfo_0"></span>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="limpiarSeleccionEquipo(0)">
+                                                <i class="bi bi-x-circle"></i> Cambiar
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="agregarOtro()">
+                    <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="agregarEquipo()">
                             <i class="bi bi-plus-circle"></i> Agregar Equipo
                     </button>
                 </div>
@@ -213,6 +227,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
         let clienteSeleccionado = null;
         let clienteIDSeleccionado = null;
         let clientesData = <?= json_encode($clientes) ?>;
+        let equiposSeleccionados ={};
         let elementoSeleccionado = null;
         let contadorReportes = 1;
         const buscarClienteInput = document.getElementById('buscarCliente');
@@ -266,7 +281,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             if(termino.length < 2){
                 resultadosDiv.innerHTML = `
                     <div class="alert alert-info">
-                        <div class="bi bi-info-circle"> Escribe al menos 2 caracteres para comenzar a buscar
+                        <i class="bi bi-info-circle"> Escribe al menos 2 caracteres para comenzar a buscar</i>
                     </div>
                 `;
                 return;
@@ -319,25 +334,154 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             html += '</div>';
             resultadosDiv.innerHTML = html;
         }
-        function filtrarEquiposPorCliente(clienteId,index){
-            const select = document.querySelector(`#equipo_${index} .equipo-select`);
-            if(!select) return;
-            select.innerHTML = '<option value="">-- Ninguno --</option>';
-            if(!clienteId){
-                select.innerHTML = '<option value="">-- Seleccione un cliente primero --</option>';
+        function buscarEquipos(termino, index){
+            const resultadosDiv = document.getElementById('resultadosEquipos_' + index);
+            if(termino.length < 2){
+                resultadosDiv.innerHTML = `
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"> Escreibe al menos 2 caracteres para comenzar a buscar</i>
+                    </div>
+                `;
                 return;
             }
-            const equiposFiltrados = todosEquipos.filter(equipo => equipo.id_cliente == clienteId);
-            if(equiposFiltrados.length === 0){
-                select.innerHTML = '<option value="">-- Este cliente no tiene equipos registrados --</option>';
+            const terminoLower = termino.toLowerCase();
+            let resultados = todosEquipos;
+            if(clienteIDSeleccionado){
+                resultados = resultados.filter(equipo => equipo.id_cliente == clienteIDSeleccionado);
+            }
+            resultados = resultados.filter(equipo =>
+                equipo.no_serie.toLowerCase().includes(terminoLower) ||
+                (equipo.modelo && equipo.modelo.toLowerCase().includes(terminoLower))
+            );
+            const idSeleccionados = Object.values(equiposSeleccionados).filter(id => id > 0);
+            resultados = resultados.filter(equipo => !idSeleccionados.includes(equipo.id_equipo));
+
+            if(resultados.length === 0){
+                resultadosDiv.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i> No se encontraron equipos
+                    </div>
+                `;
                 return;
             }
-            equiposFiltrados.forEach(equipo => {
-                select.innerHTML += `<option value="${equipo.id_equipo}"
-                            data-serie="${escapeHtml(equipo.no_serie)}"
-                            data-modelo = "${escapeHtml(equipo.modelo)}">
-                            Serie: ${escapeHtml(equipo.no_serie)} - Modelo: ${escapeHtml(equipo.modelo)}
-                         </option>`;
+            let html = '<div class="row">';
+            resultados.forEach(equipo => {
+                html += `
+                    <div class="col-md-4 lg-3 mb-2">
+                        <div class="card equipo-card p-2" onclick="seleccionarEquipo(${equipo.id_equipo},${index})">
+                            <div class="card-body p-2">
+                                <strong>${escapeHtml(equipo.no_serie)}</strong>
+                                <br><small class="text-muted">${escapeHtml(equipo.modelo)}</small>
+                                <br><small class="text-primary">${escapeHtml(equipo.cliente_nombre)}</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>;'
+            resultadosDiv.innerHTML = html;
+        }
+        function seleccionarEquipo(idEquipo, index){
+            const equipo = todosEquipos.find(e => e.id_equipo == idEquipo);
+            if(!equipo) return;
+
+            equiposSeleccionados[index] = idEquipo;
+            document.getElementById('equipoId_'+index).value = idEquipo;
+
+            const infoDiv = document.getElementById('equipoSeleccionado_' + index);
+            const infoSpan = document.getElementById('equipoInfo_' + index);
+            infoSpan.innerHTML = `<strong>Serie:</strong> ${escapeHtml(equipo.no_serie)} | <strong>Modelo: </strong> ${escapeHtml(equipo.modelo)}`;
+            infoDiv.style.display = 'block';
+
+            document.getElementById('resultadosEquipos_'+index).innerHTML = '';
+            document.getElementById('buscarEquipo_'+index).value = equipo.no_serie;
+
+            const btnEliminar = document.querySelector(`#equipo_${index} .btn-danger`);
+            if(btnEliminar) btnEliminar.style.display = 'block';
+            validarFormulario();
+        }
+        function limpiarSeleccionEquipo(index){
+            equiposSeleccionados[index] = null;
+            document.getElementById('equipoId_'+index).value = '';
+            document.getElementById('equipoSeleccionado_'+index).style.display = 'none';
+            document.getElementById('buscarEquipo_'+index).value = '';
+            document.getElementById('resultadosEquipos_'+index).innerHTML = `
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"> Escribe al menos 2 caracteres para comenzar a buscar</i>
+                </div>
+            `;
+            const btnEliminar = document.querySelector(`equipo_${index}.btn-danger`);
+            if(btnEliminar) btnEliminar.style.display = 'none';
+            validarFormulario();
+        }
+        function agregarEquipo(){
+            const container = document.getElementById('equiposContainer');
+            const index = contadorReportes;
+            equiposSeleccionados[index] = null;
+
+            const html = `
+                <div class="equipo-item" id="equipo_${index}">
+                    <div class="row g-2">
+                        <div class="col-md-10">
+                            <label class ="form-label">Buscar equipo</label>
+                            <input type ="text" id="buscarEquipo_${index}" class="form-control"
+                                placeholder="Escribe número de serie o modelo"
+                                autocomplete = "off"
+                                onkeyup="buscarEquipos(this.value, ${index})">
+                            <input type = "hidden" name="equipos[${index}][id_equipo]" id="equipoId_${index}" value="">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removerEquipo(${index})">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                        <div class="col-md-12" id="resultadosEquipos_${index}">
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i> Escribe al menos 2 caracteres para comenzar a buscar
+                            </div>
+                        </div>
+                        <div class="alert alert-success mt-3" id="equipoSeleccionado_${index}" style="display: none;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-check-circle"></i>
+                                    <strong>Equipo seleccionado:</strong><span id="equipoInfo_${index}"></span>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="limpiarSeleccionEquipo(${index})">
+                                        <i class="bi bi-x-circle"></i> Cambiar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend',html);
+            contadorReportes++;
+        }
+        function removerEquipo(index){
+            const item = document.getElementById('equipo_' + index);
+            const container = document.getElementById('equiposContainer');
+            if(container.querySelectorAll('.equipo-item').length > 1){
+                delete equiposSeleccionados[index];
+                item.remove();
+                validarFormulario();
+            }else{
+                alert('Debe haber al menos un equipo');
+            }
+        }
+        function filtrarEquiposPorCliente(clienteId){
+            clienteIDSeleccionado = clienteID;
+            document.querySelectorAll('.equipo-item').forEach((item,index) => {
+                const resultadosDiv = document.getElementById('resultadosEquipos_' + index);
+                if(resultadosDiv){
+                    resultadosDiv.innerHTML = `
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"> Escribe al menos 2 caracteres para comenzar a buscar</i>
+                        </div>
+                    `;
+                }
+                const input = document.getElementById('buscarEquipo_'+index);
+                if(input) input.value = '';
+                limpiarSeleccionEquipo(index);
             });
         }
         function filtrarTodosEquipos(clienteId){
