@@ -125,15 +125,20 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
 
             <div class="form-section">
                 <div class="row g-3">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label">Número de Serie</label>
                         <input type="text" name="no_serie" id="no_serie" class="form-control"
                                 value="<?= htmlspecialchars($equipo['no_serie']) ?>" required>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label">Modelo</label>
                         <input type="text" name="modelo" id="modelo" class="form-control"
                                 value="<?= htmlspecialchars($equipo['modelo']) ?>">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="" class="form-label">Ubicación</label>
+                        <input type="text" name="ubicacion" id="ubicacion" class="form-control"
+                                value="<?= htmlspecialchars($equipo['ubicacion']) ?>">
                     </div>
                 </div>
             </div>

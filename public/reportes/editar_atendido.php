@@ -166,9 +166,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 <div class="cliente-actual">
                     <strong><i class="bi bi-info-circle"></i> Cliente actual</strong>
                     <?php if($reporte['cliente_nombre']): ?>
-                        <span class="badge bg-info">
                             <?= htmlspecialchars($reporte['cliente_nombre']) ?>
-                        </span>
                     <?php else: ?>
                         <span class="badge bg-secondary">Sin Cliente Asignado</span>
                     <?php endif; ?>
@@ -696,6 +694,14 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 }, 300);
             });
         }
+        document.getElementById('btnLimpiarBusqueda').addEventListener('click',function(){
+            buscarClienteInput.value='';
+            resultadosDiv.innerHTML = `
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"> Escribe al menos 2 caracteres para comenzar a buscar </i>
+                </div>
+            `;
+        })
         if(equipoActualId){
             const equipoActual = todosEquipos.find(e => e.id_equipo == equipoActualId);
             if(equipoActual){

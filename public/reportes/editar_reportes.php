@@ -682,6 +682,14 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 }, 300);
             });
         }
+        document.getElementById('btnLimpiarBusqueda').addEventListener('click',function(){
+            buscarClienteInput.value = '';
+            resultadosDiv.innerHTML = `
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"> Escribe al menos 2 caracteres para comenzar a buscar </i>
+                </div>
+            `;
+        })
         if(document.getElementById('idCliente')){
             document.getElementById('idCliente').addEventListener('change',validarFormulario);
         }

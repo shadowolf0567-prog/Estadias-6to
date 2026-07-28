@@ -100,6 +100,7 @@ if($equipo){
                             <div class="col-md-12">
                                 <p><span class="info-label">Modelo: </span><?= htmlspecialchars($equipo['modelo']) ?></p>
                                 <p><span class="info-label">Número de Serie: </span><?= htmlspecialchars($equipo['no_serie']) ?></p>
+                                <p><span class="info-label">Ubicación: </span><?= htmlspecialchars($equipo['ubicacion']) ?></p>
                             </div>
                         </div>
                     </div>

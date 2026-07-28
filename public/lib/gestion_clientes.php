@@ -138,10 +138,11 @@ function agregar_equipo_con_cliente($equipos, $id_cliente = null){
         }
         $no_serie = trim($equipo['no_serie']);
         $modelo = trim($equipo['modelo']);
+        $ubicacion = trim($equipo['ubicacion']);
 
-        $sql='INSERT INTO equipos(no_serie,modelo,id_cliente) VALUES (?,?,?)';
+        $sql='INSERT INTO equipos(no_serie,modelo,ubicacion,id_cliente) VALUES (?,?,?,?)';
         $stmt = mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt,'ssi',$no_serie,$modelo,$id_cliente);
+        mysqli_stmt_bind_param($stmt,'sssi',$no_serie,$modelo,$ubicacion,$id_cliente);
             if(!$stmt){
             $errores[] = 'Error en la preparación';
             continue;
@@ -313,7 +314,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                         if(!empty($equipo['no_serie'])){
                             $equipos[] = [
                                 'no_serie' => trim($equipo['no_serie']),
-                                'modelo' => trim($equipo['modelo'])
+                                'modelo' => trim($equipo['modelo']),
+                                'ubicacion' => trim($equipo['ubicacion'])
                             ];
                         }
                     }

@@ -259,13 +259,17 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
             <div class="card-body" id="equiposContainer">
                 <div class="equipo-item" id="equipo_0">
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label>Número de Serie</label>
                             <input type="text" name="equipos[0][no_serie]" id="no_serie" class="form-control" required>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label>Modelo</label>
                             <input type="text" name="equipos[0][modelo]" id="modelo" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label>Ubicación del equipo</label>
+                            <input type="text" name="equipos[0][ubicacion]" id="ubicacion" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -316,13 +320,17 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
             const html= `
                 <div class="equipo-item" id="equipo_${index}">
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label>Número de Serie</label>
                             <input type="text" name="equipos[${index}][no_serie]" id="no_serie" class="form-control" required>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label>Modelo</label>
                             <input type="text" name="equipos[${index}][modelo]" id="modelo" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label> Ubicación del equipo </label>
+                            <input type="text" name="equipos[${index}][ubicacion]" id="ubicacion" class="form-control">
                         </div>
                     </div>
                 </div>

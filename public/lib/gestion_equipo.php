@@ -20,7 +20,7 @@ function mostrar_equipos(){
     mysqli_stmt_close($select_preparado);
     return $equipos;
 }
-function agregar_equipo($no_serie,$modelo,$accesorios){
+function agregar_equipo($no_serie,$modelo,$ubicacion){
     global $conn;
     if(!$conn){
         return[
@@ -28,7 +28,7 @@ function agregar_equipo($no_serie,$modelo,$accesorios){
             'mensaje' => 'Error de conexión a la base de datos'
         ];
     }
-    $sql='INSERT INTO equipos (no_serie,modelo,accesorios) VALUES (?,?,?,?,?)';
+    $sql='INSERT INTO equipos (no_serie,modelo,ubicacion) VALUES (?,?,?)';
     $insert_preparado=mysqli_prepare($conn,$sql);
     if(!$insert_preparado){
         return[
@@ -36,7 +36,7 @@ function agregar_equipo($no_serie,$modelo,$accesorios){
             'mensaje'=>'Error en la preparación:'.mysqli_error($conn)
             ];
     }
-    mysqli_stmt_bind_param($insert_preparado,'sss',$no_serie,$modelo,$accesorios);
+    mysqli_stmt_bind_param($insert_preparado,'sss',$no_serie,$modelo,$ubicacion);
     $query_ok=mysqli_stmt_execute($insert_preparado);
     if(!$query_ok){
         $error=mysqli_stmt_error($insert_preparado);
@@ -104,7 +104,7 @@ function agregar_cliente_completo($nombre,$no_cuenta,$direccion,$telefonos = [],
         'id_cliente' => $id_cliente
     ];
 }
-function editar_equipo($id_equipo,$no_serie,$modelo,$id_cliente = null){
+function editar_equipo($id_equipo,$no_serie,$modelo,$ubicacion,$id_cliente = null){
     global $conn;
     if(!$conn){
         return[
@@ -113,13 +113,13 @@ function editar_equipo($id_equipo,$no_serie,$modelo,$id_cliente = null){
         ];
     }
     if(empty($id_cliente)){
-        $sql = "UPDATE equipos SET no_serie = ?,modelo=?, id_cliente=NULL WHERE id_equipo=?";
+        $sql = "UPDATE equipos SET no_serie = ?,modelo=?,ubicacion=?, id_cliente=NULL WHERE id_equipo=?";
         $stmt = mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt, 'ssi',$no_serie,$modelo,$id_equipo);
+        mysqli_stmt_bind_param($stmt, 'ssi',$no_serie,$modelo,$ubicacion,$id_equipo);
     }else{
-        $sql = "UPDATE equipos SET no_serie=?,modelo=?,id_cliente=? WHERE id_equipo = ?";
+        $sql = "UPDATE equipos SET no_serie=?,modelo=?,ubicacion=?,id_cliente=? WHERE id_equipo = ?";
         $stmt = mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt,'ssii',$no_serie, $modelo, $id_cliente, $id_equipo);
+        mysqli_stmt_bind_param($stmt,'ssii',$no_serie, $modelo,$ubicacion, $id_cliente, $id_equipo);
     }
     if(!$stmt){
         return[
@@ -178,7 +178,7 @@ function eliminar_equipo($id_equipo){
         ];
     }
 }
-function agregar_equipo_con_cliente($no_serie,$modelo,$accesorios,$id_cliente = null){
+function agregar_equipo_con_cliente($no_serie,$modelo,$accesorios,$ubicacion,$id_cliente = null){
     global $conn;
     if(!$conn){
         return[
@@ -187,13 +187,13 @@ function agregar_equipo_con_cliente($no_serie,$modelo,$accesorios,$id_cliente = 
         ];
     }
     if(empty($id_cliente) || $id_cliente == 0){
-        $sql='INSERT INTO equipos (no_serie,modelo,accesorios) VALUES(?,?,?,?,?)';
+        $sql='INSERT INTO equipos (no_serie,modelo,accesorios,ubicacion) VALUES(?,?,?,?)';
         $stmt=mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt, 'sss', $no_serie,$modelo,$accesorios);
+        mysqli_stmt_bind_param($stmt, 'ssss', $no_serie,$modelo,$accesorios,$ubicacion);
     }else{
-        $sql = 'INSERT INTO equipos(no_serie,modelo,accesorios,id_cliente) VALUES(?,?,?,?)';
+        $sql = 'INSERT INTO equipos(no_serie,modelo,accesorios,ubicacion,id_cliente) VALUES(?,?,?,?,?)';
         $stmt = mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt, 'sssi', $no_serie,$modelo,$accesorios,$id_cliente);
+        mysqli_stmt_bind_param($stmt, 'ssssi', $no_serie,$modelo,$accesorios,$ubicacion,$id_cliente);
         $mensaje = 'Equipo agregado correctamente';
     }
     if(!$stmt){
@@ -278,12 +278,12 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         $accion = $_POST['accion'];
         switch($accion){
             case 'agregar':
-                if(isset($_POST['no_serie'],$_POST['modelo'],$_POST['accesorios'])){
+                if(isset($_POST['no_serie'],$_POST['modelo'],$_POST['ubicacion'])){
                     $no_serie=trim($_POST['no_serie']);
                     $modelo=trim($_POST['modelo']);
-                    $accesorios=trim($_POST['accesorios']);
+                    $ubicacion=trim($_POST['ubicacion']);
 
-                    $resultado=agregar_equipo($no_serie,$modelo,$accesorios);
+                    $resultado=agregar_equipo($no_serie,$modelo,$ubicacion);
                     header('Location: ../equipos/agregar_equipo.php?'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
                     exit;
                 }
@@ -293,6 +293,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                         $id_equipo=intval($_POST['id_equipo']);
                         $no_serie=trim($_POST['no_serie']);
                         $modelo=trim($_POST['modelo']);
+                        $ubicacion=trim($_POST['ubicacion']);
                         $id_cliente=isset($_POST['id_cliente']) && !empty($_POST['id_cliente']) ? intval($_POST['id_cliente']) : null;
 
                         if(empty($no_serie)){
@@ -300,7 +301,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                             exit;
                         }
 
-                        $resultado=editar_equipo($id_equipo,$no_serie,$modelo,$id_cliente);
+                        $resultado=editar_equipo($id_equipo,$no_serie,$modelo,$ubicacion,$id_cliente);
                         if($resultado['estatus'] === 'msg' || $resultado['estatus'] === 'info'){
                             header('Location: ../equipos/editar_equipo.php?id_equipo='.$id_equipo.'&msg='.urlencode($resultado['mensaje']));
                         }else{
@@ -322,6 +323,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                         $no_serie=trim($_POST['no_serie']);
                         $modelo=trim($_POST['modelo']);
                         $accesorios=trim($_POST['accesorios']);
+                        $ubicacion = trim($_POST['ubicacion']);
                         $modo_cliente=$_POST['modo_cliente'] ?? 'existente';
 
                         $id_cliente=null;
@@ -332,7 +334,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                             header('Location: ../equipos/agregar_equipo.php?error='.urlencode('El número de serie es obligatorio'));
                             exit;
                         }
-                        $resultado = agregar_equipo_con_cliente($no_serie,$modelo,$accesorios,$id_cliente);
+                        $resultado = agregar_equipo_con_cliente($no_serie,$modelo,$accesorios,$ubicacion,$id_cliente);
                         if($resultado['estatus']==='msg'){
                             header('Location: ../equipos/agregar_equipo.php?msg='.urlencode($resultado['mensaje']));
                         }else{

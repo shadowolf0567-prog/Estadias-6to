@@ -378,7 +378,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                     </div>
                 `;
             });
-            html += '</div>;'
+            html += '</div>';
             resultadosDiv.innerHTML = html;
         }
         function seleccionarEquipo(idEquipo, index){
@@ -531,10 +531,10 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 select.innerHTML = '<option value="">-- Seleccione un cliente primero --</option>';
             });
         };
-        function validarFormulario() {
-            const equipo = document.getElementById('equipoId_0');
-            if(btnGuardar) {
-                btnGuardar.disabled = (!equipo || equipo.value === '');
+        function validarFormulario(){
+            const titulo = document.querySelector('input[name="reporte"]');
+            if(btnGuardar){
+                btnGuardar.disabled = (titulo && titulo.value.trim() === '');
             }
         }
         let timeoutId = null;
