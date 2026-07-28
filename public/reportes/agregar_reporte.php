@@ -147,17 +147,34 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             </div>
             <div class="form-section">
                 <h5>Equipo Relacionado</h5>
-                <div class="row g-3">
-                    <div class="col-md-12">
-                        <label class="form-label">Seleccionar Equipo</label>
-                        <select name="id_equipo" id="id_equipo" class="form-select">
-                            <option value="">-- Seleccione un cliente primero --</option>
-                        </select>
+                <div id="equiposContainer">
+                    <div class="equipo-item" id="equipo_0">
+                        <div class="row g-3">
+                            <div class="col-md-10">
+                                <label for="" class="form-label">Buscar Equipo</label>
+                                <input type="text" id="buscarEquipo_0" class="form-control" onkeyup="buscarEquipos(this.value,0)">
+                                <input type="hidden" name="id_equipo" id="equipoId_0" value="">
+                            </div>
+                            <div class="col-md-12" id="resultadosEquipos_0">
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle"> Escribe al menos 2 caracteres para comenzar a buscar</i>
+                                </div>
+                            </div>
+                            <div class="col-md-12" id="equipoSeleccionado_0" style="display: none;">
+                                <div class="alert alert-success">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <i class="bi bi-check-circle"></i>
+                                            <strong>Equipo seleccionado:</strong> <span id="equipoInfo_0"></span>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="limpiarSeleccionEquipo(0)">
+                                            <i class="bi bi-x-circle"></i> Cambiar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="info-equipo" id="infoEquipo" style="display: none;">
-                    <strong><i class="bi bi-info-circle"></i> Información del Equipo:</strong>
-                    <span id="infoEquipoTexto"></span>
                 </div>
             </div>
             <div class="form-section">
@@ -247,15 +264,14 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
         let clienteIDSeleccionado = null;
         let clientesData = <?= json_encode($clientes) ?>;
         let elementoSeleccionado =null;
+        let equiposSeleccionados = {};
         let contadorComponentes = 1;
+        let contadorEquipos = 1;
         const buscarClienteInput = document.getElementById('buscarCliente');
         const idClienteInput = document.getElementById('idCliente');
         const resultadosDiv = document.getElementById('resultadosBusqueda');
         const clienteSeleccionadoDiv = document.getElementById('clienteSeleccionado');
         const nombreClienteSpan = document.getElementById('nombreClienteSeleccionado');
-        const equipoSelect = document.getElementById('id_equipo');
-        const infoEquipoDiv = document.getElementById('infoEquipo');
-        const infoEquipoTexto = document.getElementById('infoEquipoTexto');
         const btnGuardar = document.getElementById('btnGuardar');
 
         function escapeHtml(text){
@@ -349,8 +365,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             }else{
                 alert('Debe haber al menos un componente');
             }
-        }
-        
+        }        
         function buscarClientes(termino){
             if(!resultadosDiv) return;
             if(termino.length < 2){
@@ -419,42 +434,102 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             html += '</div>';
             resultadosDiv.innerHTML = html;
         }
-        function filtrarEquiposPorCliente(clienteId,mantenerEquipoActual = false){
-            let equipoSeleccionadoId = mantenerEquipoActual ? equipoActualId : null;
-            if(equipoSelect){
-                equipoSelect.innerHTML='<option value="">-- Ninguno --</option>';
-            }
-            if(infoEquipoDiv) infoEquipoDiv.style.display='none';
-            if(!clienteId){
-                if(equipoSelect) equipoSelect.innerHTML = '<option value="">-- Seleccione un cliente primero --</option>';
+        function buscarEquipos(termino, index){
+            const resultadosDiv = document.getElementById('resultadosEquipos_' + index);
+            if(termino.length < 2){
+                resultadosDiv.innerHTML = `
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"> Escribe al menos 2 caracteres para comenzar a buscar </i>
+                    </div>
+                `;
                 return;
             }
-            const equiposFiltrados = todosEquipos.filter(equipo => equipo.id_cliente == clienteId);
-            if(equiposFiltrados.length === 0){
-                if(equipoSelect) equipoSelect.innerHTML == '<option value="">-- Este cliente no tiene equipos registrados --</option>';
+            const terminoLower = termino.toLowerCase();
+            let resultados = todosEquipos;
+            if(clienteIDSeleccionado){
+                resultados = resultados.filter(equipo => equipo.id_cliente == clienteIDSeleccionado);
+            }
+            resultados = resultados.filter(equipo => 
+                equipo.no_serie.toLowerCase().includes(terminoLower) ||
+                (equipo.modelo && equipo.modelo.toLowerCase().includes(terminoLower))
+            );
+            const idSeleccionados = Object.values(equiposSeleccionados).filter(id => id > 0);
+            resultados = resultados.filter(equipo => !idSeleccionados.includes(equipo.id_equipo));
+
+            if(resultados.length === 0){
+                resultadosDiv.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i> No se encontraton equipos
+                    </div>
+                `;
                 return;
             }
-            let html = '<option value="">-- Ninguno --</option>';
-            equiposFiltrados.forEach(equipo => {
-                const selected = (equipoSeleccionadoId == equipo.id_equipo);
-                html += `<option value="${equipo.id_equipo}"
-                            data-serie="${escapeHtml(equipo.no_serie)}"
-                            data-modelo="${escapeHtml(equipo.modelo)}"
-                            ${selected ? 'selected' : ''}>
-                            Serie: ${escapeHtml(equipo.no_serie)} - Modelo: ${escapeHtml(equipo.modelo)}
-                         </option>`; 
+            let html = '<div class="row">';
+            resultados.forEach(equipo => {
+                html += `
+                    <div class="col-md-4 col-lg-3 mb-2">
+                        <div class="card equipo-card p-2" onclick="seleccionarEquipo(${equipo.id_equipo},${index})">
+                            <div class="card-body p-2">
+                                <strong>${escapeHtml(equipo.no_serie)}</strong>
+                                <br><small class="text-muted">${escapeHtml(equipo.modelo)}</small>
+                                <br><small class="text-primary">${escapeHtml(equipo.cliente_nombre)}</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
             });
-            if(equipoSelect) equipoSelect.innerHTML = html;
-            if(equipoSeleccionadoId && infoEquipoTexto){
-                const equipoSeleccionado = equiposFiltrados.find (e => e.id_equipo == equipoSeleccionadoId);
-                if(equipoSeleccionado){
-                    infoEquipoTexto.innerHTML = `
-                                <strong>Serie:</strong> ${escapeHtml(equipoSeleccionado.no_serie)} |
-                                <strong>Modelo:</strong> ${escapeHtml(equipoSeleccionado.modelo)}
-                            `;
-                            if(infoEquipoDiv) infoEquipoDiv.style.display = 'block';
+            html += '</div>';
+            resultadosDiv.innerHTML = html;
+        }
+        function seleccionarEquipo(idEquipo, index){
+            const equipo = todosEquipos.find(e => e.id_equipo == idEquipo);
+            if(!equipo) return;
+
+            equiposSeleccionados[index] = idEquipo;
+            document.getElementById('equipoId_'+index).value=idEquipo;
+            const infoDiv = document.getElementById('equipoSeleccionado_'+index);
+            const infoSpan = document.getElementById('equipoInfo_'+index);
+            infoSpan.innerHTML = `<strong>Serie: </strong> ${escapeHtml(equipo.no_serie)} | <strong>Modelo: </strong> ${escapeHtml(equipo.modelo)}`;
+            infoDiv.style.display = 'block';
+            document.getElementById('resultadosEquipos_'+index).innerHTML = '';
+            document.getElementById('buscarEquipo_'+index).value=equipo.no_serie;
+
+            validarFormulario();
+        }
+        function limpiarSeleccionEquipo(index){
+            equiposSeleccionados[index] = null;
+            document.getElementById('equipoId_'+index).value = '';
+            document.getElementById('equipoSeleccionado_'+index).style.display = 'none';
+            document.getElementById('buscarEquipo_'+index).value='';
+            document.getElementById('resultadosEquipos_'+index).innerHTML = `
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"> Escribe al menos 2 caracteres para comenzar a buscar</i>
+                </div>
+            `;
+            validarFormulario();
+        }
+        function filtrarEquiposPorCliente(clienteId){
+            clienteIDSeleccionado = clienteId;
+            document.querySelectorAll('.equipo-item').forEach((item,index) => {
+                const resultadosDiv = document.getElementById('resultadosEquipos_' + index);
+                if(resultadosDiv){
+                    resultadosDiv.innerHTML = `
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"> Escribe al menos 2 caracteres para comenzar a buscar<i>
+                        </div> 
+                    `;
                 }
-            }
+                const input = document.getElementById('buscarEquipo_'+index);
+                if(input) input.value = '';
+                limpiarSeleccionEquipo(index);
+            });
+        }
+        function filtrarTodosEquipos(clienteId){
+            document.querySelectorAll('.equipo-select').forEach((celect,index) => {
+                const item = select.closest('.equipo-item');
+                const id = item ? item.id.replace('equipo_','') : index;
+                filtrarEquiposPorCliente(clienteId,parseInt(id));
+            });
         }
         window.seleccionarCliente = function(id,nombre){
             clienteIDSeleccionado = id;
@@ -477,7 +552,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                     headerDiv.appendChild(checkIcon);
                 }
             }
-            filtrarEquiposPorCliente(id,false);
+            filtrarEquiposPorCliente(id);
         };
         window.limpiarSeleccion=function(){
             if(elementoSeleccionado){
@@ -492,16 +567,16 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             if(clienteSeleccionadoDiv) clienteSeleccionadoDiv.style.display = 'none';
             if(idClienteInput) idClienteInput.value=0;
             if(nombreClienteSpan) nombreClienteSpan.textContent = '';
-            if(telefonoInput) telefonoInput.value = '';
-            if(equipoSelect){
-                equipoSelect.innerHTML = '<option value="">-- Seleccione un cliente primero --</option>';
-            }
-            if(infoEquipoDiv) infoEquipoDiv.style.display = 'none';
+            document.querySelectorAll('.equipo-item').forEach((item, index) => {
+                const input = document.getElementById('buscarEquipo_'+index);
+                if(input) input.value = '';
+                limpiarSeleccionEquipo(index);
+            });
         };
-        function validarFormulario(){
-            const titulo = document.querySelector('input[name="reporte"]');
-            if(btnGuardar){
-                btnGuardar.disabled = (titulo && titulo.value.trim() === '');
+        function validarFormulario() {
+            const equipo = document.getElementById('equipoId_0');
+            if(btnGuardar) {
+                btnGuardar.disabled = (!equipo || equipo.value === '');
             }
         }
         let timeoutId = null;
@@ -522,19 +597,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 </div>
             `;
         })
-        if(equipoSelect){
-            equipoSelect.addEventListener('change',function(){
-                const selectedOption = this.options[this.selectedIndex];
-                const serie = selectedOption.getAttribute('data-serie');
-                const modelo=selectedOption.getAttribute('data-modelo');
-                if(serie && modelo && infoEquipoTexto && infoEquipoDiv){
-                    infoEquipoTexto.innerHTML = `<strong>Serie:</strong> ${escapeHtml(serie)} | <strong>Modelo:</strong> ${escapeHtml(modelo)}`;
-                    infoEquipoDiv.style.display = 'block';
-                }else if(infoEquipoDiv){
-                    infoEquipoDiv.style.display = 'none';
-                }
-            });
-        }
         const tituloInput = document.querySelector('input[name="reporte"]');
         if(tituloInput){
             tituloInput.addEventListener('input',validarFormulario);

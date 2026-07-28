@@ -339,7 +339,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             if(termino.length < 2){
                 resultadosDiv.innerHTML = `
                     <div class="alert alert-info">
-                        <i class="bi bi-info-circle"> Escreibe al menos 2 caracteres para comenzar a buscar</i>
+                        <i class="bi bi-info-circle"> Escribe al menos 2 caracteres para comenzar a buscar</i>
                     </div>
                 `;
                 return;
@@ -437,7 +437,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         </div>
                         <div class="col-md-12" id="resultadosEquipos_${index}">
                             <div class="alert alert-info">
-                                <i class="bi bi-info-circle"></i> Escribe al menos 2 caracteres para comenzar a buscar
+                                <i class="bi bi-info-circle"> Escribe al menos 2 caracteres para comenzar a buscar</i>
                             </div>
                         </div>
                         <div class="alert alert-success mt-3" id="equipoSeleccionado_${index}" style="display: none;">
@@ -508,7 +508,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 const headerDiv = selectedCard.querySelector('.d-flex');
                 if(headerDiv && !selectedCard.querySelector('.bi-check-circle-fill')){
                     const checkIcon = document.createElement('i');
-                    checkIcon.className = 'bi bi-check-fill text-success';
+                    checkIcon.className = 'bi bi-check-circle-fill text-success';
                     headerDiv.appendChild(checkIcon);
                 }
             }
@@ -527,15 +527,14 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             if(clienteSeleccionadoDiv) clienteSeleccionadoDiv.style.display = 'none';
             if(idClienteInput) idClienteInput.value=0;
             if(nombreClienteSpan) nombreClienteSpan.textContent = '';
-            if(equipoSelect){
-                equipoSelect.innerHTML = '<option value = "">-- Seleccione un cliente primero --</option>';
-            }
-            if(infoEquipoDiv) infoEquipoDiv.style.display = 'none';
+            document.querySelectorAll('.equipo-select').forEach((select,index) => {
+                select.innerHTML = '<option value="">-- Seleccione un cliente primero --</option>';
+            });
         };
-        function validarFormulario(){
-            const titulo = document.querySelector('input[name="reporte"]');
-            if(btnGuardar){
-                btnGuardar.disabled = (titulo && titulo.value.trim() === '');
+        function validarFormulario() {
+            const equipo = document.getElementById('equipoId_0');
+            if(btnGuardar) {
+                btnGuardar.disabled = (!equipo || equipo.value === '');
             }
         }
         let timeoutId = null;
