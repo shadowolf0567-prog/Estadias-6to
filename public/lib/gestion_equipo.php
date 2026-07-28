@@ -119,7 +119,7 @@ function editar_equipo($id_equipo,$no_serie,$modelo,$ubicacion,$id_cliente = nul
     }else{
         $sql = "UPDATE equipos SET no_serie=?,modelo=?,ubicacion=?,id_cliente=? WHERE id_equipo = ?";
         $stmt = mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt,'ssii',$no_serie, $modelo,$ubicacion, $id_cliente, $id_equipo);
+        mysqli_stmt_bind_param($stmt,'sssii',$no_serie, $modelo,$ubicacion, $id_cliente, $id_equipo);
     }
     if(!$stmt){
         return[
