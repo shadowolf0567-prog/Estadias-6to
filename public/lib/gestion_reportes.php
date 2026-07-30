@@ -221,6 +221,9 @@ function mostrar_reportes(){
 }
 function marcar_atendido($id_reporte, $observaciones = '',$fecha_atencion = ''){
     global $conn;
+     if(empty($fecha_atencion) || $fecha_atencion == '0000-00-00'){
+        $fecha_atencion = null;
+    }
     $sql = "UPDATE reportes SET estado='atendido', 
             observaciones_atencion=?, 
             fecha_atencion = ? WHERE id_reporte=?";
@@ -239,6 +242,37 @@ function marcar_atendido($id_reporte, $observaciones = '',$fecha_atencion = ''){
         return[
             'estatus' => 'msg',
             'mensaje' => 'Reporte marcado como atendido'
+        ];
+    } else{
+        return[
+            'estatus' => 'error',
+            'mensaje' => 'No se pudo marcar como atendido'
+        ];
+    }
+}
+function atender_rapido($id_reporte, $observaciones = '',$fecha_atencion = ''){
+    global $conn;
+    if(empty($fecha_atencion) || $fecha_atencion == '0000-00-00'){
+        $fecha_atencion = null;
+    }
+    $sql = "UPDATE reportes SET estado='atendido', 
+            observaciones_atencion=?, 
+            fecha_atencion = ? WHERE id_reporte=?";
+    $stmt = mysqli_prepare($conn,$sql);
+    if(!$stmt){
+        return[
+            'estatus' => 'error',
+            'mensaje' => 'Error en la preparación'.mysqli_error($conn)
+        ];
+    }
+    mysqli_stmt_bind_param($stmt, 'ssi', $observaciones, $fecha_atencion,$id_reporte);
+    $query_ok = mysqli_stmt_execute($stmt);
+    $rows_ok=mysqli_affected_rows($conn);
+    mysqli_stmt_close($stmt);
+    if($query_ok && $rows_ok > 0){
+        return[
+            'estatus' => 'msg',
+            'mensaje' => 'Reporte marcado como atendido, recuerda colocar los datos faltantes en Editar'
         ];
     } else{
         return[
@@ -276,6 +310,9 @@ function reabrir_reporte($id_reporte){
 
 function editar_atendidos($id_reporte,$fecha,$tecnico,$referencia,$fecha_atencion,$observaciones_atencion,$id_cliente = null,$id_equipo = null,$componentes=[]){
     global $conn;
+    if(empty($fecha_atencion) || $fecha_atencion == '0000-00-00'){
+        $fecha_atencion = null;
+    }
     $sql = "UPDATE reportes SET fecha=?,tecnico=?,referencia=?,fecha_atencion=?,observaciones_atencion = ?,
             id_cliente = ?, id_equipo = ? WHERE id_reporte = ?";
     $update_preparado = mysqli_prepare($conn,$sql);
@@ -557,6 +594,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     $id_reporte=intval($_POST['id_reporte']);
                     $observaciones = isset($_POST['observaciones_atencion']) ? trim($_POST['observaciones_atencion']) : '';
                     $fecha_atencion = isset($_POST['fecha_atencion']) ? trim($_POST['fecha_atencion']) : '';
+                    if(empty($fecha_atencion)){
+                        $fecha_atencion = null;
+                    }
                     $resultado = marcar_atendido($id_reporte,$observaciones,$fecha_atencion);
                     header('Location: ../reportes/reportes.php?tab=atendido&'.$resultado['estatus']. '='. urlencode($resultado['mensaje']));
                     exit;
@@ -578,6 +618,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     $tecnico = trim($_POST['tecnico']);
                     $referencia = trim($_POST['referencia']);
                     $fecha_atencion = trim($_POST['fecha_atencion']);
+                    if(empty($fecha_atencion)){
+                        $fecha_atencion = null;
+                    }
                     $observaciones_atencion = trim($_POST['observaciones_atencion']);
                     $id_cliente = !empty($_POST['id_cliente']) ? intval($_POST['id_cliente']) : null;
                     $id_equipo = !empty($_POST['id_equipo']) ? intval($_POST['id_equipo']) : null;
@@ -651,6 +694,19 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     exit;
                 }else{
                     header('Location: ../reportes/reportar_muchos.php?error='.urlencode('No se recibieron equipos para reportar'));
+                    exit;
+                }
+                break;
+            case 'marcar_atendi2':
+                if(isset($_POST['id_reporte'])){
+                    $id_reporte=intval($_POST['id_reporte']);
+                    $observaciones = isset($_POST['observaciones_atencion']) ? trim($_POST['observaciones_atencion']) : '';
+                    $fecha_atencion = isset($_POST['fecha_atencion']) ? trim($_POST['fecha_atencion']) : '';
+                    if(empty($fecha_atencion)){
+                        $fecha_atencion = null;
+                    }
+                    $resultado = atender_rapido($id_reporte,$observaciones,$fecha_atencion);
+                    header('Location: ../reportes/reportes.php?tab=atendido&'.$resultado['estatus']. '='. urlencode($resultado['mensaje']));
                     exit;
                 }
                 break;

@@ -350,8 +350,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 resultados = resultados.filter(equipo => equipo.id_cliente == clienteIDSeleccionado);
             }
             resultados = resultados.filter(equipo =>
-                equipo.no_serie.toLowerCase().includes(terminoLower) ||
-                (equipo.modelo && equipo.modelo.toLowerCase().includes(terminoLower))
+                equipo.no_serie.toLowerCase().includes(terminoLower)
             );
             const idSeleccionados = Object.values(equiposSeleccionados).filter(id => id > 0);
             resultados = resultados.filter(equipo => !idSeleccionados.includes(equipo.id_equipo));
@@ -425,7 +424,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         <div class="col-md-10">
                             <label class ="form-label">Buscar equipo</label>
                             <input type ="text" id="buscarEquipo_${index}" class="form-control"
-                                placeholder="Escribe número de serie o modelo"
+                                placeholder="Escribe número de serie"
                                 autocomplete = "off"
                                 onkeyup="buscarEquipos(this.value, ${index})">
                             <input type = "hidden" name="equipos[${index}][id_equipo]" id="equipoId_${index}" value="">

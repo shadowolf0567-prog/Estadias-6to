@@ -232,7 +232,11 @@ mysqli_close($conn);
                         <div class="col-12">
                             <hr>
                             <h6><i class="bi bi-check-circle"></i> Reporte Atendido</h6>
-                            <p><span class="info-label">Fecha Atención: </span><?= date('d/m/Y',strtotime($reporte['fecha_atencion'])) ?></p>
+                            <p><span class="info-label">Fecha Atención:
+                                </span><?= (!empty($reporte['fecha_atencion']) && $reporte['fecha_atencion'] != '0000-00-00') 
+                                ? date('d/m/Y', strtotime($reporte['fecha_atencion'])) 
+                                : '-' 
+                            ?></p>
                             <p><span class="info-label">Observaciones</span></p>
                             <div class="bg-white p-2 rounded"><?= nl2br(htmlspecialchars($reporte['observaciones_atencion'] ?: 'Sin observaciones')) ?></div>
                         </div>

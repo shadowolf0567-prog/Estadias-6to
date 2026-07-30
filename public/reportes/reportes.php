@@ -70,7 +70,6 @@ function contar_reportes_por_estado(){
     }
     return $contadores;
 }
-
 $clientes =[];
 $sql_clientes = "SELECT id_cliente, nombre FROM clientes
                 ORDER BY nombre ASC";
@@ -265,6 +264,14 @@ $contadores = contar_reportes_por_estado();
                                         <a href="ver_reporte.php?id=<?= $reporte['id_reporte'] ?>" class="btn btn-sm btn-info">
                                         <i class="bi bi-eye"></i> Ver Reporte
                                         </a>
+                                        <form action="../lib/gestion_reportes.php" method="post"
+                                            style="display:inline-block;" onsubmit="return confirm('¿Marcar como atendido?')">
+                                            <input type="hidden" name="accion" value="marcar_atendi2">
+                                            <input type="hidden" name="id_reporte" value="<?= $reporte['id_reporte'] ?>">
+                                            <button type="submit" class="btn btn-sm btn-success">
+                                                <i class="bi bi-check-circle"></i> Atender Rapidamente
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -313,7 +320,10 @@ $contadores = contar_reportes_por_estado();
                                         <?php endif; ?>        
                                     </td>
                                     <td><?= date('d/m/Y',strtotime($reporte['fecha'])) ?></td>
-                                    <td><?= date('d/m/Y', strtotime($reporte['fecha_atencion'])) ?></td>
+                                    <td>
+                                        <?= (!empty($reporte['fecha_atencion']) && $reporte['fecha_atencion'] != '0000-00-00')
+                                            ? date('d/m/Y', strtotime($reporte['fecha'])) : '-' ?>
+                                    </td>
                                     <td>
                                         <?php if($reporte['tecnico']): ?>
                                             <span class="tecnico-badge"><?= htmlspecialchars($reporte['tecnico']) ?></span>
@@ -321,13 +331,6 @@ $contadores = contar_reportes_por_estado();
                                             <span class="text-muted">-</span>
                                         <?php endif; ?>
                                     </td>
-                                    <!-- <td>
-                                        <?php if($reporte['refaccion']): ?>
-                                            <?= htmlspecialchars(substr($reporte['refaccion'],0,25)) ?>
-                                        <?php else: ?>
-                                            <span class="text-muted">-</span>
-                                        <?php endif; ?>
-                                    </td> -->
                                     <td>
                                         <span class="badge-estado badge-atendido">
                                             <i class="bi bi-check-circle"></i> Atendido
@@ -372,6 +375,10 @@ $contadores = contar_reportes_por_estado();
             const url = new URL(window.location.href);
             url.searchParams.delete(campo);
             window.location.href = url.toString();
+        }
+        function abrirModalAtender(){
+            var modal = new bootstrap.Modal(document.getElementById('modalAtender'));
+            modal.show();
         }
     </script>
 </body>

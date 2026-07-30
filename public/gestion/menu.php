@@ -1,6 +1,8 @@
 <nav class="navbar navbar-expand-lg navbar-dark" style="background: #808080;">
     <div class="container">
-        <img src="../assets/img/Logo.png" alt="Logo" style="height: 44px; width: auto;">
+        <a href="../gestion/almacen.php">
+            <img src="../assets/img/Logo.png" alt="Logo" style="height: 44px; width: auto;">
+        </a>
         
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
