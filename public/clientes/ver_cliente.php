@@ -332,7 +332,7 @@ mysqli_close($conn);
                     <div class="card-header">
                         <h5>Equipos del Cliente
                             <span class="badge bg-light text-dark ms-2">
-                                <?= count($reportes) ?> reporte(s)
+                                <?= $total_reportes ?> equipo(s)
                             </span>
                         </h5>
                     </div>    

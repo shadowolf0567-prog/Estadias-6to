@@ -140,8 +140,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                 </button>
                             </div>
                         </div>
-                        <input type="hidden" name="telefono_cliente" id="telefono_cliente">
-                        <input type="hidden" name="contacto_cliente" id="contacto_cliente">
                     </div>
                 </div>
             </div>

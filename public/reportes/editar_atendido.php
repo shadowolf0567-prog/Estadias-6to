@@ -257,7 +257,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">Cantidad</label>
-                                        <input type="number" name="componentes[<?= $index ?>][cantidad]" class="form-control" value="<?= $comp['cantidad'] ?>">
+                                        <input type="number" name="componentes[<?= $index ?>][cantidad]" class="form-control" value="<?= $comp['cantidad'] ?>" min="1">
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">&nbsp;</label>
