@@ -224,11 +224,11 @@ function resaltar_coincidencias($texto, $busqueda) {
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Cantidad</label>
-                            <input type="number" name="cantidad" class="form-control" id="edit_cantidad">
+                            <input type="number" name="cantidad" class="form-control" id="edit_cantidad" min="0">
                         </div>
                         <div class="mb-4">
                             <label class="form-label">Información Adicional</label>
-                            <input type="text" name="info_adicional" id="edit_info_adicional" class="form-control">
+                            <textarea name="info_adicional" id="edit_info_adicional" class="form-control"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -247,7 +247,7 @@ function resaltar_coincidencias($texto, $busqueda) {
             document.getElementById('edit_id').value=id;
             document.getElementById('edit_nombre').value = nombre;
             document.getElementById('edit_serie').value = serie || '';
-            document.getElementById('edit_cantidad').value = cantidad;
+            document.getElementById('edit_cantidad').value = cantidad || 0;
             document.getElementById('edit_info_adicional').value = info_adicional || '';
         }
     </script>

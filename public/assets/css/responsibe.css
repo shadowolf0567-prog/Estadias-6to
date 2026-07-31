@@ -51,7 +51,7 @@
     transition: all 0.3s;
 }
 
-.navbar .nav-item:hover {
+.navbar .nav-link:hover {
     background: rgba(255,255,255,0.15);
     color: white !important;
 }
