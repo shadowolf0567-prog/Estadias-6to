@@ -1,10 +1,10 @@
 <?php
 session_start();
-require_once __DIR__ .'/../../config/db.php';
+require_once __DIR__ . '/../lib/validar_sesion.php';
+require_once __DIR__ . '/../../config/db.php';
 
-if(!isset($_SESSION['tip_usr']) || ($_SESSION['tip_usr'] !=1 && $_SESSION['tip_usr'] !=2 && $_SESSION['tip_usr' ] != 3)){
-    header('Location: ../login.php?error=' . urlencode('Acceso denegado'));
-    exit;
+if(!$conn){
+    die("Error de conexión a la base de datos");
 }
 $inventario = [];
 $sql_inv = "SELECT * FROM almacen ORDER BY id DESC";

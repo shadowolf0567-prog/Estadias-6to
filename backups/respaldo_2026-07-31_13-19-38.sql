@@ -1,5 +1,5 @@
 -- Backup de Base de Datos Emipac
--- Fecha: 2026-07-31 10:52:52
+-- Fecha: 2026-07-31 13:19:38
 DROP DATABASE IF EXISTS emipac;
 CREATE DATABASE emipac;
 USE emipac;
@@ -364,12 +364,17 @@ CREATE TABLE `usuarios` (
   `mail` varchar(255) DEFAULT NULL,
   `pass` varchar(255) DEFAULT NULL,
   `tip_usr` int(11) DEFAULT NULL,
+  `session_id` varchar(64) DEFAULT NULL,
+  `session_ip` varchar(45) DEFAULT NULL,
+  `session_time` datetime DEFAULT NULL,
+  `session_count` int(11) DEFAULT 1,
+  `session_tokens` text DEFAULT NULL,
   PRIMARY KEY (`id_usr`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: usuarios
-INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`) VALUES ('1', 'a', 'Servicio tecnico', '1234', '1');
-INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`) VALUES ('2', 'b', 'Administracion', '1234', '2');
-INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`) VALUES ('3', 'c', 'yo', '1234', '3');
+INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('1', 'a', 'Servicio tecnico', '1234', '1', NULL, NULL, NULL, '1', NULL);
+INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('2', 'b', 'Administracion', '1234', '2', NULL, NULL, NULL, '1', NULL);
+INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('3', 'c', 'yo', '1234', '3', '1d96b27b2e5bc904999c97a83aff0706', NULL, '2026-07-31 19:03:10', '1', NULL);
 
 SET FOREIGN_KEY_CHECKS=1;
