@@ -1,6 +1,0 @@
-2026-07-30 16:42:17 - Editando: id=3, nombre=iuyty900, serie=345
-2026-07-30 16:42:17 - Editar: id=, nombre=3, serie=iuyty900, info=0
-2026-07-30 16:43:11 - Editando: id=5, nombre=inpoh00, serie=mponj
-2026-07-30 16:43:11 - Editar: id=5, nombre=inpoh00, serie=mponj, info=
-2026-07-30 16:45:04 - Editando: id=5, nombre=inpoh00999, serie=mponj87
-2026-07-30 16:45:04 - Editar: id=5, nombre=inpoh00999, serie=mponj87, info=67

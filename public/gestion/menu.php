@@ -33,6 +33,9 @@
                 </li>
             </ul>
             <ul class="navbar-nav">
+                <li class="nav item">
+                    <a href="../gestion/pruebas.php" class="nav-link"></a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="../logout.php">
                         <i class="bi bi-box-arrow-right"></i> Salir

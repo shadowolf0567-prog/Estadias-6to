@@ -14,41 +14,6 @@ if($resultado){
         $inventario[] = $row;
     }
 }
-function buscar($termino = ''){
-    global $conn;
-    if(!$conn){
-        return[];
-    }
-    if(empty($termino)){
-        $sql = "SELECT * FROM almacen ORDER BY id DESC";
-        $resultado = mysqli_query($conn,$sql);
-    }else{
-        $termino = mysqli_real_escape_string($conn,$termino);
-        $sql = "SELECT * from almacen WHERE nombre LIKE '%$termino%'";
-        $resultado = mysqli_query($conn,$sql);
-        if(!$resultado){
-            return[];
-        }
-    }
-    $productos = [];
-    if($resultado && mysqli_num_rows($resultado) > 0){
-        while($fila = mysqli_fetch_assoc($resultado)){
-            $productos[] = $fila;
-        }
-    }
-    return $productos;
-}
-$busqueda = isset($_GET['buscar']) ? trim($_GET['buscar']) : '';
-$productos = buscar($busqueda);
-$mostrar = (!empty($busqueda)) ? $productos : $inventario;
-function resaltar_coincidencias($texto, $busqueda) {
-    if(empty($busqueda) || empty($texto)){
-        return htmlspecialchars($texto);
-    }
-    $texto = htmlspecialchars($texto);
-    $busqueda = htmlspecialchars($busqueda);
-    return preg_replace('/(' . preg_quote($busqueda, '/') . ')/i', '<span class="resaltar">$1</span>', $texto);
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -82,38 +47,6 @@ function resaltar_coincidencias($texto, $busqueda) {
     <?php require_once __DIR__ . '/menu.php'; ?>
     <div class="container mt-4">
         <h2 class="mb-4">Inventario</h2>
-        <div class="busqueda-container">
-            <form action="" method="get" id="formBusqueda">
-                <div class="row g-3">
-                    <div class="col-md-10">
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-search"></i>
-                            </span>
-                            <input type="text" name="buscar" id="buscarInput" 
-                            class="form-control" value="<?= htmlspecialchars($busqueda); ?>"
-                            autocomplete="off">
-                            <?php if(!empty($busqueda)): ?>
-                                <a href="almacen.php" class="btn btn-outline-secondary">
-                                    <i class="bi bi-x-circle"></i> Limpiar
-                                </a>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary btn-md w-100">
-                            <i class="bi bi-search"></i> Buscar
-                        </button>
-                    </div>
-                </div>
-            </form>
-            <?php if(!empty($busqueda)): ?>
-                <div class="mt-2">
-                    <i class="bi bi-info-circle"></i> 
-                    Mostrando <strong><?= count($productos) ?></strong> resultado(s) para "<strong><?= htmlspecialchars($busqueda) ?></strong>"
-                </div>
-            <?php endif; ?>
-        </div>
         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregar">
             <i class="bi bi-plus-circle"></i> Agregar
         </button>
@@ -129,8 +62,7 @@ function resaltar_coincidencias($texto, $busqueda) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if(count($mostrar) > 0): ?>
-                        <?php foreach($mostrar as $inv): ?>
+                        <?php foreach($inventario as $inv): ?>
                             <tr>         
                                 <td><?= htmlspecialchars($inv['nombre']) ?></td>
                                 <td><?= htmlspecialchars($inv['serie']) ?></td>
@@ -152,14 +84,6 @@ function resaltar_coincidencias($texto, $busqueda) {
                                 </td>
                             </tr>
                         <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="6" class="text-center py-4">
-                                <i class="bi bi-inbox" style="font-size: 2rem;"></i>
-                                <p class="mt-2">No hay recursos en el inventario</p>
-                            </td>
-                        </tr>
-                    <?php endif; ?>
                 </tbody>
             </table>
         </div>

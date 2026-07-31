@@ -28,7 +28,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                         exit;
                     case 3:
                         mysqli_close($conn);
-                        header("Location: ../clientes/clientes.php");
+                        header("Location: ../gestion/pruebas.php");
                         exit;
                     default:
                         mysqli_close($conn);
