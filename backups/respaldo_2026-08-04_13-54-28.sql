@@ -1,9 +1,20 @@
 -- Backup de Base de Datos Emipac
--- Fecha: 2026-07-28 17:13:11
+-- Fecha: 2026-08-04 13:54:28
 DROP DATABASE IF EXISTS emipac;
 CREATE DATABASE emipac;
 USE emipac;
 SET FOREIGN_KEY_CHECKS=0;
+
+-- Estructura de tabla: almacen
+DROP TABLE IF EXISTS `almacen`;
+CREATE TABLE `almacen` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) DEFAULT NULL,
+  `serie` varchar(30) DEFAULT NULL,
+  `info_adicional` text DEFAULT NULL,
+  `cantidad` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- Estructura de tabla: clientes
 DROP TABLE IF EXISTS `clientes`;
@@ -16,19 +27,19 @@ CREATE TABLE `clientes` (
   `contrato` varchar(20) DEFAULT NULL,
   `subdireccion` text DEFAULT NULL,
   PRIMARY KEY (`id_cliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: clientes
 INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('1', 'Intelligence Berau and Laborator', '291901', 'Av. Antea #1032 Int. 404 Jurica', 'Roberto Alfaro', 'C-0399', '');
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('2', 'Nachi Technologies México', '287201', 'Tequisquiapan No.2 Galerias Aerotech Industrial Park Colón', 'Benito Sanchez', 'C-0133', NULL);
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('3', 'Industrial Powder Coatings Mex', '130701', 'Av. de la Noria No. 104 Parque Qro.', 'Norma Luna', '', NULL);
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('4', 'GNS Automotive México', '268501', 'Av. Ing. Antonio Gutierrez Cortina No. 14 Parque Opción SJI', 'Oscar Nazareth', '', NULL);
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('5', 'SEPSA SA de CV.', '232301', 'Espuela del Ferrocarril No. 204 Carrillo Puerto', 'Sarahí Bustamante', 'C-0318', NULL);
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('6', 'María Magdalena Mejía Ruíz', '172401', 'Puente de Alvarado No. 210 Carretas', 'Erika Gudiño', 'C-0080', NULL);
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('7', 'GW Plastics Mexicana S de RL', '294901', 'Circuito Marques #23A Parque IND El Marqués.', 'Mariana Martínez', 'C-0429', NULL);
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('12', 'Clarton Horn México', '271301', 'Av. de la Cruz 103 Col. Buenavista', 'Abigail Cabrera', 'C-0020', NULL);
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('13', 'Gerresheimer Querétaro', '230001', 'Av. Coahuila No. 9 Industrial Benito Juarez', 'Luis Culebro', 'C-0046', NULL);
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('14', 'Flex N Gate México S de RL de CV', '246401', 'Principal No. 1 Parque Industrial Opción SJI', 'Nathanael Torres', 'C-0213', NULL);
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('2', 'Nachi Technologies México', '287201', 'Tequisquiapan No.2 Galerias Aerotech Industrial Park Colón', 'Benito Sanchez', 'C-0133', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('3', 'Industrial Powder Coatings Mex', '130701', 'Av. de la Noria No. 104 Parque Qro.', 'Norma Luna', '', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('4', 'GNS Automotive México', '268501', 'Av. Ing. Antonio Gutierrez Cortina No. 14 Parque Opción SJI', 'Oscar Nazareth', '', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('5', 'SEPSA SA de CV.', '232301', 'Espuela del Ferrocarril No. 204 Carrillo Puerto', 'Sarahí Bustamante', 'C-0318', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('6', 'María Magdalena Mejía Ruíz', '172401', 'Puente de Alvarado No. 210 Carretas', 'Erika Gudiño', 'C-0080', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('7', 'GW Plastics Mexicana S de RL', '294901', 'Circuito Marques #23A Parque IND El Marqués.', 'Mariana Martínez', 'C-0429', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('12', 'Clarton Horn México', '271301', 'Av. de la Cruz 103 Col. Buenavista', 'Abigail Cabrera', 'C-0020', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('13', 'Gerresheimer Querétaro', '230001', 'Av. Coahuila No. 9 Industrial Benito Juarez', 'Luis Culebro', 'C-0046', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('14', 'Flex N Gate México S de RL de CV', '246401', 'Principal No. 1 Parque Industrial Opción SJI', 'Nathanael Torres', 'C-0213', '');
 
 -- Estructura de tabla: correos
 DROP TABLE IF EXISTS `correos`;
@@ -41,7 +52,7 @@ CREATE TABLE `correos` (
   PRIMARY KEY (`id`),
   KEY `id_cliente` (`id_cliente`),
   CONSTRAINT `correos_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Estructura de tabla: equipos
 DROP TABLE IF EXISTS `equipos`;
@@ -54,7 +65,7 @@ CREATE TABLE `equipos` (
   PRIMARY KEY (`id_equipo`),
   KEY `id_cliente` (`id_cliente`),
   CONSTRAINT `equipos_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=99 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: equipos
 INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('1', 'C757M500195', 'S-11MPC6004R+', '1', '');
@@ -149,7 +160,7 @@ CREATE TABLE `reportes` (
   KEY `idx_equipo` (`id_equipo`),
   CONSTRAINT `reportes_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE SET NULL,
   CONSTRAINT `reportes_ibfk_2` FOREIGN KEY (`id_equipo`) REFERENCES `equipos` (`id_equipo`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: reportes
 INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('1', '2026-07-08', 'Damian', 'atendido', '2026-07-08', '', '1', '1', '291901-0399-0001');
@@ -239,7 +250,7 @@ CREATE TABLE `reportes_componentes` (
   PRIMARY KEY (`id_reporte_componente`),
   KEY `id_reporte` (`id_reporte`),
   CONSTRAINT `1` FOREIGN KEY (`id_reporte`) REFERENCES `reportes` (`id_reporte`)
-) ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=159 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --Datos de tabla: reportes_componentes
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('1', '13', 'Servicio Preventivo', 'SER-01', '1', '');
@@ -251,9 +262,6 @@ INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `comp
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('7', '11', 'Servicio Correctivo', 'SER-02', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('8', '21', 'Servicio Preventivo', 'SER-01', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('9', '7', 'Servicio Preventivo', 'SER-01', '1', '');
-INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('10', '1', 'Entrega Refacción/Consumible', 'SER-03', '1', 'Elemento de Equipo');
-INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('11', '1', 'Servicio Correctivo', 'SER-02', '1', '');
-INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('12', '1', '120978G+', 'componente', '1', 'Toner MPC6003 Cyan Ikon/CET+');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('15', '25', 'Servicio Preventivo', 'SER-01', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('16', '48', 'Servicio Preventivo', 'SER-01', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('17', '47', 'Servicio Preventivo', 'SER-01', '1', '');
@@ -316,10 +324,13 @@ INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `comp
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('76', '83', 'Servicio Preventivo', 'SER-01', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('77', '73', 'Servicio Preventivo', 'SER-01', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('78', '72', 'Servicio Preventivo', 'SER-01', '1', '');
-INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('97', '87', 'Servicio Preventivo', 'SER-01', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('107', '46', 'Servicio Preventivo', 'SER-01', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('108', '24', 'Servicio Correctivo', 'SER-02', '18', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('109', '24', '131224', 'componente', '1', 'Fotoconductora MP402 SP4500/4510');
+INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('121', '87', 'Servicio Preventivo', 'SER-01', '1', '');
+INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('149', '1', 'Entrega Refacción/Consumible', 'componente', '1', 'Elemento de Equipo');
+INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('150', '1', 'Servicio Correctivo', 'SER-02', '1', '');
+INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('151', '1', '120978G+', 'componente', '1', 'Toner MPC6003 Cyan Ikon/CET+');
 
 -- Estructura de tabla: telefonos
 DROP TABLE IF EXISTS `telefonos`;
@@ -331,19 +342,19 @@ CREATE TABLE `telefonos` (
   PRIMARY KEY (`id`),
   KEY `id_cliente` (`id_cliente`),
   CONSTRAINT `telefonos_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: telefonos
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('22', '4421532410', '2', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('24', '4422389600', '3', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('25', '4421338069', '6', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('27', '4423948804', '4', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('32', '4422531069', '7', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('34', '4422199244', '5', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('35', '4421787636', '12', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('36', '4422052215', '13', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('37', '4422744952', '14', '');
 INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('38', '4422133388', '1', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('40', '4422744952', '14', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('41', '4422052215', '13', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('42', '4421787636', '12', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('43', '4422531069', '7', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('44', '4421338069', '6', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('45', '4422199244', '5', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('46', '4423948804', '4', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('47', '4422389600', '3', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('48', '4421532410', '2', '');
 
 -- Estructura de tabla: usuarios
 DROP TABLE IF EXISTS `usuarios`;
@@ -353,12 +364,17 @@ CREATE TABLE `usuarios` (
   `mail` varchar(255) DEFAULT NULL,
   `pass` varchar(255) DEFAULT NULL,
   `tip_usr` int(11) DEFAULT NULL,
+  `session_id` varchar(64) DEFAULT NULL,
+  `session_ip` varchar(45) DEFAULT NULL,
+  `session_time` datetime DEFAULT NULL,
+  `session_count` int(11) DEFAULT 1,
+  `session_tokens` text DEFAULT NULL,
   PRIMARY KEY (`id_usr`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: usuarios
-INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`) VALUES ('1', 'a', 'Servicio tecnico', '1234', '1');
-INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`) VALUES ('2', 'b', 'Administracion', '1234', '2');
-INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`) VALUES ('3', 'c', 'yo', '1234', '1');
+INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('1', 'a', 'Servicio tecnico', '1234', '1', NULL, NULL, NULL, '1', NULL);
+INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('2', 'b', 'Administracion', '1234', '2', '17d864b86fa0bf2d41bd790faa2c34f0', NULL, '2026-08-04 15:22:57', '1', NULL);
+INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('3', 'c', 'yo', '1234', '3', 'afd67c6ad567ee8d2b201a9486689253', NULL, '2026-08-04 15:46:46', '1', NULL);
 
 SET FOREIGN_KEY_CHECKS=1;

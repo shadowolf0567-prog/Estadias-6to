@@ -1,8 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark" style="background: #808080;">
     <div class="container">
-        <a href="../gestion/almacen.php">
             <img src="../assets/img/Logo.png" alt="Logo" style="height: 44px; width: auto;">
-        </a>
         
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,10 +29,15 @@
                        href="../respaldos/backup.php">Respaldos
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="../gestion/almacen.php" class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'almacen') !== false ? 'active' : '' ?>">
+                        Inventario
+                    </a>
+                </li>
             </ul>
             <ul class="navbar-nav">
-                <li class="nav item">
-                    <a href="../gestion/pruebas.php" class="nav-link"></a>
+                <li class="nav-item">
+                    <a href="../gestion/pruebas.php" class="btn"></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="../logout.php">

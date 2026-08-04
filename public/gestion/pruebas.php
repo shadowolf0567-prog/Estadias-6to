@@ -2,7 +2,10 @@
 session_start();
 require_once __DIR__ . '/../lib/validar_sesion.php';
 require_once __DIR__ . '/../../config/db.php';
-
+if(!isset($_SESSION['tip_usr']) || ($_SESSION['tip_usr' ] != 3)){
+    header('Location: ../clientes/clientes.php?error=' .urlencode('Acceso denegado'));
+    exit;
+}
 if(!$conn){
     die("Error de conexión a la base de datos");
 }

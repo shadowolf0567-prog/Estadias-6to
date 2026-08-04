@@ -47,7 +47,7 @@ function agregar_reportes_con_reportes($fecha,$tecnico,$referencia,$id_cliente =
                 } elseif($tipo == 'SER-02'){
                     $componente = 'Servicio Correctivo';
                 }elseif($tipo == 'SER-03'){
-                    $componente = 'Entrega Refacción/Consumible';
+                    $componente = 'Reparación';
                 }
             }
             if(empty($tipo)){
@@ -55,7 +55,7 @@ function agregar_reportes_con_reportes($fecha,$tecnico,$referencia,$id_cliente =
                     $tipo = 'SER-01';
                 } elseif(strpos($componente, 'Correctivo') !== false){
                     $tipo = 'SER-02';
-                } elseif(strpos($componente, 'Entrega Refacción/Consumible') !== false){
+                } elseif(strpos($componente, 'Reparación') !== false){
                     $tipo = 'SER-03';
                 } else{
                     $tipo = 'componente';
@@ -124,14 +124,14 @@ function editar_reporte_con_componentes($id_reporte,$fecha,$tecnico,$referencia,
                         }elseif($tipo == 'SER-02'){
                             $componente = 'Servicio Correctivo';
                         }elseif($tipo == 'SER-03'){
-                            $componente = 'Entrega Refacción/Consumible';
+                            $componente = 'Reparación';
                         }
                     }if(empty($tipo)){
                         if(strpos($componente, 'Preventivo') !== false){
                             $tipo = 'SER-01';
                         } elseif(strpos($componente, 'Correctivo') !== false){
                             $tipo = 'SER-02';
-                        } elseif(strpos($componente, 'Entrega Refacción/Consumible') !== false){
+                        } elseif(strpos($componente, 'Reparación') !== false){
                             $tipo = 'SER-03';
                         } else{
                             $tipo = 'componente';
@@ -354,7 +354,7 @@ function editar_atendidos($id_reporte,$fecha,$tecnico,$referencia,$fecha_atencio
                         } elseif($tipo == 'SER-02'){
                             $componente = 'Servicio Correctivo';
                         } elseif($tipo == 'SER-03'){
-                            $componente = 'Entrega Refacción/Consumible';
+                            $componente = 'Reparación';
                         }
                     }
                     if(empty($tipo)){
@@ -362,7 +362,7 @@ function editar_atendidos($id_reporte,$fecha,$tecnico,$referencia,$fecha_atencio
                             $tipo = 'SER-01';
                         } elseif(strpos($componente, 'Correctivo') !== false){
                             $tipo = 'SER-02';
-                        } elseif(strpos($componente, 'Entrega Refacción/Consumible') !== false){
+                        } elseif(strpos($componente, 'Reparación') !== false){
                             $tipo = 'SER-03';
                         } else{
                             $tipo = 'componente';
@@ -397,9 +397,10 @@ function agregar_en_masa($reportes,$id_cliente = null){
             continue;
         }
         $fecha = trim($reporte['fecha']);
-        $tecnico = trim($reporte['tecnico']);
+        $tecnico = trim($reporte['tecnico'] ?? '');
         $id_equipo = intval($reporte['id_equipo']);
         $servicio = trim($reporte['servicio'] ?? 'SER-01');
+        $referencia = trim($reporte['referencia']) ?? '';
 
         if($servicio == 'SER-01'){
             $nombre_servicio = 'Servicio Preventivo';
@@ -407,18 +408,18 @@ function agregar_en_masa($reportes,$id_cliente = null){
             $nombre_servicio = 'Servicio Correctivo';
         }
 
-        $sql="INSERT INTO reportes(fecha,tecnico,id_equipo,id_cliente,estado)
-                VALUES (?,?,?,?,'pendiente')";
+        $sql="INSERT INTO reportes(fecha,tecnico,referencia,id_equipo,id_cliente,estado)
+                VALUES (?,?,?,?,?,'pendiente')";
         $stmt = mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt,'ssii',$fecha,$tecnico,$id_equipo,$id_cliente);
+        mysqli_stmt_bind_param($stmt,'sssii',$fecha,$tecnico,$referencia,$id_equipo,$id_cliente);
         if(!$stmt){
             $errores[] = 'Error en la preparación';
             continue;
         }
         if(mysqli_stmt_execute($stmt)){
             $id_reporte = mysqli_insert_id($conn);
-            $sql_comp = "INSERT INTO reportes_componentes(id_reporte, componente,cantidad,tipo)
-                            VALUES (?,?,1,?)";
+            $sql_comp = "INSERT INTO reportes_componentes(id_reporte, componente,cantidad,tipo,descripcion)
+                            VALUES (?,?,1,?,' ')";
             $stmt_comp = mysqli_prepare($conn,$sql_comp);
             mysqli_stmt_bind_param($stmt_comp,'iss',$id_reporte,$nombre_servicio,$servicio);
             mysqli_stmt_execute($stmt_comp);
@@ -473,7 +474,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                                 } elseif($tipo == 'SER-02'){
                                     $nombre = 'Servicio Correctivo';
                                 }elseif($tipo == 'SER-03'){
-                                    $nombre = 'Entrega Refacción/Consumible';
+                                    $nombre = 'Reparación';
                                 }
                             }
                             
@@ -520,7 +521,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                                 } elseif($tipo == 'SER-02'){
                                     $componente = 'Servicio Correctivo';
                                 }elseif($tipo == 'SER-03'){
-                                    $componente = 'Entrega Refacción/Consumible';
+                                    $componente = 'Reparación';
                                 }
                             }
                             if(!empty($componente)){
@@ -639,7 +640,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                                 } elseif($tipo == 'SER-02'){
                                     $componente = 'Servicio Correctivo';
                                 }elseif($tipo == 'SER-03'){
-                                    $componente = 'Entrega Refacción/Consumible';
+                                    $componente = 'Reparación';
                                 }
                             }
                             if(!empty($componente)){
@@ -669,6 +670,17 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     $fecha  = trim($_POST['fecha'] ?? date('Y-m-d'));
                     $tecnico = trim($_POST['tecnico'] ?? '');
                     $servicio = trim($_POST['servicio'] ?? 'SER-01');
+                    $referencia = '';
+                    if(isset($_POST['referencia']) && is_array($_POST['referencia'])){
+                        foreach($_POST['referencia'] as $ref_array){
+                            if(!empty($ref_array['referencia'])){
+                                $referencia = trim($ref_array['referencia']);
+                                break;
+                            }
+                        }
+                    } else if(isset($_POST['referencia']) && is_string($_POST['referencia'])) {
+                        $referencia = trim($_POST['referencia']);
+                    }
 
                     $reportes = [];
                     foreach($_POST['equipos'] as $equipo){
@@ -678,6 +690,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                                 'tecnico' => $tecnico,
                                 'id_equipo' => intval($equipo['id_equipo']),
                                 'servicio' => $servicio,
+                                'referencia' => $referencia
                             ];
                         }
                     }

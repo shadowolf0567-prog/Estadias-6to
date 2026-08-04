@@ -169,15 +169,14 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                     <div id="equiposContainer">
                         <div class="equipo-item" id="equipo_0">
                             <div class="row g-3">
-                                <div class="col-md-10">
-                                    <label for="" class="form-label">Buscar Equipo</label>
+                                <div class="col-md-3">
+                                    <label class="form-label">Referencia</label>
+                                    <input type="text" name="referencia[0][referencia]" id="referencia_0" class="form-control">
+                                </div>
+                                <div class="col-md-9">
+                                    <label class="form-label">Buscar Equipo</label>
                                     <input type="text" id="buscarEquipo_0" class="form-control" onkeyup="buscarEquipos(this.value, 0)">
                                     <input type="hidden" name="equipos[0][id_equipo]" id="equipoId_0" value="">
-                                </div>
-                                <div class="col-md-2 d-flex align-items-end">
-                                    <button type="button" class="btn btn-danger btn-sm" onclick="removerEquipo(0)" style="display: none;">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
                                 </div>
                                 <div class="col-md-12" id="resultadosEquipos_0"></div>
                                 <div class="alert alert-success" id="equipoSeleccionado_0" style="display: none;">
@@ -421,14 +420,15 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             const html = `
                 <div class="equipo-item" id="equipo_${index}">
                     <div class="row g-2">
-                        <div class="col-md-10">
-                            <label class ="form-label">Buscar equipo</label>
-                            <input type ="text" id="buscarEquipo_${index}" class="form-control"
-                                placeholder="Escribe número de serie"
-                                autocomplete = "off"
-                                onkeyup="buscarEquipos(this.value, ${index})">
-                            <input type = "hidden" name="equipos[${index}][id_equipo]" id="equipoId_${index}" value="">
-                        </div>
+                        <div class="col-md-3">
+                                    <label class="form-label">Referencia</label>
+                                    <input type="text" name="referencia[${index}][referencia]" id="referencia_0" class="form-control">
+                                </div>
+                                <div class="col-md-9">
+                                    <label class="form-label">Buscar Equipo</label>
+                                    <input type="text" id="buscarEquipo_${index}" class="form-control" onkeyup="buscarEquipos(this.value, ${index})">
+                                    <input type="hidden" name="equipos[${index}][id_equipo]" id="equipoId_${index}" value="">
+                                </div>
                         <div class="col-md-2 d-flex align-items-end">
                             <button type="button" class="btn btn-danger btn-sm" onclick="removerEquipo(${index})">
                                 <i class="bi bi-trash"></i>

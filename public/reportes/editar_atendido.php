@@ -45,7 +45,7 @@ while($row = mysqli_fetch_assoc($result_comp)){
             $row['tipo'] = 'SER-01';
         }elseif(strpos($row['componente'], 'Correctivo') !== false){
             $row['tipo'] = 'SER-02';
-        }elseif(strpos($row['componente'], 'Entrega Refacción/Consumible') !== false){
+        }elseif(strpos($row['componente'], 'Reparación') !== false){
             $row['tipo'] = 'SER-03';
         }elseif(strpos($row['componente'],'Componente') !== false || strpos($row['componente'], 'componente') !== false){
             $row['tipo'] = 'componente';
@@ -247,7 +247,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                             <option value="">-- Ninguno --</option>
                                             <option value="SER-01" <?= ($comp['tipo'] == 'SER-01') ? 'selected' : '' ?>>SER-01</option>
                                             <option value="SER-02" <?= ($comp['tipo'] == 'SER-02') ? 'selected' : '' ?>>SER-02</option>
-                                            <option value="SER-03" <?= ($comp['tipo'] == 'SER-03') ? 'selected' : '' ?>>SER-03</option>
+                                            <option value="SER-03" <?= ($comp['tipo'] == 'SER-03') ? 'selected' : '' ?>>Reparación</option>
                                             <option value="componente" <?= ($comp['tipo'] == 'componente') || empty($comp['tipo']) ? 'selected' : ''?>>Componente</option>
                                         </select>
                                     </div>
@@ -281,7 +281,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                         <option value="">-- Ninguno --</option>
                                         <option value="SER-01">SER-01</option>
                                         <option value="SER-02">SER-02</option>
-                                        <option value="SER-03">SER-03</option>
+                                        <option value="SER-03">Reparación</option>
                                         <option value="componente">Componente</option>
                                     </select>
                                 </div>
@@ -402,13 +402,13 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         nombreInput.readoOnly=true;
                     break;
                     case 'SER-03':
-                        nombreInput.value = 'Entrega Refacción/Consumible';
+                        nombreInput.value = 'Reparación';
                         nombreInput.readOnly = true;
                     break;
                     default:
                         if(nombreInput.value === 'Servicio Preventivo' || 
                             nombreInput.value === 'Servicio Correctivo' ||
-                            nombreInput.value === 'Entrega Refacción/Consumible') {
+                            nombreInput.value === 'Reparación') {
                                 nombreInput.value = '';
                             }
                             nombreInput.readOnly = false;
@@ -430,7 +430,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                 <option value="">-- Ninguno --</option>
                                 <option value="SER-01">SER-01</option>
                                 <option value="SER-02">SER-02</option>
-                                <option value="SER-03">SER-03</option>
+                                <option value="SER-03">Reparación</option>
                                 <option value="componente">Componente</option>
                             </select>
                         </div>

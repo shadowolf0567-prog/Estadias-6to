@@ -1,9 +1,20 @@
 -- Backup de Base de Datos Emipac
--- Fecha: 2026-07-23 17:29:57
+-- Fecha: 2026-08-04 12:02:47
 DROP DATABASE IF EXISTS emipac;
 CREATE DATABASE emipac;
 USE emipac;
 SET FOREIGN_KEY_CHECKS=0;
+
+-- Estructura de tabla: almacen
+DROP TABLE IF EXISTS `almacen`;
+CREATE TABLE `almacen` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) DEFAULT NULL,
+  `serie` varchar(30) DEFAULT NULL,
+  `info_adicional` text DEFAULT NULL,
+  `cantidad` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- Estructura de tabla: clientes
 DROP TABLE IF EXISTS `clientes`;
@@ -16,19 +27,19 @@ CREATE TABLE `clientes` (
   `contrato` varchar(20) DEFAULT NULL,
   `subdireccion` text DEFAULT NULL,
   PRIMARY KEY (`id_cliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: clientes
 INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('1', 'Intelligence Berau and Laborator', '291901', 'Av. Antea #1032 Int. 404 Jurica', 'Roberto Alfaro', 'C-0399', '');
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('2', 'Nachi Technologies México', '287201', 'Tequisquiapan No.2 Galerias Aerotech Industrial Park Colón', 'Benito Sanchez', 'C-0133', NULL);
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('3', 'Industrial Powder Coatings Mex', '130701', 'Av. de la Noria No. 104 Parque Qro.', 'Norma Luna', '', NULL);
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('4', 'GNS Automotive México', '268501', 'Av. Ing. Antonio Gutierrez Cortina No. 14 Parque Opción SJI', 'Oscar Nazareth', '', NULL);
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('5', 'SEPSA SA de CV.', '232301', 'Espuela del Ferrocarril No. 204 Carrillo Puerto', 'Sarahí Bustamante', 'C-0318', NULL);
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('6', 'María Magdalena Mejía Ruíz', '172401', 'Puente de Alvarado No. 210 Carretas', 'Erika Gudiño', 'C-0080', NULL);
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('7', 'GW Plastics Mexicana S de RL', '294901', 'Circuito Marques #23A Parque IND El Marqués.', 'Mariana Martínez', 'C-0429', NULL);
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('12', 'Clarton Horn México', '271301', 'Av. de la Cruz 103 Col. Buenavista', 'Abigail Cabrera', 'C-0020', NULL);
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('13', 'Gerresheimer Querétaro', '230001', 'Av. Coahuila No. 9 Industrial Benito Juarez', 'Luis Culebro', 'C-0046', NULL);
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('14', 'Flex N Gate México S de RL de CV', '246401', 'Principal No. 1 Parque Industrial Opción SJI', 'Nathanael Torres', 'C-0213', NULL);
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('2', 'Nachi Technologies México', '287201', 'Tequisquiapan No.2 Galerias Aerotech Industrial Park Colón', 'Benito Sanchez', 'C-0133', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('3', 'Industrial Powder Coatings Mex', '130701', 'Av. de la Noria No. 104 Parque Qro.', 'Norma Luna', '', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('4', 'GNS Automotive México', '268501', 'Av. Ing. Antonio Gutierrez Cortina No. 14 Parque Opción SJI', 'Oscar Nazareth', '', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('5', 'SEPSA SA de CV.', '232301', 'Espuela del Ferrocarril No. 204 Carrillo Puerto', 'Sarahí Bustamante', 'C-0318', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('6', 'María Magdalena Mejía Ruíz', '172401', 'Puente de Alvarado No. 210 Carretas', 'Erika Gudiño', 'C-0080', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('7', 'GW Plastics Mexicana S de RL', '294901', 'Circuito Marques #23A Parque IND El Marqués.', 'Mariana Martínez', 'C-0429', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('12', 'Clarton Horn México', '271301', 'Av. de la Cruz 103 Col. Buenavista', 'Abigail Cabrera', 'C-0020', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('13', 'Gerresheimer Querétaro', '230001', 'Av. Coahuila No. 9 Industrial Benito Juarez', 'Luis Culebro', 'C-0046', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('14', 'Flex N Gate México S de RL de CV', '246401', 'Principal No. 1 Parque Industrial Opción SJI', 'Nathanael Torres', 'C-0213', '');
 
 -- Estructura de tabla: correos
 DROP TABLE IF EXISTS `correos`;
@@ -41,7 +52,7 @@ CREATE TABLE `correos` (
   PRIMARY KEY (`id`),
   KEY `id_cliente` (`id_cliente`),
   CONSTRAINT `correos_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Estructura de tabla: equipos
 DROP TABLE IF EXISTS `equipos`;
@@ -50,86 +61,87 @@ CREATE TABLE `equipos` (
   `no_serie` varchar(100) NOT NULL,
   `modelo` varchar(255) DEFAULT NULL,
   `id_cliente` int(11) DEFAULT NULL,
+  `ubicacion` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_equipo`),
   KEY `id_cliente` (`id_cliente`),
   CONSTRAINT `equipos_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: equipos
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('1', 'C757M500195', 'S-11MPC6004R+', '1');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('2', '3353P254701', 'S-110430F', '2');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('3', 'G746R510164', 'S-11C2004R+', '2');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('4', 'G145R600271', 'S-117008', '3');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('5', 'Y177HB01092', 'S-11402SPF', '4');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('6', '3353PA50400', 'S-110430F', '4');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('7', '3353P352683', 'S-110430F', '5');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('8', '3353P350596', 'S-110430F', '6');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('9', '9264P600643', 'S-11IM460F', '7');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('10', '9264P600645', 'S-11IM460F', '7');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('11', '3148MB00315', 'S-11IMC6000R+', '7');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('18', 'Y177HC01816', 'S-11402SPFR+', '12');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('20', 'C328R300429', 'S-11MP4055R+', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('21', 'C299R200008', 'S-11MP2555R+', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('22', '3350P301149', 'S-110430F', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('23', 'W915PA03579', 'S-11301SPF', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('24', 'W916P903286', 'S-11301SPF', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('25', 'Y176HC00121', 'S-11402SPF', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('26', 'Y178HA02593', 'S-11402SPF+', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('27', 'G989X213198', 'S-11501SPF+', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('28', 'S9058500168', 'S-115200R+', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('29', 'G144RB00118', 'S-117008', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('30', 'G145R600752', 'S-117008', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('31', 'C767R610043', 'S-11C2004R+', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('32', '3351P500840', 'S-11IM430R+', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('33', 'C298R220838', 'S-11MP2555R+', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('34', 'Y176HC00140', 'S-11402SPF', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('35', 'C329R901156', 'S-11MP4055R+', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('36', 'G716M510138', 'S-11MPC4504R+', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('37', '3359PA00288', 'S-11IM430R+', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('38', '3354PA51353', 'S-110430F', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('39', '3354P450921', 'S-110430F', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('40', '3354PA51351', 'S-110430F', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('41', '3353PA50395', 'S-110430F', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('42', '3354PA51348', 'S-110430F', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('43', 'G737M160847', 'S-11MPC6004R+', '13');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('45', 'Y176HC00154', 'S-11402SPF', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('46', 'Y177H100762', 'S-11402SPF', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('47', 'Y177H100781', 'S-11402SPF', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('48', 'Y177HA01385', 'S-11402SPF', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('49', 'Y177HA02425', 'S-11402SPF', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('50', 'Y177HA02428', 'S-11402SPF', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('51', 'Y177HA02429', 'S-11402SPF', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('52', 'Y177HC01591', 'S-11402SPF', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('53', 'Y177HC01623', 'S-11402SPF', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('54', 'Y176H901864', 'S-11402SPFR+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('55', 'Y176HA01102', 'S-11402SPFR+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('56', 'Y176HC02439', 'S-11402SPFR+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('57', 'Y177H101011', 'S-11402SPFR+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('58', 'C768R311165', 'S-11C2004R', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('59', 'C307R600045', 'S-11MP3055R+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('60', 'C508P301958', 'S-11MPC307R+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('61', 'C508P301961', 'S-11MPC307R+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('62', 'C508P800341', 'S-11MPC307R+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('63', 'C738M640993', 'S-11MPC4504R', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('64', 'Y177H702834', 'S-1140SPFR+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('65', 'Y176HA03560', 'S-11402SPFR+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('66', 'C757M500164', 'S-11MPC6004R+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('67', 'G736MA60670', 'S-11MPC6004R+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('68', 'Y177HA02430', 'S-11402SPF+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('69', 'Y178H401620', 'S-11402SPF+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('70', 'Y177HB05160', 'S-11402SPF', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('71', 'C329R900039', 'S-11MP4055R+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('72', 'C337R400681', 'S-11MP5055R+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('73', '3140R100716', 'S-11IMC6000', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('74', 'C509PA01055', 'S-11MPC307R+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('75', 'Y178H500108', 'S-11402SPRF+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('76', 'C507PC04901', 'S-11307C', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('77', 'Y178HA01264', 'S-11402SPF', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('78', 'Y178HA01296', 'S-11402SPF', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('79', 'Y177HC01784', 'S-11402SPF', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('80', 'Y178H401959', 'S-11402SPFR+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('81', 'Y177H901479', 'S-11402SPF+', '14');
-INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`) VALUES ('82', 'Y177HC01647', 'S-1102SPF', '14');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('1', 'C757M500195', 'S-11MPC6004R+', '1', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('2', '3353P254701', 'S-110430F', '2', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('3', 'G746R510164', 'S-11C2004R+', '2', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('4', 'G145R600271', 'S-117008', '3', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('5', 'Y177HB01092', 'S-11402SPF', '4', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('6', '3353PA50400', 'S-110430F', '4', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('7', '3353P352683', 'S-110430F', '5', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('8', '3353P350596', 'S-110430F', '6', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('9', '9264P600643', 'S-11IM460F', '7', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('10', '9264P600645', 'S-11IM460F', '7', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('11', '3148MB00315', 'S-11IMC6000R+', '7', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('18', 'Y177HC01816', 'S-11402SPFR+', '12', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('20', 'C328R300429', 'S-11MP4055R+', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('21', 'C299R200008', 'S-11MP2555R+', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('22', '3350P301149', 'S-110430F', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('23', 'W915PA03579', 'S-11301SPF', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('24', 'W916P903286', 'S-11301SPF', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('25', 'Y176HC00121', 'S-11402SPF', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('26', 'Y178HA02593', 'S-11402SPF+', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('27', 'G989X213198', 'S-11501SPF+', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('28', 'S9058500168', 'S-115200R+', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('29', 'G144RB00118', 'S-117008', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('30', 'G145R600752', 'S-117008', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('31', 'C767R610043', 'S-11C2004R+', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('32', '3351P500840', 'S-11IM430R+', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('33', 'C298R220838', 'S-11MP2555R+', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('34', 'Y176HC00140', 'S-11402SPF', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('35', 'C329R901156', 'S-11MP4055R+', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('36', 'G716M510138', 'S-11MPC4504R+', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('37', '3359PA00288', 'S-11IM430R+', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('38', '3354PA51353', 'S-110430F', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('39', '3354P450921', 'S-110430F', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('40', '3354PA51351', 'S-110430F', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('41', '3353PA50395', 'S-110430F', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('42', '3354PA51348', 'S-110430F', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('43', 'G737M160847', 'S-11MPC6004R+', '13', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('45', 'Y176HC00154', 'S-11402SPF', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('46', 'Y177H100762', 'S-11402SPF', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('47', 'Y177H100781', 'S-11402SPF', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('48', 'Y177HA01385', 'S-11402SPF', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('49', 'Y177HA02425', 'S-11402SPF', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('50', 'Y177HA02428', 'S-11402SPF', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('51', 'Y177HA02429', 'S-11402SPF', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('52', 'Y177HC01591', 'S-11402SPF', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('53', 'Y177HC01623', 'S-11402SPF', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('54', 'Y176H901864', 'S-11402SPFR+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('55', 'Y176HA01102', 'S-11402SPFR+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('56', 'Y176HC02439', 'S-11402SPFR+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('57', 'Y177H101011', 'S-11402SPFR+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('58', 'C768R311165', 'S-11C2004R', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('59', 'C307R600045', 'S-11MP3055R+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('60', 'C508P301958', 'S-11MPC307R+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('61', 'C508P301961', 'S-11MPC307R+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('62', 'C508P800341', 'S-11MPC307R+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('63', 'C738M640993', 'S-11MPC4504R', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('64', 'Y177H702834', 'S-1140SPFR+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('65', 'Y176HA03560', 'S-11402SPFR+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('66', 'C757M500164', 'S-11MPC6004R+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('67', 'G736MA60670', 'S-11MPC6004R+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('68', 'Y177HA02430', 'S-11402SPF+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('69', 'Y178H401620', 'S-11402SPF+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('70', 'Y177HB05160', 'S-11402SPF', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('71', 'C329R900039', 'S-11MP4055R+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('72', 'C337R400681', 'S-11MP5055R+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('73', '3140R100716', 'S-11IMC6000', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('74', 'C509PA01055', 'S-11MPC307R+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('75', 'Y178H500108', 'S-11402SPRF+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('76', 'C507PC04901', 'S-11307C', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('77', 'Y178HA01264', 'S-11402SPF', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('78', 'Y178HA01296', 'S-11402SPF', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('79', 'Y177HC01784', 'S-11402SPF', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('80', 'Y178H401959', 'S-11402SPFR+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('81', 'Y177H901479', 'S-11402SPF+', '14', '');
+INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('82', 'Y177HC01647', 'S-1102SPF', '14', '');
 
 -- Estructura de tabla: reportes
 DROP TABLE IF EXISTS `reportes`;
@@ -148,7 +160,7 @@ CREATE TABLE `reportes` (
   KEY `idx_equipo` (`id_equipo`),
   CONSTRAINT `reportes_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE SET NULL,
   CONSTRAINT `reportes_ibfk_2` FOREIGN KEY (`id_equipo`) REFERENCES `equipos` (`id_equipo`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: reportes
 INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('1', '2026-07-08', 'Damian', 'atendido', '2026-07-08', '', '1', '1', '291901-0399-0001');
@@ -161,7 +173,7 @@ INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atenc
 INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('12', '2026-07-09', 'Jose Luis', 'atendido', '2026-07-09', '', '6', '8', '172401-0080-0002');
 INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('13', '2026-07-07', 'Jose Luis', 'atendido', '2026-07-07', '', '2', '3', '287201-0133-0004');
 INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('21', '2026-07-09', 'Jose Luis', 'atendido', '2026-07-09', '', '7', '11', '294901-0429-0001');
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('24', '2026-07-17', '', 'atendido', '2026-07-17', '', '12', '18', '27131-0020-003');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('24', '2026-07-17', '', 'atendido', '2026-07-17', '', '12', '18', '271301-0020-0003');
 INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('25', '2026-07-20', '', 'atendido', '2026-07-20', '', '13', '22', '230001-0046-0001');
 INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('26', '2026-07-20', '', 'atendido', '2026-07-20', '', '13', '32', '230001-0046-0014');
 INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('27', '2026-07-20', '', 'atendido', '2026-07-20', '', '13', '41', '230001-0046-0024');
@@ -183,7 +195,7 @@ INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atenc
 INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('43', '2026-07-20', '', 'atendido', '2026-07-20', '', '13', '27', '230001-0046-0008');
 INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('44', '2026-07-20', '', 'atendido', '2026-07-20', '', '13', '28', '230001-0046-0010');
 INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('45', '2026-07-20', '', 'atendido', '2026-07-20', '', '13', '23', '230001-0046-0002');
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('46', '2026-07-20', '', 'atendido', '2026-07-20', '', '13', '24', '23001-0046-0003');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('46', '2026-07-20', '', 'atendido', '2026-07-20', '', '13', '24', '230001-0046-0003');
 INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('47', '2026-07-20', '', 'atendido', '2026-07-20', '', '13', '25', '230001-0046-0005');
 INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('48', '2026-07-20', '', 'atendido', '2026-07-20', '', '13', '26', '230001-0046-0007');
 INSERT INTO `reportes` (`id_reporte`, `fecha`, `tecnico`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`) VALUES ('49', '2026-07-16', '', 'atendido', '2026-07-16', '', '13', '20', '230001-0046-0017');
@@ -238,7 +250,7 @@ CREATE TABLE `reportes_componentes` (
   PRIMARY KEY (`id_reporte_componente`),
   KEY `id_reporte` (`id_reporte`),
   CONSTRAINT `1` FOREIGN KEY (`id_reporte`) REFERENCES `reportes` (`id_reporte`)
-) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=159 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --Datos de tabla: reportes_componentes
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('1', '13', 'Servicio Preventivo', 'SER-01', '1', '');
@@ -250,15 +262,9 @@ INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `comp
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('7', '11', 'Servicio Correctivo', 'SER-02', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('8', '21', 'Servicio Preventivo', 'SER-01', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('9', '7', 'Servicio Preventivo', 'SER-01', '1', '');
-INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('10', '1', 'Entrega Refacción/Consumible', 'SER-03', '1', 'Elemento de Equipo');
-INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('11', '1', 'Servicio Correctivo', 'SER-02', '1', '');
-INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('12', '1', '120978G+', 'componente', '1', 'Toner MPC6003 Cyan Ikon/CET+');
-INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('13', '24', 'Servicio Correctivo', 'SER-02', '18', '');
-INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('14', '24', '131224', 'componente', '1', 'Fotoconductora MP402 SP4500/4510');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('15', '25', 'Servicio Preventivo', 'SER-01', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('16', '48', 'Servicio Preventivo', 'SER-01', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('17', '47', 'Servicio Preventivo', 'SER-01', '1', '');
-INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('18', '46', 'Servicio Preventivo', 'SER-01', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('19', '45', 'Servicio Preventivo', 'SER-01', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('20', '44', 'Servicio Preventivo', 'SER-01', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('21', '43', 'Servicio Preventivo', 'SER-01', '1', '');
@@ -282,7 +288,6 @@ INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `comp
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('39', '49', 'Servicio Correctivo', 'SER-02', '18', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('40', '49', '133049', 'componente', '1', 'Switch Thermistor MPC3503');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('41', '50', 'Servicio Preventivo', 'SER-01', '1', '');
-INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('42', '87', 'Servicio Preventivo', 'SER-01', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('43', '86', 'Servicio Preventivo', 'SER-01', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('44', '85', 'Servicio Preventivo', 'SER-01', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('45', '84', 'Servicio Preventivo', 'SER-01', '1', '');
@@ -319,6 +324,13 @@ INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `comp
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('76', '83', 'Servicio Preventivo', 'SER-01', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('77', '73', 'Servicio Preventivo', 'SER-01', '1', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('78', '72', 'Servicio Preventivo', 'SER-01', '1', '');
+INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('107', '46', 'Servicio Preventivo', 'SER-01', '1', '');
+INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('108', '24', 'Servicio Correctivo', 'SER-02', '18', '');
+INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('109', '24', '131224', 'componente', '1', 'Fotoconductora MP402 SP4500/4510');
+INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('121', '87', 'Servicio Preventivo', 'SER-01', '1', '');
+INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('149', '1', 'Entrega Refacción/Consumible', 'componente', '1', 'Elemento de Equipo');
+INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('150', '1', 'Servicio Correctivo', 'SER-02', '1', '');
+INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `cantidad`, `descripcion`) VALUES ('151', '1', '120978G+', 'componente', '1', 'Toner MPC6003 Cyan Ikon/CET+');
 
 -- Estructura de tabla: telefonos
 DROP TABLE IF EXISTS `telefonos`;
@@ -330,18 +342,19 @@ CREATE TABLE `telefonos` (
   PRIMARY KEY (`id`),
   KEY `id_cliente` (`id_cliente`),
   CONSTRAINT `telefonos_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: telefonos
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('22', '4421532410', '2', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('24', '4422389600', '3', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('25', '4421338069', '6', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('27', '4423948804', '4', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('32', '4422531069', '7', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('34', '4422199244', '5', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('35', '4421787636', '12', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('36', '4422052215', '13', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('37', '4422744952', '14', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('38', '4422133388', '1', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('40', '4422744952', '14', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('41', '4422052215', '13', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('42', '4421787636', '12', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('43', '4422531069', '7', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('44', '4421338069', '6', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('45', '4422199244', '5', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('46', '4423948804', '4', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('47', '4422389600', '3', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('48', '4421532410', '2', '');
 
 -- Estructura de tabla: usuarios
 DROP TABLE IF EXISTS `usuarios`;
@@ -351,12 +364,17 @@ CREATE TABLE `usuarios` (
   `mail` varchar(255) DEFAULT NULL,
   `pass` varchar(255) DEFAULT NULL,
   `tip_usr` int(11) DEFAULT NULL,
+  `session_id` varchar(64) DEFAULT NULL,
+  `session_ip` varchar(45) DEFAULT NULL,
+  `session_time` datetime DEFAULT NULL,
+  `session_count` int(11) DEFAULT 1,
+  `session_tokens` text DEFAULT NULL,
   PRIMARY KEY (`id_usr`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: usuarios
-INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`) VALUES ('1', 'a', 'Servicio tecnico', '1234', '1');
-INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`) VALUES ('2', 'b', 'Administracion', '1234', '2');
-INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`) VALUES ('3', 'c', 'yo', '1234', '1');
+INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('1', 'a', 'Servicio tecnico', '1234', '1', NULL, NULL, NULL, '1', NULL);
+INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('2', 'b', 'Administracion', '1234', '2', '17d864b86fa0bf2d41bd790faa2c34f0', NULL, '2026-08-04 15:22:57', '1', NULL);
+INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('3', 'c', 'yo', '1234', '3', 'afd67c6ad567ee8d2b201a9486689253', NULL, '2026-08-04 15:46:46', '1', NULL);
 
 SET FOREIGN_KEY_CHECKS=1;

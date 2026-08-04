@@ -114,7 +114,7 @@ function resaltar_coincidencias($texto, $busqueda) {
                 </div>
             <?php endif; ?>
         </div>
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregar">
+        <button type="button" class="btn btn-success  mt-2" data-bs-toggle="modal" data-bs-target="#modalAgregar">
             <i class="bi bi-plus-circle"></i> Agregar
         </button>
         <div class="table-responsive">

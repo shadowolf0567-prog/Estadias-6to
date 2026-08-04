@@ -186,7 +186,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                     <option value="">-- Ninguno --</option>
                                     <option value="SER-01">SER-01</option>
                                     <option value="SER-02">SER-02</option>
-                                    <option value="SER-03">SER-03</option>
+                                    <option value="SER-03">Reparación</option>
                                     <option value="componente">Componente</option>
                                 </select>
                             </div>
@@ -299,13 +299,13 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         nombreInput.readOnly=true;
                     break;
                     case 'SER-03':
-                        nombreInput.value = 'Entrega Refacción/Consumible';
+                        nombreInput.value = 'Reparación';
                         nombreInput.readOnly = true;
                     break;
                     default:
                         if(nombreInput.value === 'Servicio Preventivo' || 
                             nombreInput.value === 'Servicio Correctivo' ||
-                            nombreInput.value === 'Entrega Refacción/Consumible') {
+                            nombreInput.value === 'Reparación') {
                                 nombreInput.value = '';
                             }
                             nombreInput.readOnly = false;
@@ -326,7 +326,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                 <option value="">-- Ninguno --</option>
                                 <option value="SER-01">SER-01</option>
                                 <option value="SER-02">SER-02</option>
-                                <option value="SER-03">SER-03</option>
+                                <option value="SER-03">Reparación</option>
                                 <option value="componente">Componente</option>
                             </select>
                         </div>
