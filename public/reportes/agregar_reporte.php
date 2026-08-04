@@ -427,7 +427,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                             </div>
                         </div>
                     </div>
-                    
                 `;
             });
             html += '</div>';
