@@ -175,7 +175,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                 </div>
                                 <div class="col-md-9">
                                     <label class="form-label">Buscar Equipo</label>
-                                    <input type="text" id="buscarEquipo_0" class="form-control" onkeyup="buscarEquipos(this.value, 0)">
+                                    <input type="text" id="buscarEquipo_0" class="form-control" onkeyup="buscarEquipos(this.value, 0)"  placeholder="Buscar por número de serie">
                                     <input type="hidden" name="equipos[0][id_equipo]" id="equipoId_0" value="">
                                 </div>
                                 <div class="col-md-12" id="resultadosEquipos_0"></div>

@@ -24,7 +24,7 @@ function buscar($termino = ''){
         $resultado = mysqli_query($conn,$sql);
     }else{
         $termino = mysqli_real_escape_string($conn,$termino);
-        $sql = "SELECT * from almacen WHERE nombre LIKE '%$termino%'";
+        $sql = "SELECT * from almacen WHERE nombre LIKE '%$termino%' OR serie LIKE '%$termino%' ORDER BY id DESC";
         $resultado = mysqli_query($conn,$sql);
         if(!$resultado){
             return[];
@@ -41,7 +41,7 @@ function buscar($termino = ''){
 $busqueda = isset($_GET['buscar']) ? trim($_GET['buscar']) : '';
 $productos = buscar($busqueda);
 $mostrar = (!empty($busqueda)) ? $productos : $inventario;
-function resaltar_coincidencias($texto, $busqueda) {
+function resaltar_coincidencia($texto, $busqueda) {
     if(empty($busqueda) || empty($texto)){
         return htmlspecialchars($texto);
     }
@@ -132,9 +132,11 @@ function resaltar_coincidencias($texto, $busqueda) {
                     <?php if(count($mostrar) > 0): ?>
                         <?php foreach($mostrar as $inv): ?>
                             <tr>         
-                                <td><?= htmlspecialchars($inv['nombre']) ?></td>
-                                <td><?= htmlspecialchars($inv['serie']) ?></td>
-                                <td><?= htmlspecialchars($inv['info_adicional'] ?: '') ?></td>
+                                <td><?= resaltar_coincidencia($inv['nombre'], $busqueda) ?></td>
+                                <td><?= resaltar_coincidencia($inv['serie'], $busqueda) ?></td>
+                                <td class="info-adicional" title="<?= htmlspecialchars($inv['info_adicional']) ?>">
+                                    <?= htmlspecialchars($inv['info_adicional']) ?>
+                                </td>
                                 <td><?= htmlspecialchars($inv['cantidad']) ?></td>
                                 <td>
                                     <form action="../lib/gestion_almacen.php" method="post">

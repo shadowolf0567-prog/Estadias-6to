@@ -10,29 +10,19 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'clientes') !== false ? 'active' : '' ?>" 
-                       href="../clientes/clientes.php">Clientes
-                    </a>
+                    <a class="nav-link" href="../clientes/clientes.php">Clientes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'equipos') !== false ? 'active' : '' ?>" 
-                       href="../equipos/equipos.php">Equipos
-                    </a>
+                    <a class="nav-link" href="../equipos/equipos.php">Equipos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'reportes') !== false ? 'active' : '' ?>" 
-                       href="../reportes/reportes.php">Reportes
-                    </a>
+                    <a class="nav-link" href="../reportes/reportes.php">Reportes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'backup') !== false ? 'active' : '' ?>" 
-                       href="../respaldos/backup.php">Respaldos
-                    </a>
+                    <a class="nav-link" href="../respaldos/backup.php">Respaldos</a>
                 </li>
                 <li class="nav-item">
-                    <a href="../gestion/almacen.php" class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'almacen') !== false ? 'active' : '' ?>">
-                        Inventario
-                    </a>
+                    <a href="../gestion/almacen.php" class="nav-link">Inventario</a>
                 </li>
             </ul>
             <ul class="navbar-nav">

@@ -209,7 +209,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         <div class="row g-3">
                             <div class="col-md-10">
                                 <label class="form-label">Buscar Equipo</label>
-                                <input type="text" id="buscarEquipo_0" class="form-control" onkeyup="buscarEquipo(this.value,0)">
+                                <input type="text" id="buscarEquipo_0" class="form-control" onkeyup="buscarEquipo(this.value,0)" placeholder="Buscar por número de serie o modelo">
                                 <input type="hidden" name="id_equipo" id="equipoId_0" value="<?= $reporte['id_equipo'] ?>">
                             </div>
                             <div class="col-md-12" id="resultadosEquipos_0">
@@ -584,7 +584,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                             <div class="card-body p-2">
                                 <strong>${escapeHtml(equipo.no_serie)}</strong>
                                 <br><small class="text-muted">${escapeHtml(equipo.modelo)}</small>
-                                <br<small class="text-primary">${escapeHtml(equipo.cliente_nombre)}</small>
+                                <br><small class="text-primary">${escapeHtml(equipo.cliente_nombre)}</small>
                             </div>
                         </div>
                     </div>
