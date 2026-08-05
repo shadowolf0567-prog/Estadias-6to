@@ -18,10 +18,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             
             if($usuario['pass'] == $password){
                 
-                // ✅ Destruir sesión anterior
                 session_destroy();
-                
-                // ✅ Iniciar nueva sesión
                 session_start();
                 
                 $_SESSION['id_usr'] = $usuario['id_usr'];
@@ -30,7 +27,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 $_SESSION['tip_usr'] = $usuario['tip_usr'];
                 $_SESSION['login_time'] = time();
                 
-                // ✅ Guardar session_id en BD
                 $session_id = session_id();
                 $now = date('Y-m-d H:i:s');
                 

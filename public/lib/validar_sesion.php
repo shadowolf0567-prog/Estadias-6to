@@ -27,7 +27,6 @@ if($usuario && !empty($usuario['session_id'])){
     }
 }
 
-// ✅ Si no hay session_id en BD, guardarlo
 if(!$usuario || empty($usuario['session_id'])){
     $sql_update = "UPDATE usuarios SET session_id = ? WHERE id_usr = ?";
     $stmt_update = mysqli_prepare($conn, $sql_update);
@@ -41,7 +40,6 @@ if(!isset($_SESSION['tip_usr']) || ($_SESSION['tip_usr'] != 1 && $_SESSION['tip_
     exit;
 }
 
-// ✅ Expirar sesión después de 8 horas
 if(isset($_SESSION['login_time']) && (time() - $_SESSION['login_time']) > 28800){
     session_destroy();
     header('Location: ../login.php?error=' . urlencode('Sesión expirada'));
