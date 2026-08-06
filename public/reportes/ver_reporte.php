@@ -16,10 +16,11 @@ $id_reporte = intval($_GET['id']);
 
 $sql = "SELECT r.*, 
                c.id_cliente, c.nombre as cliente_nombre, c.no_cuenta as cliente_cuenta, c.encargado as encargado,
-               e.id_equipo, e.no_serie as equipo_serie, e.modelo as equipo_modelo 
+               e.id_equipo, e.no_serie as equipo_serie, e.modelo as equipo_modelo, t.nombre as tecnico
         FROM reportes r
         LEFT JOIN clientes c ON r.id_cliente = c.id_cliente
         LEFT JOIN equipos e ON r.id_equipo = e.id_equipo
+        LEFT JOIN tecnicos t ON r.id = t.id
         WHERE r.id_reporte = ?";
 
 $stmt = mysqli_prepare($conn, $sql);
@@ -220,7 +221,7 @@ mysqli_close($conn);
                                                 <tr>
                                                     <td><strong><?= htmlspecialchars($comp['componente_nombre']) ?></strong></td>
                                                     <td><?= htmlspecialchars($comp['componente_descripcion'] ?? '-') ?></td>
-                                                    <td><?= htmlspecialchars($reporte['tecnico']) ?></td>
+                                                    <td><?= htmlspecialchars($reporte['tecnico']) ?? '-' ?></td>
                                                     <td><?= $comp['cantidad'] ?></td>
                                                 </tr>
                                             <?php endforeach; ?>

@@ -82,13 +82,13 @@ $componentes = [];
 $mes = isset($_GET['mes']) ? intval($_GET['mes']) : null;
 if($id_cliente){    
     $sql_componentes = "SELECT r.fecha,rc.descripcion, e.modelo,e.no_serie, rc.componente
-                        FROM reportes_componentes rc
-                        INNER JOIN reportes r ON rc.id_reporte = r.id_reporte
-                        LEFT JOIN clientes c ON r.id_cliente = c.id_cliente
-                        LEFT JOIN equipos e ON r.id_equipo = e.id_equipo
-                        WHERE 1=1
-                        AND rc.componente != 'Servicio Preventivo'
-                        AND rc.componente != 'Servicio Correctivo'
+                    FROM reportes_componentes rc
+                INNER JOIN reportes r ON rc.id_reporte = r.id_reporte
+            LEFT JOIN clientes c ON r.id_cliente = c.id_cliente
+        LEFT JOIN equipos e ON r.id_equipo = e.id_equipo
+            WHERE 1=1
+                AND rc.componente != 'Servicio Preventivo'
+                    AND rc.componente != 'Servicio Correctivo'
                         AND c.id_cliente = ?";
     
     $params = [$cliente['id_cliente']];

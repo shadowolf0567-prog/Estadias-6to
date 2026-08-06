@@ -12,6 +12,7 @@ function buscar_reportes_filtros($filtros = [], $estado = 'pendiente'){
     if(!$conn) return [];
 
     $sql = "SELECT r.*,
+            t.nombre as tecnico,
             c.nombre as cliente_nombre,
             c.no_cuenta as cliente_cuenta,
             e.no_serie as equipo_serie,
@@ -19,13 +20,14 @@ function buscar_reportes_filtros($filtros = [], $estado = 'pendiente'){
         FROM reportes r
         LEFT JOIN clientes c ON r.id_cliente = c.id_cliente
         LEFT JOIN equipos e ON r.id_equipo = e.id_equipo
+        LEFT JOIN tecnicos t ON r.id = t.id
         WHERE r.estado = ?";
 
     $params = [$estado];
     $types = "s";
 
     if(!empty($filtros['tecnico'])){
-        $sql .= " AND r.tecnico LIKE ?";
+        $sql .= " AND t.nombre LIKE ?";
         $params[] = "%" . $filtros['tecnico'] . "%";
         $types .= "s";
     }

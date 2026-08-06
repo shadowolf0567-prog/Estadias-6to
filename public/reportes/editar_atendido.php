@@ -83,6 +83,14 @@ if($result_clientes){
         $clientes[] = $row;
     }
 }
+$tecnicos = [];
+$sql_tecnicos = "SELECT * FROM tecnicos";
+$result_tecnicos = mysqli_query($conn,$sql_tecnicos);
+if($result_tecnicos){
+    while($row = mysqli_fetch_assoc($result_tecnicos)){
+        $tecnicos[] = $row;
+    }
+}
 $error=isset($_GET['error']) ? $_GET['error'] : '';
 $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
 ?>
@@ -313,26 +321,34 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             </div>
             <div class="form-section">
                 <h5>Detalles del Reporte</h5>
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Referencia</label>
-                        <input type="text" name="referencia" id="" class="form-control" value="<?= htmlspecialchars($reporte['referencia']) ?>">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Fecha de creación del Reporte</label>
-                        <input type="date" name="fecha" class="form-control" value="<?= htmlspecialchars($reporte['fecha']) ?>">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Fecha de atención</label>
-                        <input type="date" name="fecha_atencion" class="form-control" value="<?= htmlspecialchars($reporte['fecha_atencion']) ?>">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Técnico</label>
-                        <input type="text" name="tecnico" class="form-control" value="<?= htmlspecialchars($reporte['tecnico']) ?>">
-                    </div>
-                    <div class="col-md-12">
-                        <label class="form-label">Observaciones</label>
-                        <textarea name="observaciones_atencion" class="form-control"><?= htmlspecialchars($reporte['observaciones_atencion']) ?></textarea>
+                <div id="reportesContainer">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Referencia</label>
+                            <input type="text" name="referencia" id="" class="form-control" value="<?= htmlspecialchars($reporte['referencia']) ?>">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha de creación del Reporte</label>
+                            <input type="date" name="fecha" class="form-control" value="<?= htmlspecialchars($reporte['fecha']) ?>">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha de atención</label>
+                            <input type="date" name="fecha_atencion" class="form-control" value="<?= htmlspecialchars($reporte['fecha_atencion']) ?>">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Técnico</label>
+                            <select name="id" class="form-select">
+                                <?php foreach($tecnicos as $tecnico): ?>
+                                    <option value="<?= $tecnico['id'] ?>">
+                                        <?= htmlspecialchars($tecnico['nombre']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Observaciones</label>
+                            <textarea name="observaciones_atencion" class="form-control"><?= htmlspecialchars($reporte['observaciones_atencion']) ?></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -678,6 +694,17 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 limpiarSeleccionEquipos(index);
             });
         };
+        // function agregarTecnico(){
+        //     const container = document.getElementById('reportesContainer');
+        //     const html = `
+        //         <div class="col-md-4">
+        //             <input type="text" class="form-control"
+        //             <label class="form-label">&nbsp</label>
+        //         </div>
+        //     `;
+        //     container.insertAdjacentHTML('beforeend',html);
+            
+        // }
         function validarFormulario() {
             const equipo = document.getElementById('equipoId_0');
             if(btnGuardar) {
