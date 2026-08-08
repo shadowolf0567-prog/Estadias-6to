@@ -24,7 +24,7 @@ if(!$reporte){
     exit;
 }
 $componentes = [];
-$sql_comp = "SELECT id_reporte_componente, componente, cantidad,descripcion,tipo
+$sql_comp = "SELECT id_reporte_componente, componente,descripcion,tipo
             FROM reportes_componentes
             WHERE id_reporte = ?";
 $stmt_comp = mysqli_prepare($conn,$sql_comp);
@@ -79,6 +79,14 @@ $result_clientes = mysqli_query($conn, $sql_clientes);
 if($result_clientes){
     while($row = mysqli_fetch_assoc($result_clientes)){
         $clientes[] = $row;
+    }
+}
+$tecnicos = [];
+$sql_tecnicos = "SELECT * FROM tecnicos";
+$result_tecnicos = mysqli_query($conn,$sql_tecnicos);
+if($result_tecnicos){
+    while($row = mysqli_fetch_assoc($result_tecnicos)){
+        $tecnicos[] = $row;
     }
 }
 $error=isset($_GET['error']) ? $_GET['error'] : '';
@@ -254,10 +262,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                         <input type="text" name="componentes[<?= $index ?>][nombre]" class="form-control" value="<?= htmlspecialchars($comp['componente']) ?>" id="nombre_<?= $index ?>">
                                     </div>
                                     <div class="col-md-2">
-                                        <label class="form-label">Cantidad</label>
-                                        <input type="number" name="componentes[<?= $index ?>][cantidad]" class="form-control" value="<?= $comp['cantidad'] ?>" min="1">
-                                    </div>
-                                    <div class="col-md-2">
                                         <label class="form-label">&nbsp;</label>
                                         <i class="bi bi-dash-circle btn-remover" onclick="removerComponente(this)" style="display: block; margin-top: 5px; font-size: 24px;"></i>
                                     </div>
@@ -265,7 +269,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                 <div class="row g-2 mt-2" id="seccionDescripcion_<?= $index ?>" style="display: <?= ($comp['tipo'] == 'componente' || empty($comp['tipo'])) ? 'block' : 'none' ?>;">
                                     <div class="col-md-12">
                                         <label class="form-label">Descripción</label>
-                                        <textarea name="componentes[<?= $index ?>][descripcion]" class="form-control" placeholder="Escribe el nombre del componente o refacción"><?= htmlspecialchars($comp['descripcion']) ?></textarea>
+                                        <textarea name="componentes[<?= $index ?>][descripcion]" class="form-control" placeholder="Escribe el nombre del componente, refacción o la descripción del problema"><?= htmlspecialchars($comp['descripcion']) ?></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -312,18 +316,28 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             <div class="form-section">
                 <h5>Detalles del Reporte</h5>
                 <div class="row g-3">
-                    <div class="col-md-4">
-                        <label class="form-label">Referencia</label>
-                        <input type="text" name="referencia" id="" class="form-control" value="<?= htmlspecialchars($reporte['referencia']) ?>">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Fecha de creación del Reporte</label>
-                        <input type="date" name="fecha" class="form-control" value="<?= htmlspecialchars($reporte['fecha']) ?>">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="" class="form-label">Técnico</label>
-                        <input type="text" name="tecnico" id="" class="form-control" value="<?= htmlspecialchars($reporte['tecnico']) ?>">
-                    </div>
+                    <div class="col-md-3">
+                            <label class="form-label">Referencia</label>
+                            <input type="text" name="referencia" id="" class="form-control" value="<?= htmlspecialchars($reporte['referencia']) ?>">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha de creación del Reporte</label>
+                            <input type="date" name="fecha" class="form-control" value="<?= htmlspecialchars($reporte['fecha']) ?>">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha de atención</label>
+                            <input type="date" name="fecha_atencion" class="form-control" value="<?= htmlspecialchars($reporte['fecha_atencion']) ?>">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Técnico</label>
+                            <select name="id" class="form-select">
+                                <?php foreach($tecnicos as $tecnico): ?>
+                                    <option value="<?= $tecnico['id'] ?>">
+                                        <?= htmlspecialchars($tecnico['nombre']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
                 </div>
             </div>
             <div class="mt-3 mb-3">
@@ -376,7 +390,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             const seccion = document.getElementById('seccionDescripcion_' + index);
             const nombreInput = document.getElementById('nombre_' + index);
             if(seccion){
-                if(select.value === 'componente' || select.value === 'SER-03'){
+                if(select.value === 'componente' || select.value === 'SER-03' || select.value === 'SER-01' || select.value === 'SER-02'){
                     seccion.style.display = 'block';
                 }else{
                     seccion.style.display = 'none';
@@ -428,10 +442,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         <div class="col-md-4">
                             <label class="form-label">Nombre</label>
                             <input type="text" id="nombre_${index}" name="componentes[${index}][nombre]" class="form-control" placeholder="Nombre del componente/servicio" value="">
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label">Cantidad</label>
-                            <input type="number" name="componentes[${index}][cantidad]" class="form-control" value="1" min="1">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label">&nbsp;</label>

@@ -62,6 +62,24 @@ if($equipo){
     }
     mysqli_stmt_close($stmt_re);
 }
+$sql_totalizadores = "SELECT color,bn,fecha
+                        FROM totalizadores t
+                        WHERE id_equipo = ?";
+$params_t = [$id_equipo];
+$types_t = "i";
+if(!empty($mes)){
+    $sql_totalizadores .= " AND month(fecha) = ?
+                            AND year(fecha) = year(curdate())";
+    $params_t[] = $mes;
+    $types_t .= "i";
+}
+$sql_totalizadores .= " ORDER BY fecha DESC LIMIT 1";
+$stmt_t = mysqli_prepare($conn,$sql_totalizadores);
+mysqli_stmt_bind_param($stmt_t,$types_t, ...$params_t);
+mysqli_stmt_execute($stmt_t);
+$resultado_t = mysqli_stmt_get_result($stmt_t);
+$totalizadores = mysqli_fetch_assoc($resultado_t);
+mysqli_stmt_close($stmt_t);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -97,10 +115,35 @@ if($equipo){
                     <div class="card-header">Información del Equipo</div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <p><span class="info-label">Modelo: </span><?= htmlspecialchars($equipo['modelo']) ?></p>
                                 <p><span class="info-label">Número de Serie: </span><?= htmlspecialchars($equipo['no_serie']) ?></p>
                                 <p><span class="info-label">Ubicación: </span><?= htmlspecialchars($equipo['ubicacion']) ?></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p>
+                                    <span class="info-label">Color: </span> <?= number_format($totalizadores['color'] ?? 0) ?>
+                                </p>
+                                <p>
+                                    <span class="info-label">Blanco y Negro: </span> <?= number_format($totalizadores['bn'] ?? 0) ?>
+                                </p>
+                                <form action="../lib/gestion_equipo.php" method="post" class="mt-2">
+                                    <input type="hidden" name="accion" value="totalizadores">
+                                    <input type="hidden" name="id_equipo" value="<?= $equipo['id_equipo'] ?>">
+                                    <div class="row g-2">
+                                        <div class="col-5">
+                                            <input type="number" name="color" id="" class="form-control form-control-sm" value="<?= $equipo['color'] ?? 0 ?>">
+                                        </div>
+                                        <div class="col-5">
+                                            <input type="number" name="bn" id="" class="form-control form-control-sm" value="<?= $equipo['bn'] ?? 0 ?>">
+                                        </div>
+                                        <div class="col-2">
+                                            <button type="submit" class="btn btn-success btn-sm w-100">
+                                                <i class="bi bi-save"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -210,5 +253,20 @@ if($equipo){
         </div>
     </div>
     <script src="../assets/js/bootstrap.min.js"></script>
+    <script>
+        document.querySelector('form[action="../lib/gestion_equipo.php"]')?.addEventListener('submit', function(e) {
+            const color = parseInt(this.querySelector('input[name="color"]').value);
+            const bn = parseInt(this.querySelector('input[name="bn"]').value);
+            
+            const colorActual = <?= $totalizadores['color'] ?? 0 ?>;
+            const bnActual = <?= $totalizadores['bn'] ?? 0 ?>;
+            
+            return confirm(
+                '¿Estás seguro de actualizar los totalizadores?\n\n' +
+                'Color: ' + colorActual + ' → ' + color + '\n' +
+                'B/N: ' + bnActual + ' → ' + bn
+            );
+        });
+    </script>
 </body>
 </html>

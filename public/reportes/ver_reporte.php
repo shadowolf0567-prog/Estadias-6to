@@ -14,7 +14,7 @@ if(!isset($_GET['id']) || empty($_GET['id'])){
 
 $id_reporte = intval($_GET['id']);
 
-$sql = "SELECT r.*, 
+$sql = "SELECT r.*, t.nombre as tecnico,
                c.id_cliente, c.nombre as cliente_nombre, c.no_cuenta as cliente_cuenta, c.encargado as encargado,
                e.id_equipo, e.no_serie as equipo_serie, e.modelo as equipo_modelo, t.nombre as tecnico
         FROM reportes r
@@ -32,8 +32,7 @@ $reporte = mysqli_fetch_assoc($resultado);
 $componentes_reporte = [];
             if($reporte['id_reporte']){
                 $sql_comp = "SELECT rc.*, rc.componente as componente_nombre,
-                            rc.descripcion as componente_descripcion,
-                            rc.cantidad as cantidad
+                            rc.descripcion as componente_descripcion
                             FROM reportes_componentes rc
                             WHERE rc.id_reporte = ?";
                 $stmt_comp = mysqli_prepare($conn,$sql_comp);
@@ -213,7 +212,6 @@ mysqli_close($conn);
                                                 <th>Componente</th>
                                                 <th>Descripción</th>
                                                 <th>Técnico</th>
-                                                <th>Cantidad</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -222,7 +220,6 @@ mysqli_close($conn);
                                                     <td><strong><?= htmlspecialchars($comp['componente_nombre']) ?></strong></td>
                                                     <td><?= htmlspecialchars($comp['componente_descripcion'] ?? '-') ?></td>
                                                     <td><?= htmlspecialchars($reporte['tecnico']) ?? '-' ?></td>
-                                                    <td><?= $comp['cantidad'] ?></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         </tbody>
@@ -307,7 +304,6 @@ mysqli_close($conn);
     </div>
     <script src="../assets/js/bootstrap.min.js"></script>
     <script>
-        // Función para abrir modales (alternativa al data-bs-toggle)
         function abrirModalAtender() {
             var modal = new bootstrap.Modal(document.getElementById('modalAtender'));
             modal.show();
@@ -318,7 +314,6 @@ mysqli_close($conn);
             modal.show();
         }
         
-        // Cerrar modales con tecla ESC
         document.addEventListener('keydown', function(e) {
             if(e.key === 'Escape') {
                 var modales = document.querySelectorAll('.modal.show');

@@ -20,7 +20,8 @@ if($result_equipos){
 $clientes = [];
 $sql_clientes = "SELECT c.*,
                         GROUP_CONCAT(DISTINCT ct.telefono SEPARATOR ', ') as telefonos,
-                        GROUP_CONCAT(DISTINCT cc.correo SEPARATOR ', ') as correos
+                        GROUP_CONCAT(DISTINCT cc.correo SEPARATOR ', ') as correos,
+                        CONCAT(c.no_cuenta, '-', REPLACE(c.contrato, 'C-', '')) as referencia_auto
                 FROM clientes c
                 LEFT JOIN telefonos ct ON c.id_cliente = ct.id_cliente
                 LEFT JOIN correos cc ON c.id_cliente = cc.id_cliente
@@ -32,9 +33,6 @@ if($result_clientes){
         $clientes[] = $row;
     }
 }
-$cliente = "SELECT c.*,r.* FROM clientes c
-            INNER JOIN reportes r
-            ON r.id_cliente = c.id_cliente";
 $error=isset($_GET['error']) ? $_GET['error'] : '';
 $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
 ?>
@@ -195,10 +193,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                 <input type="text" id="nombre_0" name="componentes[0][nombre]" class="form-control" placeholder="Nombre del componente">
                             </div>
                             <div class="col-md-2">
-                                <label class="form-label">Cantidad</label>
-                                <input type="number" name="componentes[0][cantidad]" class="form-control" value="1" min="1">
-                            </div>
-                            <div class="col-md-2">
                                 <label class="form-label">&nbsp;</label>
                                 <i class="bi bi-dash-circle btn-remover" onclick="removerComponente(this)" style="display: block; margin-top: 5px; font-size: 24px;"></i>
                             </div>
@@ -206,7 +200,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         <div class="row g-2 mt-2" id="seccionDescripcion_0" style="display: none;">
                             <div class="col-md-12">
                                 <label class="form-label">Descripción</label>
-                                <textarea name="componentes[0][descripcion]" class="form-control" rows="2" placeholder="Escribe el nombre del componente o refacción"></textarea>
+                                <textarea name="componentes[0][descripcion]" class="form-control" rows="2" placeholder="Escribe el nombre del componente, refacción o la descripción del problema"></textarea>
                             </div>
                         </div>
                     </div>
@@ -220,7 +214,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 <div class="row g-3">
                     <div class="col-md-4">
                         <label class="form-label">Referencia</label>
-                        <input type="text" name="referencia" id="" class="form-control">
+                        <input type="text" name="referencia" id="referencia" class="form-control referencia-auto" readonly>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Fecha</label>
@@ -270,6 +264,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
         const resultadosDiv = document.getElementById('resultadosBusqueda');
         const clienteSeleccionadoDiv = document.getElementById('clienteSeleccionado');
         const nombreClienteSpan = document.getElementById('nombreClienteSeleccionado');
+        const referenciaInput = document.getElementById('referencia');
         const btnGuardar = document.getElementById('btnGuardar');
 
         function escapeHtml(text){
@@ -282,7 +277,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             const seccion = document.getElementById('seccionDescripcion_' + index);
             const nombreInput = document.getElementById('nombre_' + index);
             if(seccion){
-                if(select.value === 'componente' || select.value === 'SER-03'){
+                if(select.value === 'componente' || select.value === 'SER-03' || select.value === 'SER-02' || select.value === 'SER-01'){
                     seccion.style.display = 'block';
                 }else{
                     seccion.style.display = 'none';
@@ -333,10 +328,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         <div class="col-md-4">
                             <label class="form-label">Nombre</label>
                             <input type="text" id="nombre_${contadorComponentes}" name="componentes[${contadorComponentes}][nombre]" class="form-control" placeholder="Nombre del componente/servicio">
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label">Cantidad</label>
-                            <input type="number" name="componentes[${contadorComponentes}][cantidad]" class="form-control" value="1" min="1">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label">&nbsp;</label>
@@ -534,6 +525,10 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             if(idClienteInput) idClienteInput.value=id;
             if(nombreClienteSpan) nombreClienteSpan.textContent = nombre;
             if(clienteSeleccionadoDiv) clienteSeleccionadoDiv.style.display='block';
+            const clienteSeleccionado = clientesData.find(cliente => cliente.id_cliente == id);
+            if(clienteSeleccionado && clienteSeleccionado.referencia_auto){
+                referenciaInput.value = clienteSeleccionado.referencia_auto;
+            }
             if(elementoSeleccionado){
                 elementoSeleccionado.classList.remove('cliente-seleccionado');
                 const iconAntiguo = elementoSeleccionado.querySelector('.bi-check-circle-fill');
@@ -565,6 +560,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             if(clienteSeleccionadoDiv) clienteSeleccionadoDiv.style.display = 'none';
             if(idClienteInput) idClienteInput.value=0;
             if(nombreClienteSpan) nombreClienteSpan.textContent = '';
+            referenciaInput.value = '';
             document.querySelectorAll('.equipo-item').forEach((item, index) => {
                 const input = document.getElementById('buscarEquipo_'+index);
                 if(input) input.value = '';
@@ -573,6 +569,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
         };
         function validarFormulario() {
             const equipo = document.getElementById('equipoId_0');
+            const referencia = referenciaInput.value;
             if(btnGuardar) {
                 btnGuardar.disabled = (!equipo || equipo.value === '');
             }

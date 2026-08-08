@@ -80,10 +80,10 @@ function agregar_reportes_con_reportes($fecha,$referencia,$id_cliente = null,$id
         'mensaje' => 'Reporte generado con éxito'
     ];
 }
-function editar_reporte_con_componentes($id_reporte,$fecha,$tecnico,$referencia,$id_cliente = null,$id_equipo = null,$componentes = []){
+function editar_reporte_con_componentes($id_reporte,$fecha,$id_cliente = null,$id_equipo = null,$tecnico=null,$componentes = []){
     global $conn;
     $sql="UPDATE reportes SET
-    fecha=?,tecnico = ?,referencia=?,id_cliente = ?,id_equipo =? WHERE id_reporte =?";
+    fecha=?,id_cliente = ?,id_equipo =?,id=? WHERE id_reporte =?";
     $update_preparado=mysqli_prepare($conn,$sql);
     if(!$update_preparado){
         return[
@@ -92,7 +92,7 @@ function editar_reporte_con_componentes($id_reporte,$fecha,$tecnico,$referencia,
         ];
     }
     
-    mysqli_stmt_bind_param($update_preparado,"sssiii",$fecha,$tecnico,$referencia,$id_cliente,$id_equipo,$id_reporte);
+    mysqli_stmt_bind_param($update_preparado,"ssiii",$fecha,$id_cliente,$id_equipo,$tecnico,$id_reporte);
     $query_ok=mysqli_stmt_execute($update_preparado);
     mysqli_stmt_close($update_preparado);
     if(!$query_ok){
@@ -107,15 +107,14 @@ function editar_reporte_con_componentes($id_reporte,$fecha,$tecnico,$referencia,
     mysqli_stmt_execute($stmt_delete);
     mysqli_stmt_close($stmt_delete);
     if(!empty($componentes) && is_array($componentes)){
-        $sql_comp = "INSERT INTO reportes_componentes (id_reporte,componente,cantidad,descripcion,tipo)
-                    VALUES (?,?,?,?,?)";
+        $sql_comp = "INSERT INTO reportes_componentes (id_reporte,componente,descripcion,tipo)
+                    VALUES (?,?,?,?)";
         $stmt_comp = mysqli_prepare($conn, $sql_comp);
 
         if($stmt_comp){
             foreach($componentes as $comp){
                     $componente = trim($comp['nombre'] ?? $comp['componente']) ?? '';
                     $tipo = trim($comp['tipo'] ?? '');
-                    $cantidad = isset($comp['cantidad']) ? intval($comp['cantidad']) : 1;
                     $descripcion = trim($comp['descripcion']);
 
                     if(empty($componente)){
@@ -138,7 +137,7 @@ function editar_reporte_con_componentes($id_reporte,$fecha,$tecnico,$referencia,
                         }
                     }
                     if(!empty($componente)){
-                        mysqli_stmt_bind_param($stmt_comp,'isiss',$id_reporte,$componente,$cantidad,$descripcion,$tipo);
+                        mysqli_stmt_bind_param($stmt_comp,'isss',$id_reporte,$componente,$descripcion,$tipo);
                         mysqli_stmt_execute($stmt_comp);
                     }
             }
@@ -250,13 +249,12 @@ function marcar_atendido($id_reporte, $observaciones = '',$fecha_atencion = ''){
         ];
     }
 }
-function atender_rapido($id_reporte, $observaciones = '',$fecha_atencion = ''){
+function atender_rapido($id_reporte,$fecha_atencion = ''){
     global $conn;
     if(empty($fecha_atencion) || $fecha_atencion == '0000-00-00'){
         $fecha_atencion = null;
     }
     $sql = "UPDATE reportes SET estado='atendido', 
-            observaciones_atencion=?, 
             fecha_atencion = ? WHERE id_reporte=?";
     $stmt = mysqli_prepare($conn,$sql);
     if(!$stmt){
@@ -265,7 +263,7 @@ function atender_rapido($id_reporte, $observaciones = '',$fecha_atencion = ''){
             'mensaje' => 'Error en la preparación'.mysqli_error($conn)
         ];
     }
-    mysqli_stmt_bind_param($stmt, 'ssi', $observaciones, $fecha_atencion,$id_reporte);
+    mysqli_stmt_bind_param($stmt, 'si', $fecha_atencion,$id_reporte);
     $query_ok = mysqli_stmt_execute($stmt);
     $rows_ok=mysqli_affected_rows($conn);
     mysqli_stmt_close($stmt);
@@ -283,7 +281,7 @@ function atender_rapido($id_reporte, $observaciones = '',$fecha_atencion = ''){
 }
 function reabrir_reporte($id_reporte){
     global $conn;
-    $sql = "UPDATE reportes SET estado = 'pendiente', fecha_atencion = NULL, observaciones_atencion = NULL WHERE id_reporte = ?";
+    $sql = "UPDATE reportes SET estado = 'pendiente' WHERE id_reporte = ?";
     $stmt = mysqli_prepare($conn,$sql);
     if(!$stmt){
         return[
@@ -338,14 +336,13 @@ function editar_atendidos($id_reporte,$fecha,$referencia,$fecha_atencion,$observ
     mysqli_stmt_close($stmt_delete);
 
     if(!empty($componentes) && is_array($componentes)){
-        $sql_comp = "INSERT INTO reportes_componentes (id_reporte,componente,cantidad,descripcion,tipo)
-                    VALUES (?,?,?,?,?)";
+        $sql_comp = "INSERT INTO reportes_componentes (id_reporte,componente,descripcion,tipo)
+                    VALUES (?,?,?,?)";
         $stmt_comp = mysqli_prepare($conn,$sql_comp);
         if($stmt_comp){
             foreach($componentes as $comp){
                     $componente = trim($comp['nombre'] ?? $comp['componente'] ?? '');
                     $tipo = trim($comp['tipo'] ?? '');
-                    $cantidad = isset($comp['cantidad']) ? intval($comp['cantidad']) : 1;
                     $descripcion = trim($comp['descripcion']);
 
                     if(empty($componente)){
@@ -369,7 +366,7 @@ function editar_atendidos($id_reporte,$fecha,$referencia,$fecha_atencion,$observ
                         }
                     }
                     if(!empty($componente)){
-                        mysqli_stmt_bind_param($stmt_comp,'isiss',$id_reporte,$componente,$cantidad,$descripcion,$tipo);
+                        mysqli_stmt_bind_param($stmt_comp,'isss',$id_reporte,$componente,$descripcion,$tipo);
                         mysqli_stmt_execute($stmt_comp);
                     }
             }
@@ -455,7 +452,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             case 'agregar':
                 if(isset($_POST['fecha'])){
                     $fecha=trim($_POST['fecha']);
-                    $referencia = trim($_POST['referencia'] ?? '');
                     $id_cliente=!empty($_POST['id_cliente']) ? intval($_POST['id_cliente']) : null;
                     $id_equipo=!empty($_POST['id_equipo']) ? intval($_POST['id_equipo']): null;
 
@@ -464,7 +460,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                         foreach($_POST['componentes'] as $comp){
                             $nombre = trim($comp['nombre'] ?? $comp['componente'] ?? '');
                             $tipo = trim($comp['tipo'] ?? '');
-                            $cantidad = isset($comp['cantidad']) ? intval($comp['cantidad']) : 1;
                             $descripcion = trim($comp['descripcion'] ?? '');
 
                             if(empty($nombre)){
@@ -480,7 +475,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                             if(!empty($nombre)){
                                 $componentes[] = [
                                     'nombre' => $nombre,
-                                    'cantidad' => $cantidad,
                                     'descripcion' => $descripcion
                                 ];
                             }
@@ -488,7 +482,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                         }
                     }
 
-                    $resultado=agregar_reportes_con_reportes($fecha,$referencia,$id_cliente,$id_equipo,$componentes);
+                    $resultado=agregar_reportes_con_reportes($fecha,$id_cliente,$id_equipo,$componentes);
                     if($resultado['estatus'] === 'msg'){
                         header('Location: ../reportes/agregar_reporte.php?msg='.urlencode($resultado['mensaje']));
                     }else{
@@ -501,17 +495,15 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 if(isset($_POST['id_reporte'],$_POST['fecha'])){
                     $id_reporte=intval($_POST['id_reporte']);
                     $fecha=trim($_POST['fecha']);
-                    $tecnico=trim($_POST['tecnico']);
-                    $referencia = trim($_POST['referencia']);
                     $id_cliente=!empty($_POST['id_cliente']) ? intval($_POST['id_cliente']) : null;
                     $id_equipo=!empty($_POST['id_equipo']) ? intval($_POST['id_equipo']) : null;
+                    $tecnico=trim($_POST['id']) ? intval($_POST['id']) : null;
 
                     $componentes = [];
                     if(isset($_POST['componentes']) && is_array(($_POST['componentes']))){
                         foreach($_POST['componentes'] as $comp){
                             $componente = trim($comp['nombre'] ?? $comp['componente']);
                             $tipo = trim($comp['tipo'] ?? '');
-                            $cantidad = isset($comp['cantidad']) ? intval($comp['cantidad']) : 1;
                             $descripcion = trim($comp['descripcion'] ?? '');
 
                             if(empty($componente)){
@@ -526,14 +518,13 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                             if(!empty($componente)){
                                 $componentes[] = [
                                     'nombre' => $componente,
-                                    'cantidad' => $cantidad,
                                     'descripcion' => $descripcion
                                 ];
                             }
                         }
                     }
                     
-                    $resultado=editar_reporte_con_componentes($id_reporte,$fecha,$tecnico,$referencia,$id_cliente,$id_equipo,$componentes);
+                    $resultado=editar_reporte_con_componentes($id_reporte,$fecha,$id_cliente,$id_equipo,$tecnico,$componentes);
                     header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.'&'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
                     if($resultado['estatus'] === 'msg'){
                         header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.'&msg=' .urlencode($resultado['mensaje']));
@@ -630,7 +621,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                         foreach($_POST['componentes'] as $comp){
                             $componente = trim($comp['nombre'] ?? $comp['componente'] ?? '');
                             $tipo = trim($comp['tipo'] ?? '');
-                            $cantidad = isset($comp['cantidad']) ? intval($comp['cantidad']) : 1;
                             $descripcion = trim($comp['descripcion'] ?? '');
 
                             if(empty($componente)){
@@ -645,7 +635,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                             if(!empty($componente)){
                                 $componentes[] = [
                                     'nombre' => $componente,
-                                    'cantidad' => $cantidad,
                                     'descripcion' => $descripcion
                                 ];
                             }

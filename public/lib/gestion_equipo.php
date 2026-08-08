@@ -273,6 +273,46 @@ function obtener_cliente_completo($id_cliente){
     mysqli_stmt_close($stmt_telefonos);
     return $cliente;
 }
+function totalizadores($id_equipo,$color,$bn,$fecha=null){
+    global $conn;
+    if(empty($fecha)){
+        $fecha = date('Y-m-d H:i:s');
+    }
+    $sql_check = "SELECT COUNT(*) as total FROM totalizadores WHERE id_equipo = ?";
+    $stmt_check = mysqli_prepare($conn,$sql_check);
+    mysqli_stmt_bind_param($stmt_check, "i", $id_equipo);
+    mysqli_stmt_execute($stmt_check);
+    $result_check = mysqli_stmt_get_result($stmt_check);
+    $row_check = mysqli_fetch_assoc($result_check);
+    mysqli_stmt_close($stmt_check);
+
+    $existe = ($row_check['total'] > 0);
+    if($existe){
+        $sql = "UPDATE totalizadores SET color = ?, bn = ?, fecha = ?
+                WHERE id_equipo = ?
+                ORDER BY fecha DESC
+                LIMIT 1";
+        $stmt = mysqli_prepare($conn,$sql);
+        mysqli_stmt_bind_param($stmt, "iisi", $color,$bn,$fecha,$id_equipo);
+        $mensaje = "Totalizadores actualizados correctamente";
+    }else{
+        $sql = "INSERT INTO totalizadores (id_equipo, color, bn,fecha)
+                VALUES (?,?,?,?)";
+        $stmt = mysqli_prepare($conn,$sql);
+        mysqli_stmt_bind_param($stmt,"iiis",$id_equipo,$color,$bn,$fecha);
+        $mensaje = "Totalizadores registrados correctamente";
+    }
+    $query_ok = mysqli_stmt_execute($stmt);
+    if(!$query_ok){
+        $error = mysqli_stmt_error($stmt);
+        mysqli_stmt_close($stmt);
+        return[
+            'estatus' => 'error',
+            'mensaje' => 'Error al insertar '.$error
+        ];
+    }
+    mysqli_stmt_close($stmt);
+}
 if($_SERVER['REQUEST_METHOD']==='POST'){
     if(isset($_POST['accion'])){
         $accion = $_POST['accion'];
@@ -343,9 +383,23 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                         exit;
                     }
                     break;
+                case 'totalizadores':
+                    if(isset($_POST['id_equipo'],$_POST['color'],$_POST['bn'])){
+                        $id_equipo = intval($_POST['id_equipo']);
+                        $color = intval($_POST['color']);
+                        $bn = intval($_POST['bn']);
+                        $resultado = totalizadores($id_equipo,$color,$bn);
+                        if($resultado['estatus'] === 'msg'){
+                            header('Location: ../equipos/ver_equipo.php?id=' .$id_equipo.'&msg='.urlencode($resultado['mensaje']));
+                        }else{
+                            header('Location: ../equipos/ver_equipo.php?id=' .$id_equipo. '&error=' .urlencode($resultado['mensaje']));
+                        }
+                        exit;
+                    }
+                    break;
                 default:
                     header('Location: ../equipos/equipos.php?error='.urlencode('Acción no válida'));
-                    exit;
+                exit;
         }
     }
 }

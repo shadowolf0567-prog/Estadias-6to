@@ -32,7 +32,7 @@ while($row = mysqli_fetch_assoc($result_equipos)){
     $todos_equipos[] = $row;
 }
 $componentes = [];
-$sql_comp = "SELECT id_reporte_componente as id, componente, cantidad,descripcion,tipo
+$sql_comp = "SELECT id_reporte_componente as id, componente,descripcion,tipo
             FROM reportes_componentes
             WHERE id_reporte = ?";
 $stmt_comp = mysqli_prepare($conn,$sql_comp);
@@ -264,10 +264,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                         <input type="text" name="componentes[<?= $index ?>][nombre]" class="form-control" value="<?= htmlspecialchars($comp['componente']) ?>" id="nombre_<?= $index ?>">
                                     </div>
                                     <div class="col-md-2">
-                                        <label class="form-label">Cantidad</label>
-                                        <input type="number" name="componentes[<?= $index ?>][cantidad]" class="form-control" value="<?= $comp['cantidad'] ?>" min="1">
-                                    </div>
-                                    <div class="col-md-2">
                                         <label class="form-label">&nbsp;</label>
                                         <i class="bi bi-dash-circle btn-remover" onclick="removerComponente(this)" style="display: block; margin-top: 5px; font-size: 24px;"></i>
                                     </div>
@@ -275,7 +271,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                 <div class="row g-2 mt-2" id="seccionDescripcion_<?= $index ?>" style="display: <?= (strpos($comp['componente'],'componente') !== false || strpos($comp['componente'],'Componente') !== false) ? 'block' : 'none' ?>;">
                                     <div class="col-md-12">
                                         <label class="form-label">Descripción</label>
-                                        <textarea name="componentes[<?= $index ?>][descripcion]" class="form-control" placeholder="Escribe el nombre del componente o refacción"><?= htmlspecialchars($comp['descripcion']) ?></textarea>
+                                        <textarea name="componentes[<?= $index ?>][descripcion]" class="form-control" placeholder="Escribe el nombre del componente, refacción o la descripción del problema"><?= htmlspecialchars($comp['descripcion']) ?></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -401,7 +397,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             const seccion = document.getElementById('seccionDescripcion_' + index);
             const nombreInput = document.getElementById('nombre_' + index);
             if(seccion){
-                if(select.value === 'componente' || select.value === 'SER-03'){
+                if(select.value === 'componente' || select.value === 'SER-03' || select.value === 'SER-01' || select.value === 'SER-02'){
                     seccion.style.display = 'block';
                 }else{
                     seccion.style.display = 'none';
@@ -453,10 +449,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         <div class="col-md-4">
                             <label class="form-label">Nombre</label>
                             <input type="text" id="nombre_${index}" name="componentes[${index}][nombre]" class="form-control" placeholder="Nombre del componente/servicio">
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label">Cantidad</label>
-                            <input type="number" name="componentes[${index}][cantidad]" class="form-control" value="1" min="1">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label">&nbsp;</label>
