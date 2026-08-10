@@ -69,7 +69,8 @@ if($reporte['id_cliente']){
 $clientes = [];
 $sql_clientes = "SELECT c.*,
                         GROUP_CONCAT(DISTINCT ct.telefono SEPARATOR ', ') as telefonos,
-                        GROUP_CONCAT(DISTINCT cc.correo SEPARATOR ', ') as correos
+                        GROUP_CONCAT(DISTINCT cc.correo SEPARATOR ', ') as correos,
+                        CONCAT(c.no_cuenta, '-', REPLACE(c.contrato, 'C-', '')) as referencia_auto
                 FROM clientes c
                 LEFT JOIN telefonos ct ON c.id_cliente = ct.id_cliente
                 LEFT JOIN correos cc ON c.id_cliente = cc.id_cliente
@@ -87,6 +88,15 @@ $result_tecnicos = mysqli_query($conn,$sql_tecnicos);
 if($result_tecnicos){
     while($row = mysqli_fetch_assoc($result_tecnicos)){
         $tecnicos[] = $row;
+    }
+}
+$referencia_actual = '';
+if($reporte['id_cliente']){
+    foreach($clientes as $cliente){
+        if($cliente['id_cliente'] == $reporte['id_cliente']){
+            $referencia_actual = $cliente['referencia_auto'] ?? '';
+            break;
+        }
     }
 }
 $error=isset($_GET['error']) ? $_GET['error'] : '';
@@ -292,10 +302,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                     <input type="text" id="nombre_0" name="componentes[0][nombre]" class="form-control" placeholder="Nombre del componente/servicio">
                                 </div>
                                 <div class="col-md-2">
-                                    <label class="form-label">Cantidad</label>
-                                    <input type="number" name="componentes[0][cantidad]" class="form-control" value="1" min="1">
-                                </div>
-                                <div class="col-md-2">
                                     <label class="form-label">&nbsp;</label>
                                     <i class="bi bi-dash-circle btn-remover" onclick="removerComponente(this)" style="display: block; margin-top: 5px; font-size: 24px;"></i>
                                 </div>
@@ -316,28 +322,24 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             <div class="form-section">
                 <h5>Detalles del Reporte</h5>
                 <div class="row g-3">
-                    <div class="col-md-3">
-                            <label class="form-label">Referencia</label>
-                            <input type="text" name="referencia" id="" class="form-control" value="<?= htmlspecialchars($reporte['referencia']) ?>">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Fecha de creación del Reporte</label>
-                            <input type="date" name="fecha" class="form-control" value="<?= htmlspecialchars($reporte['fecha']) ?>">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Fecha de atención</label>
-                            <input type="date" name="fecha_atencion" class="form-control" value="<?= htmlspecialchars($reporte['fecha_atencion']) ?>">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Técnico</label>
-                            <select name="id" class="form-select">
-                                <?php foreach($tecnicos as $tecnico): ?>
-                                    <option value="<?= $tecnico['id'] ?>">
-                                        <?= htmlspecialchars($tecnico['nombre']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Referencia</label>
+                        <input type="text" name="referencia" id="referencia" class="form-control referencia-auto" value="<?= htmlspecialchars($referencia_actual) ?>">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Fecha de creación del Reporte</label>
+                        <input type="date" name="fecha" class="form-control" value="<?= htmlspecialchars($reporte['fecha']) ?>">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Técnico</label>
+                        <select name="id" class="form-select">
+                            <?php foreach($tecnicos as $tecnico): ?>
+                                <option value="<?= $tecnico['id'] ?>">
+                                    <?= htmlspecialchars($tecnico['nombre']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="mt-3 mb-3">
@@ -378,6 +380,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
         const resultadosDiv = document.getElementById('resultadosBusqueda');
         const clienteSeleccionadoDiv = document.getElementById('clienteSeleccionado');
         const nombreClienteSpan = document.getElementById('nombreClienteSeleccionado');
+        const referenciaInput = document.getElementById('referencia');
         const btnGuardar = document.getElementById('btnGuardar');
 
         function escapeHtml(text){
@@ -639,6 +642,10 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             if(idClienteInput) idClienteInput.value=id;
             if(nombreClienteSpan) nombreClienteSpan.textContent = nombre;
             if(clienteSeleccionadoDiv) clienteSeleccionadoDiv.style.display='block';
+            const clienteSeleccionado = clientesData.find(cliente => cliente.id_cliente == id);
+            if(clienteSeleccionado && clienteSeleccionado.referencia_auto){
+                referenciaInput.value=clienteSeleccionado.referencia_auto;
+            }
             if(elementoSeleccionado){
                 elementoSeleccionado.classList.remove('cliente-seleccionado');
                 const iconAntiguo = elementoSeleccionado.querySelector('.bi-check-circle-fill');
@@ -670,6 +677,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             if(clienteSeleccionadoDiv) clienteSeleccionadoDiv.style.display = 'none';
             if(idClienteInput) idClienteInput.value = 0;
             if(nombreClienteSpan) nombreClienteSpan.textContent = '';
+            referenciaInput.value = '';
             document.querySelectorAll('.equipo-item').forEach((item,index) => {
                 const input = document.getElementById('buscarEquipo_'+index);
                 if(input) input.value = '';
@@ -678,6 +686,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
         };
         function validarFormulario() {
             const equipo = document.getElementById('equipoId_0');
+            const referencia = referenciaInput.value;
             if(btnGuardar) {
                 btnGuardar.disabled = (!equipo || equipo.value === '');
             }

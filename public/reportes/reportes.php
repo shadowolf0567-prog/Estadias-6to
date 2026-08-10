@@ -21,10 +21,17 @@ function buscar_reportes_filtros($filtros = [], $estado = 'pendiente'){
         LEFT JOIN clientes c ON r.id_cliente = c.id_cliente
         LEFT JOIN equipos e ON r.id_equipo = e.id_equipo
         LEFT JOIN tecnicos t ON r.id = t.id
-        WHERE r.estado = ?";
+        WHERE 1 = 1";
 
-    $params = [$estado];
-    $types = "s";
+    $params = [];
+    $types = "";
+    if($estado == 'pendiente'){
+        $sql .= " AND (r.estado = 'pendiente' OR r.estado = 'incompleto')";
+    } else {
+        $sql .= " AND r.estado = ?";
+        $params[] = $estado;
+        $types .= "s";
+    }
 
     if(!empty($filtros['tecnico'])){
         $sql .= " AND t.nombre LIKE ?";
@@ -66,10 +73,11 @@ function contar_reportes_por_estado(){
     $sql = "SELECT estado,COUNT(*) as total FROM reportes
             GROUP BY estado";
     $resultado = mysqli_query($conn,$sql);
-    $contadores = ['pendiente' => 0, 'atendido' => 0];
+    $contadores = ['pendiente' => 0, 'atendido' => 0, 'incompleto' => 0];
     while($fila = mysqli_fetch_assoc($resultado)){
         $contadores[$fila['estado']] = $fila['total'];
     }
+    $contadores['total'] = $contadores['pendiente'] + $contadores['incompleto'];
     return $contadores;
 }
 $clientes =[];
@@ -144,6 +152,10 @@ $contadores = contar_reportes_por_estado();
             background-color: #28a745;
             color: white;
         }
+        .badge-incompleto{
+            background-color: #ffc107;
+            color: #212529;
+        }
     </style>
 </head>
 <body>
@@ -158,7 +170,7 @@ $contadores = contar_reportes_por_estado();
                 <a href="?tab=pendiente" 
                 class="nav-link pendiente <?= $tab_activa == 'pendiente' ? 'active' : '' ?>">
                     <i class="bi bi-clock-history"></i> Pendientes
-                    <span class="badge bg-danger"><?= $contadores['pendiente'] ?></span>
+                    <span class="badge bg-danger"><?= $contadores['total']?></span>
                 </a>
             </li>
             <li class="nav-item">
@@ -250,9 +262,15 @@ $contadores = contar_reportes_por_estado();
                                     <td><?= date('d/m/Y', strtotime($reporte['fecha'])) ?></td>
                                     <td><?= htmlspecialchars($reporte['tecnico']) ?></td>
                                     <td>
-                                        <span class="badge-estado badge-pendiente">
-                                            <i class="bi bi-clock"></i> Pendiente
-                                        </span>
+                                        <?php if($reporte['estado'] === 'pendiente'): ?>
+                                            <span class="badge-estado badge-pendiente">
+                                                <i class="bi bi-clock"></i> Pendiente
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="badge-estado badge-incompleto">
+                                                <i class="bi bi-arrow-repeat"></i> Reabierto
+                                            </span>
+                                        <?php endif; ?>
                                     </td>
                                     <td>
                                         <form action="../lib/gestion_reportes.php" method="post"
@@ -266,14 +284,16 @@ $contadores = contar_reportes_por_estado();
                                         <a href="ver_reporte.php?id=<?= $reporte['id_reporte'] ?>" class="btn btn-sm btn-info">
                                         <i class="bi bi-eye"></i> Ver Reporte
                                         </a>
+                                        <?php if($reporte['estado'] === 'pendiente'): ?>
                                         <form action="../lib/gestion_reportes.php" method="post"
                                             style="display:inline-block;" onsubmit="return confirm('¿Marcar como atendido?')">
                                             <input type="hidden" name="accion" value="marcar_atendi2">
                                             <input type="hidden" name="id_reporte" value="<?= $reporte['id_reporte'] ?>">
                                             <button type="submit" class="btn btn-sm btn-success">
-                                                <i class="bi bi-check-circle"></i> Atender Rapidamente
+                                                <i class="bi bi-check-circle"></i> Marcar Incompleto
                                             </button>
                                         </form>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -312,7 +332,7 @@ $contadores = contar_reportes_por_estado();
                             <?php foreach($reportes as $reporte): ?>
                                 <tr class="<?= $reporte['estado'] == 'atendido' ? 'atendido-row' : '' ?>">                                    
                                     <td>
-                                        <?= htmlspecialchars($reporte['cliente_nombre']) ?>
+                                        <?= htmlspecialchars($reporte['cliente_nombre'] ?: '-') ?>
                                     </td>
                                     <td>
                                         <?php if($reporte['equipo_serie']): ?>
@@ -372,6 +392,7 @@ $contadores = contar_reportes_por_estado();
             </div>
         <?php endif; ?>
     </div>
+    <script src="../assets/js/bootstrap.min.js"></script>
     <script>
         function removerFiltro(campo){
             const url = new URL(window.location.href);

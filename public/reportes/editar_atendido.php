@@ -71,7 +71,8 @@ if($reporte['id_cliente']){
 $clientes = [];
 $sql_clientes = "SELECT c.*,
                         GROUP_CONCAT(DISTINCT ct.telefono SEPARATOR ', ') as telefonos,
-                        GROUP_CONCAT(DISTINCT cc.correo SEPARATOR ', ') as correos
+                        GROUP_CONCAT(DISTINCT cc.correo SEPARATOR ', ') as correos,
+                        CONCAT(c.no_cuenta, '-', REPLACE(c.contrato, 'C-', '')) as referencia_auto
                 FROM clientes c
                 LEFT JOIN telefonos ct ON c.id_cliente = ct.id_cliente
                 LEFT JOIN correos cc ON c.id_cliente = cc.id_cliente
@@ -89,6 +90,15 @@ $result_tecnicos = mysqli_query($conn,$sql_tecnicos);
 if($result_tecnicos){
     while($row = mysqli_fetch_assoc($result_tecnicos)){
         $tecnicos[] = $row;
+    }
+}
+$referencia_actual = '';
+if($reporte['id_cliente']){
+    foreach($clientes as $cliente){
+        if($cliente['id_cliente'] == $reporte['id_cliente']){
+            $referencia_actual = $cliente['referencia_auto'] ?? '';
+            break;
+        }
     }
 }
 $error=isset($_GET['error']) ? $_GET['error'] : '';
@@ -321,7 +331,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                     <div class="row g-3">
                         <div class="col-md-3">
                             <label class="form-label">Referencia</label>
-                            <input type="text" name="referencia" id="" class="form-control" value="<?= htmlspecialchars($reporte['referencia']) ?>">
+                            <input type="text" name="referencia" id="referencia" class="form-control referencia-auto" value="<?= htmlspecialchars($referencia_actual) ?>">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Fecha de creación del Reporte</label>
@@ -343,7 +353,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         </div>
                         <div class="col-md-12">
                             <label class="form-label">Observaciones</label>
-                            <textarea name="observaciones_atencion" class="form-control"><?= htmlspecialchars($reporte['observaciones_atencion']) ?></textarea>
+                            <textarea name="observaciones_atencion" class="form-control"><?= htmlspecialchars($reporte['observaciones_atencion'] ?: '') ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -384,6 +394,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
         const resultadosDiv = document.getElementById('resultadosBusqueda');
         const clienteSeleccionadoDiv = document.getElementById('clienteSeleccionado');
         const nombreClienteSpan = document.getElementById('nombreClienteSeleccionado');
+        const referenciaInput = document.getElementById('referencia');
         const btnGuardar = document.getElementById('btnGuardar');
         let elementoSeleccionado = null;
 
@@ -647,6 +658,10 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             if(idClienteInput) idClienteInput.value = id;
             if(nombreClienteSpan) nombreClienteSpan.textContent = nombre;
             if(clienteSeleccionadoDiv) clienteSeleccionadoDiv.style.display = 'block';
+            const clienteSeleccionado = clientesData.find(cliente => cliente.id_cliente == id);
+            if(clienteSeleccionado && clienteSeleccionado.referencia_auto){
+                referenciaInput.value=clienteSeleccionado.referencia_auto;
+            }
 
             if(elementoSeleccionado){
                 elementoSeleccionado.classList.remove('cliente-seleccionado');
@@ -680,25 +695,16 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             if(clienteSeleccionadoDiv) clienteSeleccionadoDiv.style.display = 'none';
             if(idClienteInput) idClienteInput.value = 0;
             if(nombreClienteSpan) nombreClienteSpan.textContent = '';
+            referenciaInput = '';
             document.querySelectorAll('.equipo-item').forEach((item,index) => {
                 const input = document.getElementById('buscarEquipo_'+index);
                 if(input) input.value = '';
                 limpiarSeleccionEquipos(index);
             });
         };
-        // function agregarTecnico(){
-        //     const container = document.getElementById('reportesContainer');
-        //     const html = `
-        //         <div class="col-md-4">
-        //             <input type="text" class="form-control"
-        //             <label class="form-label">&nbsp</label>
-        //         </div>
-        //     `;
-        //     container.insertAdjacentHTML('beforeend',html);
-            
-        // }
         function validarFormulario() {
             const equipo = document.getElementById('equipoId_0');
+            const referencia = referenciaInput.value;
             if(btnGuardar) {
                 btnGuardar.disabled = (!equipo || equipo.value === '');
             }

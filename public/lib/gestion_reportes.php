@@ -1,9 +1,9 @@
 <?php
 require_once __DIR__ . '/../../config/db.php';
-function agregar_reportes_con_reportes($fecha,$referencia,$id_cliente = null,$id_equipo =  null,$componentes=[]){
+function agregar_reportes_con_reportes($fecha,$referencia,$id_cliente = null,$id_equipo =  null,$componentes=[],$tecnico = null){
     global $conn;
-    $sql="INSERT INTO reportes(fecha,referencia,id_cliente,id_equipo,estado)
-     VALUES (?,?,?,?,'pendiente')";
+    $sql="INSERT INTO reportes(fecha,referencia,id_cliente,id_equipo,estado,id)
+     VALUES (?,?,?,?,'pendiente',?)";
     $insert_preparado=mysqli_prepare($conn,$sql);
     if(!$insert_preparado){
         return[
@@ -11,8 +11,8 @@ function agregar_reportes_con_reportes($fecha,$referencia,$id_cliente = null,$id
             'mensaje' => 'Error en la base de datos'
         ];
     }
-    mysqli_stmt_bind_param($insert_preparado,'ssii',
-    $fecha,$referencia,$id_cliente,$id_equipo);
+    mysqli_stmt_bind_param($insert_preparado,'ssiii',
+    $fecha,$referencia,$id_cliente,$id_equipo,$tecnico);
     $query_ok=mysqli_stmt_execute($insert_preparado);
     $id_reporte = mysqli_insert_id($conn);
     $rows_ok = mysqli_affected_rows($conn);
@@ -26,8 +26,8 @@ function agregar_reportes_con_reportes($fecha,$referencia,$id_cliente = null,$id
         
     }
     if(!empty($componentes) && is_array($componentes)){
-        $sql_comp = "INSERT INTO reportes_componentes(id_reporte,componente,cantidad,descripcion,tipo)
-                    VALUES (?,?,?,?,?)";
+        $sql_comp = "INSERT INTO reportes_componentes(id_reporte,componente,descripcion,tipo)
+                    VALUES (?,?,?,?)";
         $stmt_comp = mysqli_prepare($conn, $sql_comp);
         if(!$stmt_comp){
             return[
@@ -38,7 +38,6 @@ function agregar_reportes_con_reportes($fecha,$referencia,$id_cliente = null,$id
         foreach($componentes as $comp){
             $componente = trim($comp['nombre'] ?? $comp['componente'] ?? '');
             $tipo = trim($comp['tipo'] ?? '');
-            $cantidad = isset($comp['cantidad']) ? intval($comp['cantidad']) : 1;
             $descripcion = trim($comp['descripcion'] ?? '');
 
             if(empty($componente) || $tipo == 'SER-01' || $tipo == 'SER-02'){
@@ -63,7 +62,7 @@ function agregar_reportes_con_reportes($fecha,$referencia,$id_cliente = null,$id
             }
             
             if(!empty($componente)){
-                mysqli_stmt_bind_param($stmt_comp, 'isiss', $id_reporte, $componente, $cantidad, $descripcion, $tipo);
+                mysqli_stmt_bind_param($stmt_comp, 'isss', $id_reporte, $componente, $descripcion, $tipo);
                 $result_comp = mysqli_stmt_execute($stmt_comp);
                 if(!$result_comp){
                     return[
@@ -80,10 +79,10 @@ function agregar_reportes_con_reportes($fecha,$referencia,$id_cliente = null,$id
         'mensaje' => 'Reporte generado con éxito'
     ];
 }
-function editar_reporte_con_componentes($id_reporte,$fecha,$id_cliente = null,$id_equipo = null,$tecnico=null,$componentes = []){
+function editar_reporte_con_componentes($id_reporte,$referencia,$fecha,$id_cliente = null,$id_equipo = null,$tecnico=null,$componentes = []){
     global $conn;
     $sql="UPDATE reportes SET
-    fecha=?,id_cliente = ?,id_equipo =?,id=? WHERE id_reporte =?";
+    referencia = ?,fecha=?,id_cliente = ?,id_equipo =?,id=? WHERE id_reporte =?";
     $update_preparado=mysqli_prepare($conn,$sql);
     if(!$update_preparado){
         return[
@@ -92,7 +91,7 @@ function editar_reporte_con_componentes($id_reporte,$fecha,$id_cliente = null,$i
         ];
     }
     
-    mysqli_stmt_bind_param($update_preparado,"ssiii",$fecha,$id_cliente,$id_equipo,$tecnico,$id_reporte);
+    mysqli_stmt_bind_param($update_preparado,"sssiii",$referencia,$fecha,$id_cliente,$id_equipo,$tecnico,$id_reporte);
     $query_ok=mysqli_stmt_execute($update_preparado);
     mysqli_stmt_close($update_preparado);
     if(!$query_ok){
@@ -281,7 +280,7 @@ function atender_rapido($id_reporte,$fecha_atencion = ''){
 }
 function reabrir_reporte($id_reporte){
     global $conn;
-    $sql = "UPDATE reportes SET estado = 'pendiente' WHERE id_reporte = ?";
+    $sql = "UPDATE reportes SET estado = 'incompleto' WHERE id_reporte = ?";
     $stmt = mysqli_prepare($conn,$sql);
     if(!$stmt){
         return[
@@ -452,8 +451,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             case 'agregar':
                 if(isset($_POST['fecha'])){
                     $fecha=trim($_POST['fecha']);
+                    $referencia = trim($_POST['referencia']);
                     $id_cliente=!empty($_POST['id_cliente']) ? intval($_POST['id_cliente']) : null;
                     $id_equipo=!empty($_POST['id_equipo']) ? intval($_POST['id_equipo']): null;
+                    $tecnico = !empty($_POST['id']) ? intval($_POST['id']): null;
 
                     $componentes = [];
                     if(isset($_POST['componentes']) && is_array($_POST['componentes'])){
@@ -482,7 +483,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                         }
                     }
 
-                    $resultado=agregar_reportes_con_reportes($fecha,$id_cliente,$id_equipo,$componentes);
+                    $resultado=agregar_reportes_con_reportes($fecha,$referencia,$id_cliente,$id_equipo,$componentes,$tecnico);
                     if($resultado['estatus'] === 'msg'){
                         header('Location: ../reportes/agregar_reporte.php?msg='.urlencode($resultado['mensaje']));
                     }else{
@@ -494,6 +495,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             case 'editar':
                 if(isset($_POST['id_reporte'],$_POST['fecha'])){
                     $id_reporte=intval($_POST['id_reporte']);
+                    $referencia = trim($_POST['referencia']);
                     $fecha=trim($_POST['fecha']);
                     $id_cliente=!empty($_POST['id_cliente']) ? intval($_POST['id_cliente']) : null;
                     $id_equipo=!empty($_POST['id_equipo']) ? intval($_POST['id_equipo']) : null;
@@ -524,7 +526,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                         }
                     }
                     
-                    $resultado=editar_reporte_con_componentes($id_reporte,$fecha,$id_cliente,$id_equipo,$tecnico,$componentes);
+                    $resultado=editar_reporte_con_componentes($id_reporte,$referencia,$fecha,$id_cliente,$id_equipo,$tecnico,$componentes);
                     header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.'&'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
                     if($resultado['estatus'] === 'msg'){
                         header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.'&msg=' .urlencode($resultado['mensaje']));

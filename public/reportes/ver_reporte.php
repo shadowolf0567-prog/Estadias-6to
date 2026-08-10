@@ -91,6 +91,10 @@ mysqli_close($conn);
             background-color: #28a745; 
             color: white; 
         }
+        .estado-incompleto{
+            background-color: #ffc107;
+            color: #212529;
+        }
         .atencion-box {
             background-color: #e8f5e9;
             border-left: 4px solid #28a745;
@@ -139,6 +143,9 @@ mysqli_close($conn);
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAtender">
                     <i class="bi bi-check-circle"></i> Marcar Atendido
                 </button>
+                <!-- <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalIncompleto">
+                    <i class="bi bi-arrow-repeat"></i> Marcar
+                </button> -->
                 <a href="editar_reportes.php?id_reporte=<?= $reporte['id_reporte'] ?>" class="btn btn-warning">
                     <i class="bi bi-pencil"></i> Editar
                 </a>
@@ -219,12 +226,14 @@ mysqli_close($conn);
                                                 <tr>
                                                     <td><strong><?= htmlspecialchars($comp['componente_nombre']) ?></strong></td>
                                                     <td><?= htmlspecialchars($comp['componente_descripcion'] ?? '-') ?></td>
-                                                    <td><?= htmlspecialchars($reporte['tecnico']) ?? '-' ?></td>
+                                                    <td><?= htmlspecialchars($reporte['tecnico']) ?: '-' ?></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         </tbody>
                                     </table>
                                 </div>
+                                <p><span class="info-label">¿Qué se hizo?</span></p>
+                                <div class="bg-white p-2 rounded"><?= nl2br(htmlspecialchars($reporte['observaciones_atencion'] ?: 'Sin observaciones')) ?></div>
                             <?php endif; ?>
                         <?php if($reporte['estado'] == 'atendido'): ?>
                         <div class="col-12">
@@ -235,8 +244,6 @@ mysqli_close($conn);
                                 ? date('d/m/Y', strtotime($reporte['fecha_atencion'])) 
                                 : '-' 
                             ?></p>
-                            <p><span class="info-label">Observaciones</span></p>
-                            <div class="bg-white p-2 rounded"><?= nl2br(htmlspecialchars($reporte['observaciones_atencion'] ?: 'Sin observaciones')) ?></div>
                         </div>
                         <?php endif; ?>
                     </div>
@@ -263,8 +270,12 @@ mysqli_close($conn);
                             <input type="date" name="fecha_atencion" class="form-control">
                         </div>
                         <div class="mb-4">
-                            <label class="form-label">Observaciones</label>
-                            <textarea name="observaciones_atencion" class="form-control" placeholder="Observaciones realizadas durante el servicio"></textarea>
+                            <label class="form-label">Observaciones:</label>
+                            <?php if(empty($reporte['observaciones_atencion'])): ?>
+                                <textarea name="observaciones_atencion" class="form-control" placeholder="Observaciones realizadas durante el servicio"></textarea>
+                            <?php else: ?>
+                                <textarea name="observaciones_atencion" class="form-control"><?= htmlspecialchars($reporte['observaciones_atencion']) ?></textarea>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -301,7 +312,29 @@ mysqli_close($conn);
                 </form>
             </div>
         </div>
-    </div>
+    <!-- </div>
+    <div class="modal fade" id="modalIncompleto">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title">
+                        <i class="bi bi-arrow-repeat"> Marcar </i>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="../lib/gestion_reportes.php" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" name="accion" value="pendiente">
+                        <input type="hidden" name="id_reporte" value="<?= $reporte['id_reporte'] ?>">
+                        <p></p>
+                        <div class="mb-3">
+                            
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> -->
     <script src="../assets/js/bootstrap.min.js"></script>
     <script>
         function abrirModalAtender() {
