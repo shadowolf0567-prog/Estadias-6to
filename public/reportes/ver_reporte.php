@@ -49,6 +49,15 @@ if(!$reporte){
     header('Location: reportes.php?error=' . urlencode('Reporte no encontrado'));
     exit;
 }
+$atenciones = [];
+$sql_at = "SELECT * from reabiertos WHERE reportes = ?";
+$stmt_at = mysqli_prepare($conn,$sql_at);
+mysqli_stmt_bind_param($stmt_at,'i',$reporte['id_reporte']);
+mysqli_stmt_execute($stmt_at);
+$result_at = mysqli_stmt_get_result($stmt_at);
+while($row = mysqli_fetch_assoc($result_at)){
+    $atenciones[] = $row;
+}
 
 mysqli_stmt_close($stmt);
 mysqli_close($conn);
@@ -139,24 +148,17 @@ mysqli_close($conn);
             <a href="reportes.php" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> Volver
             </a>
-            <?php if($reporte['estado'] == 'pendiente'): ?>
+            <?php if($reporte['estado'] != 'atendido'): ?>
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAtender">
                     <i class="bi bi-check-circle"></i> Marcar Atendido
                 </button>
-                <!-- <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalIncompleto">
-                    <i class="bi bi-arrow-repeat"></i> Marcar
-                </button> -->
-                <a href="editar_reportes.php?id_reporte=<?= $reporte['id_reporte'] ?>" class="btn btn-warning">
-                    <i class="bi bi-pencil"></i> Editar
-                </a>
-            <?php else: ?>
-                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalReabrir">
-                    <i class="bi bi-arrow-repeat"></i> Reabrir
+            <?php endif; ?>
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalIncompleto">
+                    <i class="bi bi-arrow-repeat"></i> Sin Concluir
                 </button>
                 <a href="editar_atendido.php?id_reporte=<?= $reporte['id_reporte'] ?>" class="btn btn-warning">
                     <i class="bi bi-pencil"></i> Editar
                 </a>
-            <?php endif; ?>
         </div>
         
         <div class="reporte-header">
@@ -208,9 +210,25 @@ mysqli_close($conn);
             </div>
                 <div class="col-md-12 mt-3">
                     <div class="card info-card">
-                        <div class="card-header">Detalles del Reporte</div>
+                        <div class="card-header">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                Detalles del Reporte
+                            </div>
+                            <?php if($reporte['estado'] == 'atendido'): ?>
+                                <div class="col-md-4">
+                                    <h6><i class="bi bi-check-circle"></i> Reporte Atendido</h6>
+                                </div>
+                                <div class="col-4">
+                                    <p><span class="info-label">Fecha Atención:
+                                        </span><?= (!empty($reporte['fecha_atencion']) && $reporte['fecha_atencion'] != '0000-00-00') 
+                                        ? date('d/m/Y', strtotime($reporte['fecha_atencion'])): '-'?></p>
+                                </div>
+                            <?php endif; ?>
+                            </div>
+                        </div>
                         <div class="card-body">
-                            <p><span class="info-label">Fecha:</span> <?= date('d/m/Y', strtotime($reporte['fecha'])) ?></p>
+                            <p><span class="info-label">Fecha de apertura:</span> <?= date('d/m/Y', strtotime($reporte['fecha'])) ?></p>
                             <?php if(count($componentes_reporte) > 0): ?>
                                 <div class="table-responsive">
                                     <table class="table table-sm">
@@ -232,18 +250,21 @@ mysqli_close($conn);
                                         </tbody>
                                     </table>
                                 </div>
-                                <p><span class="info-label">¿Qué se hizo?</span></p>
-                                <div class="bg-white p-2 rounded"><?= nl2br(htmlspecialchars($reporte['observaciones_atencion'] ?: 'Sin observaciones')) ?></div>
                             <?php endif; ?>
-                        <?php if($reporte['estado'] == 'atendido'): ?>
+                        <?php if($reporte['estado'] == 'atendido' || $reporte['estado'] == 'incompleto'): ?>
                         <div class="col-12">
                             <hr>
-                            <h6><i class="bi bi-check-circle"></i> Reporte Atendido</h6>
-                            <p><span class="info-label">Fecha Atención:
-                                </span><?= (!empty($reporte['fecha_atencion']) && $reporte['fecha_atencion'] != '0000-00-00') 
-                                ? date('d/m/Y', strtotime($reporte['fecha_atencion'])) 
-                                : '-' 
-                            ?></p>
+                                <div class="row g-3">
+                                    <?php foreach($atenciones as $atencion): ?>
+                                    <div class="col-md-4">
+                                        <p><span class="info-label">Fecha: </span><?= date('d/m/Y', strtotime($atencion['fechas'])) ?></p>
+                                        <p><span class="info-label">¿Qué se hizo?</span> <?= htmlspecialchars($atencion['acciones']) ?></p>
+                                        <p><span class="info-label">Observaciones: </span></p>
+                                        <div class="bg-white p-2 rounded"><?= nl2br(htmlspecialchars($atencion['observaciones'])) ?></div>
+                                    </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            
                         </div>
                         <?php endif; ?>
                     </div>
@@ -286,33 +307,6 @@ mysqli_close($conn);
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modalReabrir" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-warning">
-                    <h5 class="modal-title">
-                        <i class="bi bi-arrow-repeat"></i> Reabrir Reporte
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form action="../lib/gestion_reportes.php" method="POST">
-                    <div class="modal-body">
-                        <input type="hidden" name="accion" value="reabrir">
-                        <input type="hidden" name="id_reporte" value="<?= $reporte['id_reporte'] ?>">
-                        <p>¿Deseas reabrir este reporte?</p>
-                        <div class="alert alert-warning">
-                            <i class="bi bi-exclamation-triangle"></i>
-                            El reporte volverá a estado <strong>"Pendiente"</strong>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-warning">Reabrir Reporte</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    <!-- </div>
     <div class="modal fade" id="modalIncompleto">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -324,17 +318,30 @@ mysqli_close($conn);
                 </div>
                 <form action="../lib/gestion_reportes.php" method="post">
                     <div class="modal-body">
-                        <input type="hidden" name="accion" value="pendiente">
+                        <input type="hidden" name="accion" value="reabrir">
                         <input type="hidden" name="id_reporte" value="<?= $reporte['id_reporte'] ?>">
                         <p></p>
                         <div class="mb-3">
-                            
+                            <label class="form-label">Fecha de atención</label>
+                            <input type="date" name="fechas" class="form-control">
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label">¿Qué se hizo?</label>
+                            <input type="text" name="acciones" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Observaciones</label>
+                            <textarea name="observaciones" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning">Marcar Incompleto</button>
                     </div>
                 </form>
             </div>
         </div>
-    </div> -->
+    </div>
     <script src="../assets/js/bootstrap.min.js"></script>
     <script>
         function abrirModalAtender() {
@@ -356,6 +363,12 @@ mysqli_close($conn);
                 });
             }
         });
+        function abrirModalIncompleto(id_reporte) {
+        // Asignar el ID al campo oculto
+            document.getElementById('modal_reabrir').value = id_reporte;
+            var modal = new bootstrap.Modal(document.getElementById('modalIncompleto'));
+            modal.show();
+        }
     </script>
 </body>
 </html>

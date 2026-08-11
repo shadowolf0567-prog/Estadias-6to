@@ -284,16 +284,6 @@ $contadores = contar_reportes_por_estado();
                                         <a href="ver_reporte.php?id=<?= $reporte['id_reporte'] ?>" class="btn btn-sm btn-info">
                                         <i class="bi bi-eye"></i> Ver Reporte
                                         </a>
-                                        <?php if($reporte['estado'] === 'pendiente'): ?>
-                                        <form action="../lib/gestion_reportes.php" method="post"
-                                            style="display:inline-block;" onsubmit="return confirm('¿Marcar como atendido?')">
-                                            <input type="hidden" name="accion" value="marcar_incompleto">
-                                            <input type="hidden" name="id_reporte" value="<?= $reporte['id_reporte'] ?>">
-                                            <button type="submit" class="btn btn-sm btn-warning">
-                                                <i class="bi bi-arrow-repeat"></i> Marcar Incompleto
-                                            </button>
-                                        </form>
-                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -392,6 +382,41 @@ $contadores = contar_reportes_por_estado();
             </div>
         <?php endif; ?>
     </div>
+    <div class="modal fade" id="modalIncompleto">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title">
+                        <i class="bi bi-arrow-repeat"> Marcar </i>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="../lib/gestion_reportes.php" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" name="accion" value="reabrir">
+                        <input type="hidden" name="id_reporte" id="modal_reabrir">
+                        <p></p>
+                        <div class="mb-3">
+                            <label class="form-label">Fecha de atención</label>
+                            <input type="date" name="fechas" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">¿Qué se hizo?</label>
+                            <input type="text" name="acciones" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Observaciones</label>
+                            <textarea name="observaciones" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning">Marcar Incompleto</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <script src="../assets/js/bootstrap.min.js"></script>
     <script>
         function removerFiltro(campo){
@@ -399,8 +424,10 @@ $contadores = contar_reportes_por_estado();
             url.searchParams.delete(campo);
             window.location.href = url.toString();
         }
-        function abrirModalAtender(){
-            var modal = new bootstrap.Modal(document.getElementById('modalAtender'));
+        function abrirModalIncompleto(id_reporte) {
+        // Asignar el ID al campo oculto
+            document.getElementById('modal_reabrir').value = id_reporte;
+            var modal = new bootstrap.Modal(document.getElementById('modalIncompleto'));
             modal.show();
         }
     </script>

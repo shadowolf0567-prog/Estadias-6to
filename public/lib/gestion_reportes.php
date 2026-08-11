@@ -248,61 +248,72 @@ function marcar_atendido($id_reporte, $observaciones = '',$fecha_atencion = ''){
         ];
     }
 }
-function atender_rapido($id_reporte,$fecha_atencion = ''){
-    // global $conn;
-    // if(empty($fecha_atencion) || $fecha_atencion == '0000-00-00'){
-    //     $fecha_atencion = null;
-    // }
-    // $sql = "UPDATE reportes SET estado='atendido', 
-    //         fecha_atencion = ? WHERE id_reporte=?";
-    // $stmt = mysqli_prepare($conn,$sql);
-    // if(!$stmt){
-    //     return[
-    //         'estatus' => 'error',
-    //         'mensaje' => 'Error en la preparación'.mysqli_error($conn)
-    //     ];
-    // }
-    // mysqli_stmt_bind_param($stmt, 'si', $fecha_atencion,$id_reporte);
-    // $query_ok = mysqli_stmt_execute($stmt);
-    // $rows_ok=mysqli_affected_rows($conn);
-    // mysqli_stmt_close($stmt);
-    // if($query_ok && $rows_ok > 0){
-    //     return[
-    //         'estatus' => 'msg',
-    //         'mensaje' => 'Reporte marcado como atendido, recuerda colocar los datos faltantes en Editar'
-    //     ];
-    // } else{
-    //     return[
-    //         'estatus' => 'error',
-    //         'mensaje' => 'No se pudo marcar como atendido'
-    //     ];
-    // }
-}
-function reabrir_reporte($id_reporte){
+function reabrir_reporte($id_reporte, $fecha = null, $acciones= '', $observaciones = ''){
     global $conn;
-    $sql = "UPDATE reportes SET estado = 'incompleto' WHERE id_reporte = ?";
-    $stmt = mysqli_prepare($conn,$sql);
-    if(!$stmt){
+    if(empty($fecha)){
+        $fecha = date('Y-m-d');
+    }
+    $estado = "SELECT estado FROM reportes WHERE id_reporte = ?";
+    $stmt_check = mysqli_prepare($conn,$estado);
+    mysqli_stmt_bind_param($stmt_check, 'i', $id_reporte);
+    mysqli_stmt_execute($stmt_check);
+    $result_check = mysqli_stmt_get_result($stmt_check);
+    $reporte = mysqli_fetch_assoc($result_check);
+    mysqli_stmt_close($stmt_check);
+    if(!$reporte){
         return[
             'estatus' => 'error',
-            'mensaje' => 'Error en la preparación: '.mysqli_error($conn)
+            'mensaje' => 'Reporte'.$id_reporte.' no encontrado'
         ];
     }
-    mysqli_stmt_bind_param($stmt, 'i',$id_reporte);
-    $query_ok = mysqli_stmt_execute($stmt);
-    $rows_ok = mysqli_affected_rows($conn);
-    mysqli_stmt_close($stmt);
-    if($query_ok && $rows_ok > 0){
-        return[
-            'estatus' => 'msg',
-            'mensaje' => 'Reporte reabierto correctamente'
-        ];
-    }else{
-        return[
-            'estatus' => 'error',
-            'mensaje' => 'No se pudo reabrir el reporte'
-        ];
+    if($reporte['estado'] != 'incompleto'){
+        $sql = "UPDATE reportes SET estado = 'incompleto' WHERE id_reporte = ?";
+        $stmt = mysqli_prepare($conn,$sql);
+        if(!$stmt){
+            return[
+                'estatus' => 'error',
+                'mensaje' => 'Error en la preparación: '.mysqli_error($conn)
+            ];
+        }
+        mysqli_stmt_bind_param($stmt, 'i',$id_reporte);
+        $query_ok = mysqli_stmt_execute($stmt);
+        $rows_ok = mysqli_affected_rows($conn);
+        mysqli_stmt_close($stmt);
+        if(!$query_ok || $rows_ok == 0){
+            return[
+                'estatus' => 'error',
+                'mensaje' => 'No se pudo actualizar el reporte #' . $id_reporte . ' (filas afectadas: ' . $rows_ok . ')'
+            ];
+        }
     }
+        
+    if(!empty($acciones) || !empty($observaciones)){
+        $sql_rea = "INSERT INTO reabiertos(reportes,fechas,acciones,observaciones)
+                    VALUES (?,?,?,?)";
+        $stmt_rea = mysqli_prepare($conn,$sql_rea);
+        if(!$stmt_rea){
+            return[
+                'estatus' => 'error',
+                'mensaje' => 'Error al preparar reporte'
+            ];
+        }
+        if($stmt_rea){
+            mysqli_stmt_bind_param($stmt_rea, 'isss', $id_reporte,$fecha,$acciones,$observaciones);
+            $result_rea = mysqli_stmt_execute($stmt_rea);
+            mysqli_stmt_close($stmt_rea);
+            if(!$result_rea){
+                return[
+                    'estatus' => 'error',
+                    'mensaje' => 'Error al guardar reporte: '.mysqli_stmt_error($stmt_rea)
+                ];
+            }
+        }
+    }
+    return[
+        'estatus' => 'msg',
+        'mensaje' => 'Reporte reabierto con éxito'
+    ];
+    
 }
 
 function editar_atendidos($id_reporte,$fecha,$referencia,$fecha_atencion,$observaciones_atencion,$id_cliente = null,$id_equipo = null,$tecnico = null,$componentes=[]){
@@ -599,8 +610,11 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             case 'reabrir':
                 if(isset($_POST['id_reporte'])){
                     $id_reporte = intval($_POST['id_reporte']);
-                    $resultado = reabrir_reporte($id_reporte);
-                    header('Location: ../reportes/reportes.php?tab=pendiente&'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
+                    $fecha = trim($_POST['fechas']);
+                    $acciones = trim($_POST['acciones'] ?? '');
+                    $observaciones = trim($_POST['observaciones']);
+                    $resultado = reabrir_reporte($id_reporte,$fecha,$acciones,$observaciones);
+                    header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
                     exit;
                 }
                 break;
@@ -699,19 +713,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     header('Location: ../reportes/reportar_muchos.php?error='.urlencode('No se recibieron equipos para reportar'));
                     exit;
                 }
-                break;
-            case 'marcar_atendi2':
-                // if(isset($_POST['id_reporte'])){
-                //     $id_reporte=intval($_POST['id_reporte']);
-                //     $observaciones = isset($_POST['observaciones_atencion']) ? trim($_POST['observaciones_atencion']) : '';
-                //     $fecha_atencion = isset($_POST['fecha_atencion']) ? trim($_POST['fecha_atencion']) : '';
-                //     if(empty($fecha_atencion)){
-                //         $fecha_atencion = null;
-                //     }
-                //     $resultado = atender_rapido($id_reporte,$observaciones,$fecha_atencion);
-                //     header('Location: ../reportes/reportes.php?tab=atendido&'.$resultado['estatus']. '='. urlencode($resultado['mensaje']));
-                //     exit;
-                // }
                 break;
             default:
             header('Location: ../reportes/reportes.php?error='.urlencode('Acción no valida'));
