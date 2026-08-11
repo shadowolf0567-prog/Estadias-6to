@@ -287,10 +287,10 @@ $contadores = contar_reportes_por_estado();
                                         <?php if($reporte['estado'] === 'pendiente'): ?>
                                         <form action="../lib/gestion_reportes.php" method="post"
                                             style="display:inline-block;" onsubmit="return confirm('¿Marcar como atendido?')">
-                                            <input type="hidden" name="accion" value="marcar_atendi2">
+                                            <input type="hidden" name="accion" value="marcar_incompleto">
                                             <input type="hidden" name="id_reporte" value="<?= $reporte['id_reporte'] ?>">
-                                            <button type="submit" class="btn btn-sm btn-success">
-                                                <i class="bi bi-check-circle"></i> Marcar Incompleto
+                                            <button type="submit" class="btn btn-sm btn-warning">
+                                                <i class="bi bi-arrow-repeat"></i> Marcar Incompleto
                                             </button>
                                         </form>
                                         <?php endif; ?>
