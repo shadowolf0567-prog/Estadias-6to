@@ -223,7 +223,7 @@ function marcar_atendido($id_reporte, $observaciones = '',$fecha_atencion = ''){
         $fecha_atencion = null;
     }
     $sql = "UPDATE reportes SET estado='atendido', 
-            observaciones_atencion=?, 
+            acciones=?, 
             fecha_atencion = ? WHERE id_reporte=?";
     $stmt = mysqli_prepare($conn,$sql);
     if(!$stmt){
@@ -316,12 +316,12 @@ function reabrir_reporte($id_reporte, $fecha = null, $acciones= '', $observacion
     
 }
 
-function editar_atendidos($id_reporte,$fecha,$referencia,$fecha_atencion,$observaciones_atencion,$id_cliente = null,$id_equipo = null,$tecnico = null,$componentes=[]){
+function editar_atendidos($id_reporte,$fecha,$referencia,$fecha_atencion,$acciones,$observaciones_atencion,$id_cliente = null,$id_equipo = null,$tecnico = null,$componentes=[]){
     global $conn;
     if(empty($fecha_atencion) || $fecha_atencion == '0000-00-00'){
         $fecha_atencion = null;
     }
-    $sql = "UPDATE reportes SET fecha=?,referencia=?,fecha_atencion=?,observaciones_atencion = ?,
+    $sql = "UPDATE reportes SET fecha=?,referencia=?,fecha_atencion=?,acciones=?,observaciones_atencion = ?,
             id_cliente = ?, id_equipo = ?, id = ? WHERE id_reporte = ?";
     $update_preparado = mysqli_prepare($conn,$sql);
     if(!$update_preparado){
@@ -330,7 +330,7 @@ function editar_atendidos($id_reporte,$fecha,$referencia,$fecha_atencion,$observ
             'mensaje' => 'Error en la ejecución de la base de datos'
         ];
     }
-    mysqli_stmt_bind_param($update_preparado,"ssssiiii",$fecha,$referencia,$fecha_atencion,$observaciones_atencion,$id_cliente,$id_equipo,$tecnico,$id_reporte);
+    mysqli_stmt_bind_param($update_preparado,"sssssiiii",$fecha,$referencia,$fecha_atencion,$acciones,$observaciones_atencion,$id_cliente,$id_equipo,$tecnico,$id_reporte);
     $query_ok = mysqli_stmt_execute($update_preparado);
     mysqli_stmt_close($update_preparado);
     if(!$query_ok){
@@ -452,6 +452,40 @@ function agregar_en_masa($reportes,$id_cliente = null){
         return[
             'estatus' => 'error',
             'mensaje' => 'No se pudo registrar nungún reporte'
+        ];
+    }
+}
+function editar_reabiertos($id,$fechas,$acciones,$observaciones){
+    global $conn;
+    $sql = "UPDATE reabiertos SET fechas = ?,acciones = ?, observaciones = ? WHERE id = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    if(!$stmt){
+        return[
+            'estatus' => 'error',
+            'mensaje' => 'Error en la ejecución de la base de datos'
+        ];
+    }
+    mysqli_stmt_bind_param($stmt,'sssi',$fechas,$acciones,$observaciones,$id);
+    $query_ok = mysqli_stmt_execute($stmt);
+    if(!$query_ok){
+        $error = mysqli_stmt_error($stmt);
+        mysqli_stmt_close($stmt);
+        return[
+            'estatus' => 'error',
+            'mensaje' => 'Error al actualizar: '.$error
+        ];
+    }
+    $rows_ok = mysqli_affected_rows($conn);
+    mysqli_stmt_close($stmt);
+    if($rows_ok > 0){
+        return[
+            'estatus' => 'msg',
+            'mensaje' => 'Equipo actualizado correctamente'
+        ];
+    }else{
+        return[
+            'estatus' => 'info',
+            'mensaje' => 'No se realizaron cambios'
         ];
     }
 }
@@ -596,13 +630,13 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             case 'marcar_atendido':
                 if(isset($_POST['id_reporte'])){
                     $id_reporte=intval($_POST['id_reporte']);
-                    $observaciones = isset($_POST['observaciones_atencion']) ? trim($_POST['observaciones_atencion']) : '';
+                    $observaciones = isset($_POST['acciones']) ? trim($_POST['acciones']) : '';
                     $fecha_atencion = isset($_POST['fecha_atencion']) ? trim($_POST['fecha_atencion']) : '';
                     if(empty($fecha_atencion)){
                         $fecha_atencion = null;
                     }
                     $resultado = marcar_atendido($id_reporte,$observaciones,$fecha_atencion);
-                    header('Location: ../reportes/reportes.php?tab=atendido&'.$resultado['estatus']. '='. urlencode($resultado['mensaje']));
+                    header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.'&'.$resultado['estatus']. '='. urlencode($resultado['mensaje']));
                     exit;
                 }
                 break;
@@ -627,6 +661,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     if(empty($fecha_atencion)){
                         $fecha_atencion = null;
                     }
+                    $acciones = trim($_POST['acciones']);
                     $observaciones_atencion = trim($_POST['observaciones_atencion']);
                     $id_cliente = !empty($_POST['id_cliente']) ? intval($_POST['id_cliente']) : null;
                     $id_equipo = !empty($_POST['id_equipo']) ? intval($_POST['id_equipo']) : null;
@@ -656,7 +691,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                             }
                         }
                     }
-                    $resultado = editar_atendidos($id_reporte,$fecha,$referencia,$fecha_atencion,$observaciones_atencion,$id_cliente,$id_equipo,$tecnico,$componentes);
+                    $resultado = editar_atendidos($id_reporte,$fecha,$referencia,$fecha_atencion,$acciones,$observaciones_atencion,$id_cliente,$id_equipo,$tecnico,$componentes);
                     if($resultado['estatus'] === 'msg'){
                         header('Location: ../reportes/ver_reporte.php?id=' .$id_reporte.'&msg='.urlencode($resultado['mensaje']));
                     }else{
@@ -711,6 +746,22 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     exit;
                 }else{
                     header('Location: ../reportes/reportar_muchos.php?error='.urlencode('No se recibieron equipos para reportar'));
+                    exit;
+                }
+                break;
+            case 'editar_reabierto':
+                if(isset($_POST['id'],$_POST['fechas'])){
+                    $id_reporte = intval($_POST['id_reporte']);
+                    $id = intval($_POST['id']);
+                    $fechas = trim($_POST['fechas']);
+                    $acciones = trim($_POST['acciones']);
+                    $observaciones = trim($_POST['observaciones']);
+                    $resultado = editar_reabiertos($id,$fechas,$acciones,$observaciones);
+                    if($resultado['estatus'] === 'msg' || $resultado['estatus'] === 'info'){
+                        header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.'&msg'.urlencode($resultado['mensaje']));
+                    }else{
+                        header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.'&error'.urlencode($resultado['mensaje']));
+                    }
                     exit;
                 }
                 break;

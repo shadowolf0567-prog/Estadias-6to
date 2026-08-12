@@ -351,7 +351,11 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label class="form-label">¿Qué se hizo?</label>
+                            <textarea name="acciones" class="form-control"><?= htmlspecialchars($reporte['acciones']) ?></textarea>
+                        </div>
+                        <div class="col-md-6">
                             <label class="form-label">Observaciones</label>
                             <textarea name="observaciones_atencion" class="form-control"><?= htmlspecialchars($reporte['observaciones_atencion'] ?: '') ?></textarea>
                         </div>
