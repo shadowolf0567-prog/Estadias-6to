@@ -263,12 +263,19 @@ mysqli_close($conn);
                                 <div class="col-md-4">
                                     <p><span class="info-label">Fecha: </span><?= date('d/m/Y', strtotime($atencion['fechas'])) ?></p>
                                     <p><span class="info-label">¿Qué se hizo?</span> <?= htmlspecialchars($atencion['acciones']) ?></p>
-                                    <p><span class="info-label">Observaciones: </span> 
-                                        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditar<?= $atencion['id'] ?>">
-                                            <i class="bi bi-pencil"></i> Editar
-                                        </button>
-                                    </p>
+                                    <p><span class="info-label">Observaciones: </span></p>
                                     <div class="bg-white p-2 rounded"><?= nl2br(htmlspecialchars($atencion['observaciones'])) ?></div>
+                                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditar<?= $atencion['id'] ?>">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <form action="../lib/gestion_reportes.php" method="post" onsubmit="return confirm('¿Quieres eliminar esto?')" style="display:inline-block;">
+                                        <input type="hidden" name="accion" value="borrar">
+                                        <input type="hidden" name="id" value="<?= $atencion['id'] ?>">
+                                        <input type="hidden" name="id_reporte" value="<?= $reporte['id_reporte'] ?>">
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
                                 </div>
                                 <div class="modal fade" id="modalEditar<?= $atencion['id'] ?>">
                                     <div class="modal-dialog modal-dialog-centered">

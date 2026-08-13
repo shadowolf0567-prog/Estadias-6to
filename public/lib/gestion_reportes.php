@@ -489,6 +489,32 @@ function editar_reabiertos($id,$fechas,$acciones,$observaciones){
         ];
     }
 }
+function eliminar_reabierto($id){
+    global $conn;
+    $sql = "DELETE FROM reabiertos WHERE id = ?";
+    $stmt = mysqli_prepare($conn,$sql);
+    if(!$stmt){
+        return[
+            'estatus' => 'msg',
+            'mensaje' => 'Error en la ejecución de la base de datos'
+        ];
+    }
+    mysqli_stmt_bind_param($stmt,'i',$id);
+    $query_ok = mysqli_stmt_execute($stmt);
+    $rows_ok=mysqli_affected_rows($conn);
+    mysqli_stmt_close($stmt);
+    if($query_ok && $rows_ok > 0){
+        return[
+            'estatus' => 'msg',
+            'mensaje' => 'Eliminado correctamente'
+        ];
+    }else{
+        return[
+            'estatus' => 'error',
+            'mensaje' => 'No se pudo eliminar'
+        ];
+    }
+}
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     if(isset($_POST['accion'])){
         $accion=$_POST['accion'];
@@ -761,6 +787,19 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                         header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.'&msg'.urlencode($resultado['mensaje']));
                     }else{
                         header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.'&error'.urlencode($resultado['mensaje']));
+                    }
+                    exit;
+                }
+                break;
+            case 'borrar':
+                if(isset($_POST['id']) && isset($_POST['id_reporte'])){
+                    $id_reporte = intval($_POST['id_reporte']);
+                    $id = intval($_POST['id']);
+                    $resultado = eliminar_reabierto($id);
+                    if($resultado['estatus'] === 'msg'){
+                        header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.'&msg='.urlencode($resultado['mensaje']));
+                    }else{
+                        header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.'&msg='.urlencode($resultado['mensaje']));
                     }
                     exit;
                 }
