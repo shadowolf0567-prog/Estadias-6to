@@ -86,9 +86,10 @@ if($id_cliente){
                 INNER JOIN reportes r ON rc.id_reporte = r.id_reporte
             LEFT JOIN clientes c ON r.id_cliente = c.id_cliente
         LEFT JOIN equipos e ON r.id_equipo = e.id_equipo
-            WHERE 1=1
-                AND rc.componente != 'Servicio Preventivo'
-                    AND rc.componente != 'Servicio Correctivo'
+        WHERE 1=1
+            AND rc.componente != 'Servicio Preventivo'
+                AND rc.componente != 'Servicio Correctivo'
+                    AND rc.componente != 'Reparación'
                         AND c.id_cliente = ?";
     
     $params = [$cliente['id_cliente']];

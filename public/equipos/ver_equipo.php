@@ -41,7 +41,10 @@ if($equipo){
                                 AND (rc.tipo = 'SER-02')) as correctivos,
                                 (SELECT COUNT(*) FROM reportes_componentes rc
                                 WHERE rc.id_reporte = r.id_reporte
-                                AND (rc.tipo = 'SER-03' OR rc.tipo = 'componente')) as total_componentes
+                                AND (rc.tipo = 'SER-03')) as repacariones,
+                                (SELECT COUNT(*) FROM reportes_componentes rc
+                                WHERE rc.id_reporte = r.id_reporte
+                                AND (rc.tipo = 'componente')) as total_componentes
                                 FROM reportes r
                                 WHERE id_equipo = ?";
     $params = [$equipo['id_equipo']];
@@ -132,10 +135,10 @@ mysqli_stmt_close($stmt_t);
                                     <input type="hidden" name="id_equipo" value="<?= $equipo['id_equipo'] ?>">
                                     <div class="row g-2">
                                         <div class="col-5">
-                                            <input type="number" name="color" id="" class="form-control form-control-sm" value="<?= $equipo['color'] ?? 0 ?>">
+                                            <input type="number" name="color" id="" class="form-control form-control-sm" value="<?= $totalizadores['color'] ?? 0 ?>" min="0">
                                         </div>
                                         <div class="col-5">
-                                            <input type="number" name="bn" id="" class="form-control form-control-sm" value="<?= $equipo['bn'] ?? 0 ?>">
+                                            <input type="number" name="bn" id="" class="form-control form-control-sm" value="<?= $totalizadores['bn'] ?? 0 ?>" min="0">
                                         </div>
                                         <div class="col-2">
                                             <button type="submit" class="btn btn-success btn-sm w-100">
@@ -214,7 +217,8 @@ mysqli_stmt_close($stmt_t);
                                     <thead>
                                         <tr>
                                             <th>Fecha</th>
-                                            <th>Componentes/Refacciones</th>
+                                            <th>Componentes</th>
+                                            <th>Reparaciones</th>
                                             <th>Preventivos</th>
                                             <th>Correctivos</th>
                                             <th>Estado</th>
@@ -226,6 +230,7 @@ mysqli_stmt_close($stmt_t);
                                             <tr>
                                                 <td><?= date('d/m/Y', strtotime($reporte['fecha'])) ?></td>
                                                 <td><?= htmlspecialchars($reporte['total_componentes']) ?></td>
+                                                <td><?= htmlspecialchars($reporte['repacariones']) ?></td>
                                                 <td><?= htmlspecialchars($reporte['preventivos']) ?></td>
                                                 <td><?= htmlspecialchars($reporte['correctivos']) ?></td>
                                                 <td><?= htmlspecialchars($reporte['estado']) ?></td>
