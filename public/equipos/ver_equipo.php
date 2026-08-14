@@ -67,16 +67,28 @@ if($equipo){
 }
 $sql_totalizadores = "SELECT color,bn,fecha
                         FROM totalizadores t
-                        WHERE id_equipo = ?";
-$params_t = [$id_equipo];
-$types_t = "i";
+                        WHERE id_equipo = ? AND MONTH(fecha) = ? AND YEAR(fecha) = YEAR(CURDATE())
+                        ORDER BY fecha DESC LIMIT 1";
+    $params_t = [$id_equipo, $mes];
+    $types_t = "ii";
 if(!empty($mes)){
-    $sql_totalizadores .= " AND month(fecha) = ?
-                            AND year(fecha) = year(curdate())";
-    $params_t[] = $mes;
-    $types_t .= "i";
+    $sql_totalizadores = "SELECT color, bn, fecha
+                            FROM totalizadores t
+                            WHERE id_equipo = ? AND MONTH(fecha) = ? AND YEAR(fecha) = YEAR(CURDATE())
+                            ORDER BY fecha DESC LIMIT 1";
+    $params_t = [$id_equipo, $mes];
+    $types_t = "ii";
+}else{
+    $sql_totalizadores = "SELECT
+                            COALESCE(SUM(color), 0) as color,
+                            COALESCE(SUM(bn),0) as bn,
+                            COUNT(*) as total_registros,
+                            MAX(fecha) as ultima_actualizacion
+                            FROM totalizadores t
+                            WHERE id_equipo = ?";
+    $params_t = [$id_equipo];
+    $types_t = "i";
 }
-$sql_totalizadores .= " ORDER BY fecha DESC LIMIT 1";
 $stmt_t = mysqli_prepare($conn,$sql_totalizadores);
 mysqli_stmt_bind_param($stmt_t,$types_t, ...$params_t);
 mysqli_stmt_execute($stmt_t);

@@ -160,6 +160,9 @@ mysqli_close($conn);
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAtender">
                     <i class="bi bi-check-circle"></i> Marcar Atendido
                 </button>
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalIncompleto">
+                    <i class="bi bi-arrow-repeat"></i> Sin Concluir
+                </button>
                 <a href="editar_reportes.php?id_reporte=<?= $reporte['id_reporte'] ?>" class="btn btn-warning">
                     <i class="bi bi-pencil"></i> Editar
                 </a>

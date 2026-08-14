@@ -278,9 +278,12 @@ function totalizadores($id_equipo,$color,$bn,$fecha=null){
     if(empty($fecha)){
         $fecha = date('Y-m-d H:i:s');
     }
-    $sql_check = "SELECT COUNT(*) as total FROM totalizadores WHERE id_equipo = ?";
+    $mes = date('m',strtotime($fecha));
+    $año = date('Y',strtotime('$fecha'));
+    $sql_check = "SELECT COUNT(*) as total FROM totalizadores WHERE id_equipo = ?
+                    AND MONTH(fecha) = ? AND YEAR(fecha) = ?";
     $stmt_check = mysqli_prepare($conn,$sql_check);
-    mysqli_stmt_bind_param($stmt_check, "i", $id_equipo);
+    mysqli_stmt_bind_param($stmt_check, "iii", $id_equipo,$mes,$año);
     mysqli_stmt_execute($stmt_check);
     $result_check = mysqli_stmt_get_result($stmt_check);
     $row_check = mysqli_fetch_assoc($result_check);
@@ -289,11 +292,9 @@ function totalizadores($id_equipo,$color,$bn,$fecha=null){
     $existe = ($row_check['total'] > 0);
     if($existe){
         $sql = "UPDATE totalizadores SET color = ?, bn = ?, fecha = ?
-                WHERE id_equipo = ?
-                ORDER BY fecha DESC
-                LIMIT 1";
+                WHERE id_equipo = ? AND MONTH(fecha) = ? AND YEAR(fecha) = ?";
         $stmt = mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt, "iisi", $color,$bn,$fecha,$id_equipo);
+        mysqli_stmt_bind_param($stmt, "iisiii", $color,$bn,$fecha,$id_equipo,$mes,$año);
         $mensaje = "Totalizadores actualizados correctamente";
     }else{
         $sql = "INSERT INTO totalizadores (id_equipo, color, bn,fecha)
@@ -301,6 +302,12 @@ function totalizadores($id_equipo,$color,$bn,$fecha=null){
         $stmt = mysqli_prepare($conn,$sql);
         mysqli_stmt_bind_param($stmt,"iiis",$id_equipo,$color,$bn,$fecha);
         $mensaje = "Totalizadores registrados correctamente";
+    }
+    if(!$stmt){
+        return[
+            'estatus' => 'error',
+            'mensaje' => 'Error en la preparación: '. mysqli_error($conn)
+        ];
     }
     $query_ok = mysqli_stmt_execute($stmt);
     if(!$query_ok){
@@ -312,6 +319,10 @@ function totalizadores($id_equipo,$color,$bn,$fecha=null){
         ];
     }
     mysqli_stmt_close($stmt);
+    return[
+        'estatus' => 'msg',
+        'mensaje' => $mensaje
+    ];
 }
 if($_SERVER['REQUEST_METHOD']==='POST'){
     if(isset($_POST['accion'])){

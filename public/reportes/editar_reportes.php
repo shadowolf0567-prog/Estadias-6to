@@ -263,7 +263,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                             <option value="">-- Ninguno --</option>
                                             <option value="SER-01" <?= ($comp['tipo'] == 'SER-01') ? 'selected' : '' ?>>SER-01</option>
                                             <option value="SER-02" <?= ($comp['tipo'] == 'SER-02') ? 'selected' : '' ?>>SER-02</option>
-                                            <option value="Falla" <?= ($comp['tipo'] == 'Falla') ? 'selected' : '' ?>>Falla</option>
+                                            <option value="falla" <?= ($comp['tipo'] == 'falla') ? 'selected' : '' ?>>Falla/Mantenimiento</option>
                                             <option value="SER-03" <?= ($comp['tipo'] == 'SER-03') ? 'selected' : '' ?>>Reparación</option>
                                             <option value="componente" <?= ($comp['tipo'] == 'componente')  ? 'selected' : '' ?>>Componente</option>
                                         </select>
@@ -294,7 +294,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                         <option value="">-- Ninguno --</option>
                                         <option value="SER-01">SER-01</option>
                                         <option value="SER-02">SER-02</option>
-                                        <option value="Falla"?>>Falla</option>
+                                        <option value="falla"?>>Falla/Mantenimiento</option>
                                         <option value="SER-03">Reparación</option>
                                         <option value="componente">Componente</option>
                                     </select>
@@ -395,7 +395,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             const seccion = document.getElementById('seccionDescripcion_' + index);
             const nombreInput = document.getElementById('nombre_' + index);
             if(seccion){
-                if(select.value === 'componente' || select.value === 'SER-03' || select.value === 'SER-01' || select.value === 'SER-02' || select.value === 'Falla'){
+                if(select.value === 'componente' || select.value === 'SER-03' || select.value === 'SER-01' || select.value === 'SER-02' || select.value === 'falla'){
                     seccion.style.display = 'block';
                 }else{
                     seccion.style.display = 'none';
@@ -411,6 +411,10 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         nombreInput.value = 'Servicio Correctivo';
                         nombreInput.readOnly=true;
                     break;
+                    case 'falla':
+                        nombreInput.value = 'Falla/Mantenimiento';
+                        nombreInput.readOnly = true;
+                    break;
                     case 'SER-03':
                         nombreInput.value = 'Reparación';
                         nombreInput.readOnly = true;
@@ -418,7 +422,8 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                     default:
                         if(nombreInput.value === 'Servicio Preventivo' || 
                             nombreInput.value === 'Servicio Correctivo' ||
-                            nombreInput.value === 'Reparación') {
+                            nombreInput.value === 'Reparación' ||
+                            nombreInput.value === 'Falla/Mantenimiento') {
                                 nombreInput.value = '';
                             }
                             nombreInput.readOnly = false;
@@ -440,6 +445,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                 <option value="">-- Ninguno --</option>
                                 <option value="SER-01">SER-01</option>
                                 <option value="SER-02">SER-02</option>
+                                <option value="falla">Falla/Mantenimiento</option>
                                 <option value="SER-03">Reparación</option>
                                 <option value="componente">Componente</option>
                             </select>
