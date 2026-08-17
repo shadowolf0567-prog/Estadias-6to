@@ -625,6 +625,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     mysqli_stmt_execute($stmt_delete);
                     mysqli_stmt_close($stmt_delete);
 
+                    $sql_delete_2 = "DELETE FROM reabiertos WHERE reportes = ?";
+                    $stmt_delete_2 = mysqli_prepare($conn,$sql_delete_2);
+                    mysqli_stmt_bind_param($stmt_delete_2,'i',$id_reporte);
+                    mysqli_stmt_execute($stmt_delete_2);
+                    mysqli_stmt_close($stmt_delete_2);
+
                     $sql = "DELETE FROM reportes WHERE id_reporte = ?";
                     $stmt = mysqli_prepare($conn, $sql);
                     mysqli_stmt_bind_param($stmt,'i',$id_reporte);
@@ -647,6 +653,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     mysqli_stmt_bind_param($stmt_delete,'i',$id_reporte);
                     mysqli_stmt_execute($stmt_delete);
                     mysqli_stmt_close($stmt_delete);
+
+                    $sql_delete_2 = "DELETE FROM reabiertos WHERE reportes = ?";
+                    $stmt_delete_2 = mysqli_prepare($conn,$sql_delete_2);
+                    mysqli_stmt_bind_param($stmt_delete_2,'i',$id_reporte);
+                    mysqli_stmt_execute($stmt_delete_2);
+                    mysqli_stmt_close($stmt_delete_2);
 
                     $sql = "DELETE FROM reportes WHERE id_reporte = ?";
                     $stmt = mysqli_prepare($conn, $sql);
