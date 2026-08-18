@@ -204,10 +204,6 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                             <?= $backup['tamaño'] ?> KB
                                         </span></td>
                                         <td>
-                                            <a href="descargar_backup.php?archivo=<?= urlencode($backup['nombre']) ?>"
-                                            class="btn btn-sm btn-success">
-                                                <i class="bi bi-download"></i> Descargar
-                                            </a>
                                             <a href="restaurar_backup.php?archivo=<?= urlencode($backup['nombre']) ?>"
                                             class="btn btn-sm btn-warning"
                                             onclick="return confirm('Restaurar este respaldo? Se perderán los cambios actuales.');">

@@ -123,8 +123,8 @@ function resaltar_coincidencia($texto, $busqueda) {
                     <tr>
                         <th>Nombre</th>
                         <th>Serie</th>
-                        <th>Info. Adicional</th>
                         <th>Cantidad</th>
+                        <th>Info. Adicional</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -134,10 +134,10 @@ function resaltar_coincidencia($texto, $busqueda) {
                             <tr>         
                                 <td><?= resaltar_coincidencia($inv['nombre'], $busqueda) ?></td>
                                 <td><?= resaltar_coincidencia($inv['serie'], $busqueda) ?></td>
+                                <td><?= htmlspecialchars($inv['cantidad']) ?></td>
                                 <td class="info-adicional" title="<?= htmlspecialchars($inv['info_adicional']) ?>">
                                     <?= htmlspecialchars($inv['info_adicional']) ?>
                                 </td>
-                                <td><?= htmlspecialchars($inv['cantidad']) ?></td>
                                 <td>
                                     <form action="../lib/gestion_almacen.php" method="post">
                                         <input type="hidden" name="accion" value="eliminar">
@@ -148,7 +148,7 @@ function resaltar_coincidencia($texto, $busqueda) {
                                     </form>
                                     <button type="button" class="btn btn-sm btn-warning btn-accion"
                                         data-bs-toggle="modal" data-bs-target="#modalEditar"
-                                        onclick="editarInventario(<?= $inv['id'] ?>, '<?= addslashes($inv['nombre']) ?>', '<?= addslashes($inv['serie']) ?>', '<?= addslashes($inv['info_adicional']) ?>')">
+                                        onclick="editarInventario(<?= $inv['id'] ?>, '<?= addslashes($inv['nombre']) ?>', '<?= addslashes($inv['serie']) ?>', '<?= addslashes($inv['cantidad']) ?>', '<?= addslashes($inv['info_adicional']) ?>')">
                                         <i class="bi bi-pencil"></i> Editar
                                     </button>
                                 </td>
@@ -166,7 +166,7 @@ function resaltar_coincidencia($texto, $busqueda) {
             </table>
         </div>
     </div>
-    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modalAgregar" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-success text-white">
@@ -203,7 +203,7 @@ function resaltar_coincidencia($texto, $busqueda) {
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modalEditar" aria-hidden="true">
+    <div class="modal fade" id="modalEditar">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-warning text-dark">
