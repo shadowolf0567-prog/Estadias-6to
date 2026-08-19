@@ -493,6 +493,32 @@ function editar_reabiertos($id,$fechas,$acciones,$observaciones){
         ];
     }
 }
+function marcar_pendiente($id_reporte){
+    global $conn;
+    $sql = "UPDATE reportes SET estado = 'pendiente', fecha_atencion = NULL, observaciones_atencion = NULL, acciones = NULL WHERE id_reporte = ?";
+    $stmt = mysqli_prepare($conn,$sql);
+    if(!$stmt){
+        return[
+            'estatus' => 'error',
+            'mensaje' => 'Error en la preparación: ' . mysqli_error($conn)
+        ];
+    } 
+    mysqli_stmt_bind_param($stmt,'i',$id_reporte);
+    $query_ok = mysqli_stmt_execute($stmt);
+    $rows_ok = mysqli_affected_rows($conn);
+    mysqli_stmt_close($stmt);
+    if($query_ok && $rows_ok > 0){
+        return[
+            'estatus' => 'msg',
+            'mensaje' => 'Reporte marcado como pendiente'
+        ];
+    }else{
+        return[
+            'estatus' => 'error',
+            'mensaje' => 'No se pudo marcar como pendiente'
+        ];
+    }
+}
 function eliminar_reabierto($id){
     global $conn;
     $sql = "DELETE FROM reabiertos WHERE id = ?";
@@ -694,6 +720,14 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     $acciones = trim($_POST['acciones'] ?? '');
                     $observaciones = trim($_POST['observaciones']);
                     $resultado = reabrir_reporte($id_reporte,$fecha,$acciones,$observaciones);
+                    header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
+                    exit;
+                }
+                break;
+            case 'pendiente':
+                if(isset($_POST['id_reporte'])){
+                    $id_reporte = intval($_POST['id_reporte']);
+                    $resultado = marcar_pendiente($id_reporte);
                     header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
                     exit;
                 }

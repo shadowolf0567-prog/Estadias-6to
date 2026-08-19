@@ -156,21 +156,37 @@ mysqli_close($conn);
             <a href="reportes.php" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> Volver
             </a>
-            <?php if($reporte['estado'] != 'atendido'): ?>
+            <?php if($reporte['estado'] === 'pendiente'): ?>
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAtender">
                     <i class="bi bi-check-circle"></i> Marcar Atendido
                 </button>
                 <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalIncompleto">
                     <i class="bi bi-arrow-repeat"></i> Sin Concluir
                 </button>
-                <a href="editar_reportes.php?id_reporte=<?= $reporte['id_reporte'] ?>" class="btn btn-warning">
+                <a href="editar_reportes.php?id_reporte=<?= $reporte['id_reporte'] ?>" class="btn btn-outline-warning text-black">
                     <i class="bi bi-pencil"></i> Editar
                 </a>
-            <?php else: ?>
+            <?php elseif($reporte['estado'] === 'incompleto'): ?>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAtender">
+                    <i class="bi bi-check-circle"></i> Marcar Atendido
+                </button>
+                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalIncompleto">
+                    <i class="bi bi-arrow-repeat"></i> Sin Concluir
+                </button>
+                <button class="button btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalPendiente">
+                    <i class="bi bi-clock"></i> Marcar Pendiente
+                </button>
+                <a href="editar_reportes.php?id_reporte=<?= $reporte['id_reporte'] ?>" class="btn btn-outline-warning text-black">
+                    <i class="bi bi-pencil"></i> Editar
+                </a>
+            <?php elseif($reporte['estado'] === 'atendido'): ?>
                 <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalIncompleto">
                     <i class="bi bi-arrow-repeat"></i> Sin Concluir
                 </button>
-                <a href="editar_atendido.php?id_reporte=<?= $reporte['id_reporte'] ?>" class="btn btn-warning">
+                <button class="button btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalPendiente">
+                    <i class="bi bi-clock"></i> Marcar Pendiente
+                </button>
+                <a href="editar_atendido.php?id_reporte=<?= $reporte['id_reporte'] ?>" class="btn btn-outline-warning text-black">
                     <i class="bi bi-pencil"></i> Editar
                 </a>
             <?php endif; ?>
@@ -394,6 +410,27 @@ mysqli_close($conn);
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-warning">Marcar Incompleto</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalPendiente">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger">
+                    <h5 class="modal-title">Marcar como Pendiente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="../lib/gestion_reportes.php" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" name="accion" value="pendiente">
+                        <input type="hidden" name="id_reporte" value="<?= $reporte['id_reporte'] ?>">
+                        <p>¿Marcar como Pendiente?</p>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-danger">Marcar Pendiente</button>
+                        </div>
                     </div>
                 </form>
             </div>
