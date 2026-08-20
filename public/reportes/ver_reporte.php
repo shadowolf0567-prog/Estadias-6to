@@ -233,7 +233,7 @@ mysqli_close($conn);
                         <?php else: ?>
                             <p class="text-muted">No se especificó equipo</p>
                         <?php endif; ?>
-                        <a href="../equipos/ver_equipo.php?id=<?=$reporte['id_equipo'] ?>" class="btn btn-info">
+                        <a href="../equipos/ver__equipo.php?id=<?=$reporte['id_equipo'] ?>" class="btn btn-info">
                             <i class="bi bi-eye"></i> Ver Equipo
                         </a>
                     </div>

@@ -273,55 +273,86 @@ function obtener_cliente_completo($id_cliente){
     mysqli_stmt_close($stmt_telefonos);
     return $cliente;
 }
-function totalizadores($id_equipo,$color,$bn,$fecha=null){
+function totalizadores($id_equipo, $color, $bn, $fecha = null){
     global $conn;
-    if(empty($fecha)){
-        $fecha = date('Y-m-d H:i:s');
-    }
-    $mes = date('m',strtotime($fecha));
-    $año = date('Y',strtotime('$fecha'));
-    $sql_check = "SELECT COUNT(*) as total FROM totalizadores WHERE id_equipo = ?
-                    AND MONTH(fecha) = ? AND YEAR(fecha) = ?";
-    $stmt_check = mysqli_prepare($conn,$sql_check);
-    mysqli_stmt_bind_param($stmt_check, "iii", $id_equipo,$mes,$año);
-    mysqli_stmt_execute($stmt_check);
-    $result_check = mysqli_stmt_get_result($stmt_check);
-    $row_check = mysqli_fetch_assoc($result_check);
-    mysqli_stmt_close($stmt_check);
 
-    $existe = ($row_check['total'] > 0);
-    if($existe){
-        $sql = "UPDATE totalizadores SET color = ?, bn = ?, fecha = ?
-                WHERE id_equipo = ? AND MONTH(fecha) = ? AND YEAR(fecha) = ?";
-        $stmt = mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt, "iisiii", $color,$bn,$fecha,$id_equipo,$mes,$año);
-        $mensaje = "Totalizadores actualizados correctamente";
-    }else{
-        $sql = "INSERT INTO totalizadores (id_equipo, color, bn,fecha)
-                VALUES (?,?,?,?)";
-        $stmt = mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt,"iiis",$id_equipo,$color,$bn,$fecha);
-        $mensaje = "Totalizadores registrados correctamente";
-    }
-    if(!$stmt){
-        return[
+    if (!$conn) {
+        return [
             'estatus' => 'error',
-            'mensaje' => 'Error en la preparación: '. mysqli_error($conn)
+            'mensaje' => 'Error de conexión a la base de datos'
         ];
     }
-    $query_ok = mysqli_stmt_execute($stmt);
-    if(!$query_ok){
+
+    if (empty($fecha)) {
+        $fecha = date('Y-m-d');
+    }
+
+    $mes = intval(date('m', strtotime($fecha)));
+    $año = intval(date('Y', strtotime($fecha)));
+
+    $sql_check = "SELECT id_totalizador FROM totalizadores WHERE id_equipo = ? AND MONTH(fecha) = ? AND YEAR(fecha) = ? LIMIT 1";
+    $stmt_check = mysqli_prepare($conn, $sql_check);
+
+    if (!$stmt_check) {
+        return [
+            'estatus' => 'error',
+            'mensaje' => 'Error preparando búsqueda: ' . mysqli_error($conn)
+        ];
+    }
+
+    mysqli_stmt_bind_param( $stmt_check, 'iii', $id_equipo, $mes, $año );
+
+    mysqli_stmt_execute($stmt_check);
+    $resultado_check = mysqli_stmt_get_result($stmt_check);
+    $registro = mysqli_fetch_assoc($resultado_check);
+    mysqli_stmt_close($stmt_check);
+
+    if ($registro) {
+        $id_totalizador = intval($registro['id_totalizador']);
+        $sql = "UPDATE totalizadores SET color = ?, bn = ?, fecha = ? WHERE id_totalizador = ?";
+        $stmt = mysqli_prepare($conn, $sql);
+        if (!$stmt) {
+            return [
+                'estatus' => 'error',
+                'mensaje' => 'Error preparando UPDATE: ' . mysqli_error($conn)
+            ];
+        }
+        mysqli_stmt_bind_param( $stmt, 'iisi', $color, $bn, $fecha, $id_totalizador );
+        if (!mysqli_stmt_execute($stmt)) {
+            $error = mysqli_stmt_error($stmt);
+            mysqli_stmt_close($stmt);
+            return [
+                'estatus' => 'error',
+                'mensaje' => 'Error en UPDATE: ' . $error
+            ];
+        }
+        mysqli_stmt_close($stmt);
+        return [
+            'estatus' => 'msg',
+            'mensaje' => 'Totalizadores actualizados correctamente'
+        ];
+    }
+    $sql = "INSERT INTO totalizadores (id_equipo, color, bn, fecha) VALUES (?, ?, ?, ?)";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        return [
+            'estatus' => 'error',
+            'mensaje' => 'Error preparando INSERT: ' . mysqli_error($conn)
+        ];
+    }
+    mysqli_stmt_bind_param( $stmt, 'iiis', $id_equipo, $color, $bn, $fecha );
+    if (!mysqli_stmt_execute($stmt)) {
         $error = mysqli_stmt_error($stmt);
         mysqli_stmt_close($stmt);
-        return[
+        return [
             'estatus' => 'error',
-            'mensaje' => 'Error al insertar '.$error
+            'mensaje' => 'Error en INSERT: ' . $error
         ];
     }
     mysqli_stmt_close($stmt);
-    return[
+    return [
         'estatus' => 'msg',
-        'mensaje' => $mensaje
+        'mensaje' => 'Totalizadores registrados correctamente'
     ];
 }
 if($_SERVER['REQUEST_METHOD']==='POST'){
@@ -395,19 +426,25 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                     }
                     break;
                 case 'totalizadores':
-                    if(isset($_POST['id_equipo'],$_POST['color'],$_POST['bn'])){
+                    if (isset( $_POST['id_equipo'], $_POST['color'], $_POST['bn'], $_POST['mes'])) {
                         $id_equipo = intval($_POST['id_equipo']);
                         $color = intval($_POST['color']);
                         $bn = intval($_POST['bn']);
-                        $resultado = totalizadores($id_equipo,$color,$bn);
-                        if($resultado['estatus'] === 'msg'){
-                            header('Location: ../equipos/ver_equipo.php?id=' .$id_equipo.'&msg='.urlencode($resultado['mensaje']));
-                        }else{
-                            header('Location: ../equipos/ver_equipo.php?id=' .$id_equipo. '&error=' .urlencode($resultado['mensaje']));
+                        $mes = intval($_POST['mes']);
+
+                        if ($mes < 1 || $mes > 12) {
+                            $mes = intval(date('m'));
+                        }
+                        $fecha = date('Y') . '-' . str_pad($mes, 2, '0', STR_PAD_LEFT) . '-01';
+                        $resultado = totalizadores($id_equipo,$color,$bn,$fecha);
+                        if ($resultado['estatus'] === 'msg') {
+                            header('Location: ../equipos/ver__equipo.php?id=' .$id_equipo .'&mes=' .$mes .'&msg=' .urlencode($resultado['mensaje']));
+                        } else {
+                            header( 'Location: ../equipos/ver__equipo.php?id=' . $id_equipo . '&mes=' . $mes . '&error=' . urlencode($resultado['mensaje']));
                         }
                         exit;
                     }
-                    break;
+                break;
                 default:
                     header('Location: ../equipos/equipos.php?error='.urlencode('Acción no válida'));
                 exit;

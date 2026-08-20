@@ -49,7 +49,7 @@ function buscar_reportes_filtros($filtros = [], $estado = 'pendiente'){
         $types .= "s";
     }
 
-    $sql .= " ORDER BY r.id_reporte DESC";
+    $sql .= " ORDER BY r.fecha DESC";
 
     $stmt = mysqli_prepare($conn,$sql);
     if(!empty($params)){

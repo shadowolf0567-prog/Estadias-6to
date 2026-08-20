@@ -224,7 +224,7 @@ $total_resultados = count($equipos);
                                     onclick="eliminarEquipo(<?= $equipo['id_equipo'] ?>, '<?= addslashes($equipo['no_serie']) ?>')">
                                         <i class="bi bi-trash"></i> Eliminar
                                     </button>
-                                    <a href="ver_equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-sm btn-info">
+                                    <a href="ver__equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-sm btn-info">
                                         <i class="bi bi-eye"></i> Ver Equipo
                                     </a>
                                 </td>
@@ -259,7 +259,7 @@ $total_resultados = count($equipos);
             if(confirm(`¿Eliminar el equipo "${serie}"?`)){
                 const form=document.createElement('form');
                 form.method = 'POST';
-                form.action = '../lib/gestion_equipo.php';
+                form.action = '../lib/gestion__equipo.php';
                 form.innerHTML = `
                 <input type="hidden" name = "accion" value="eliminar"> 
                 <input type="hidden" name="id_equipo" value="${id}">

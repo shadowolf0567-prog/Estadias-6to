@@ -364,7 +364,7 @@ mysqli_close($conn);
                                                 <span>0 reportes</span>
                                             <?php endif; ?>
                                             </td>
-                                            <td><a href="../equipos/ver_equipo.php?id=<?= $reporte['id_equipo'] ?>" class="btn btn-info">
+                                            <td><a href="../equipos/ver__equipo.php?id=<?= $reporte['id_equipo'] ?>" class="btn btn-info">
                                                 <i class="bi bi-eye"></i> Ver Equipo
                                             </a></td>
                                         </tr>

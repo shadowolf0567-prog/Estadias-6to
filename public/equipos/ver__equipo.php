@@ -65,30 +65,21 @@ if($equipo){
     }
     mysqli_stmt_close($stmt_re);
 }
-$sql_totalizadores = "SELECT color,bn,fecha
-                        FROM totalizadores t
-                        WHERE id_equipo = ? AND MONTH(fecha) = ? AND YEAR(fecha) = YEAR(CURDATE())
-                        ORDER BY fecha DESC LIMIT 1";
-    $params_t = [$id_equipo, $mes];
-    $types_t = "ii";
+$sql_totalizadores = "SELECT color, bn, fecha
+                      FROM totalizadores
+                      WHERE id_equipo = ?";
+
+$params_t = [$id_equipo];
+$types_t = "i";
+
 if(!empty($mes)){
-    $sql_totalizadores = "SELECT color, bn, fecha
-                            FROM totalizadores t
-                            WHERE id_equipo = ? AND MONTH(fecha) = ? AND YEAR(fecha) = YEAR(CURDATE())
-                            ORDER BY fecha DESC LIMIT 1";
-    $params_t = [$id_equipo, $mes];
-    $types_t = "ii";
-}else{
-    $sql_totalizadores = "SELECT
-                            COALESCE(SUM(color), 0) as color,
-                            COALESCE(SUM(bn),0) as bn,
-                            COUNT(*) as total_registros,
-                            MAX(fecha) as ultima_actualizacion
-                            FROM totalizadores t
-                            WHERE id_equipo = ?";
-    $params_t = [$id_equipo];
-    $types_t = "i";
+    $sql_totalizadores .= " AND MONTH(fecha) = ?
+                           AND YEAR(fecha) = YEAR(CURDATE())";
+    $params_t[] = $mes;
+    $types_t .= "i";
 }
+
+$sql_totalizadores .= " ORDER BY fecha DESC LIMIT 1";
 $stmt_t = mysqli_prepare($conn,$sql_totalizadores);
 mysqli_stmt_bind_param($stmt_t,$types_t, ...$params_t);
 mysqli_stmt_execute($stmt_t);
@@ -142,9 +133,10 @@ mysqli_stmt_close($stmt_t);
                                 <p>
                                     <span class="info-label">Blanco y Negro: </span> <?= number_format($totalizadores['bn'] ?? 0) ?>
                                 </p>
-                                <form action="../lib/gestion_equipo.php" method="post" class="mt-2">
+                                <form action="../lib/gestion__equipo.php" method="post" class="mt-2">
                                     <input type="hidden" name="accion" value="totalizadores">
                                     <input type="hidden" name="id_equipo" value="<?= $equipo['id_equipo'] ?>">
+                                    <input type="hidden" name="mes" value="<?= $mes ?>">
                                     <div class="row g-2">
                                         <div class="col-5">
                                             <input type="number" name="color" id="" class="form-control form-control-sm" value="<?= $totalizadores['color'] ?? 0 ?>" min="0">
@@ -204,7 +196,7 @@ mysqli_stmt_close($stmt_t);
                         </div>
                         <?php if(!empty($mes)): ?>
                             <div class="col-md-2">
-                                <a href="ver_equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-secondary">
+                                <a href="ver__equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-secondary">
                                     <i class="bi bi-x-circle"></i> Limpiar
                                 </a>
                             </div>
@@ -270,20 +262,5 @@ mysqli_stmt_close($stmt_t);
         </div>
     </div>
     <script src="../assets/js/bootstrap.min.js"></script>
-    <script>
-        document.querySelector('form[action="../lib/gestion_equipo.php"]')?.addEventListener('submit', function(e) {
-            const color = parseInt(this.querySelector('input[name="color"]').value);
-            const bn = parseInt(this.querySelector('input[name="bn"]').value);
-            
-            const colorActual = <?= $totalizadores['color'] ?? 0 ?>;
-            const bnActual = <?= $totalizadores['bn'] ?? 0 ?>;
-            
-            return confirm(
-                '¿Estás seguro de actualizar los totalizadores?\n\n' +
-                'Color: ' + colorActual + ' → ' + color + '\n' +
-                'B/N: ' + bnActual + ' → ' + bn
-            );
-        });
-    </script>
 </body>
 </html>
