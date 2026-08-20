@@ -71,15 +71,16 @@ $sql_totalizadores = "SELECT color, bn, fecha
 
 $params_t = [$id_equipo];
 $types_t = "i";
+if (!empty($mes)) {
+    $sql_totalizadores .= " AND MONTH(fecha) = ? AND YEAR(fecha) = YEAR(CURDATE())
+    ";
 
-if(!empty($mes)){
-    $sql_totalizadores .= " AND MONTH(fecha) = ?
-                           AND YEAR(fecha) = YEAR(CURDATE())";
     $params_t[] = $mes;
     $types_t .= "i";
 }
 
 $sql_totalizadores .= " ORDER BY fecha DESC LIMIT 1";
+
 $stmt_t = mysqli_prepare($conn,$sql_totalizadores);
 mysqli_stmt_bind_param($stmt_t,$types_t, ...$params_t);
 mysqli_stmt_execute($stmt_t);
