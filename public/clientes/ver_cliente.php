@@ -180,7 +180,7 @@ mysqli_close($conn);
     </style>
 </head>
 <body>
-    <?php require_once __DIR__ .'/../gestion/menu.php'; ?>
+    <?php require_once __DIR__ .'/../gestion/menus.php'; ?>
 
     <div class="container mt-4">
         <div class="mb-3">
@@ -364,7 +364,7 @@ mysqli_close($conn);
                                                 <span>0 reportes</span>
                                             <?php endif; ?>
                                             </td>
-                                            <td><a href="../equipos/ver_equipo.php?id=<?= $reporte['id_equipo'] ?>" class="btn btn-info">
+                                            <td><a href="../equipos/ve_equipo.php?id=<?= $reporte['id_equipo'] ?>" class="btn btn-info">
                                                 <i class="bi bi-eye"></i> Ver Equipo
                                             </a></td>
                                         </tr>

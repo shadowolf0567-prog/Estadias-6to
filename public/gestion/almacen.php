@@ -79,7 +79,7 @@ function resaltar_coincidencia($texto, $busqueda) {
     </style>
 </head>
 <body>
-    <?php require_once __DIR__ . '/menu.php'; ?>
+    <?php require_once __DIR__ . '/menus.php'; ?>
     <div class="container mt-4">
         <h2 class="mb-4">Inventario</h2>
         <div class="busqueda-container">

@@ -88,7 +88,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
     </style>
 </head>
 <body>
-    <?php require_once __DIR__ . '/../gestion/menu.php'; ?>
+    <?php require_once __DIR__ . '/../gestion/menus.php'; ?>
     <div class="container mt-4">
         <h2 class="mb-4">Nuevos Reportes</h2>
         <p><span class="text-muted">Utiliza esta página si hay muchos servicios preventivos/correctivos de un mismo cliente</span></p>

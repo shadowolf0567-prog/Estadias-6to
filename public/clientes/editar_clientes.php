@@ -52,7 +52,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
     </style>
 </head>
 <body>
-    <?php require_once __DIR__ .'/../gestion/menu.php';?>
+    <?php require_once __DIR__ .'/../gestion/menus.php';?>
     <div class="container mt-4">
         <h2>Editar Cliente</h2>
         <?php if($mensaje): ?>

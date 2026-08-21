@@ -8,14 +8,14 @@ if(!isset($_SESSION['tip_usr']) || ($_SESSION['tip_usr'] !=1 && $_SESSION['tip_u
 }
 
 if(!isset($_GET['id_equipo']) || empty($_GET['id_equipo'])){
-    header('Location: equipos.php?error='.urlencode('ID de equipo inexistente'));
+    header('Location: equipo.php?error='.urlencode('ID de equipo inexistente'));
     exit;
 }
 
 $id_equipo = intval($_GET['id_equipo']);
 
 if(!$conn){
-    header('Location: equipos.php?error='.urlencode('Error de conexión a la base de datos'));
+    header('Location: equipo.php?error='.urlencode('Error de conexión a la base de datos'));
     exit;
 }
 
@@ -30,7 +30,7 @@ $result = mysqli_stmt_get_result($stmt);
 $equipo = mysqli_fetch_assoc($result);
 
 if(!$equipo){
-    header('Location: equipos.php?error='.urlencode('Equipo no encontrado'));
+    header('Location: equipo.php?error='.urlencode('Equipo no encontrado'));
     exit;
 }
 
@@ -103,7 +103,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
     </style>
 </head>
 <body>
-    <?php require_once __DIR__ . '/../gestion/menu.php'; ?>
+    <?php require_once __DIR__ . '/../gestion/menus.php'; ?>
     <div class="container mt-4">
         <h2 class="mb-3">Datos del Equipo</h2>
         <?php if($mensaje): ?>
@@ -118,7 +118,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
-        <form action="../lib/gestion__equipo.php" id="editForm" method="post">
+        <form action="../lib/gestion_equipos.php" id="editForm" method="post">
             <input type="hidden" name="accion" value="editar">
             <input type="hidden" name="id_equipo" value="<?= $equipo['id_equipo'] ?>">
             <input type="hidden" name="id_cliente" id="idCliente" value="<?= $equipo['id_cliente'] ?>">
@@ -192,7 +192,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                     <button type="submit" class="btn btn-primary" id="btnGuardar">
                         <i class="bi bi-save"></i> Guardar Cambios
                     </button>
-                    <a href="./ver_equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-secondary">
+                    <a href="./ve_equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-secondary">
                         <i class="bi bi-x-circle"></i> Cancelar
                     </a>
                 </div>

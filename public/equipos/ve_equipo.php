@@ -6,7 +6,7 @@ if(!isset($_SESSION['tip_usr']) || ($_SESSION['tip_usr'] !=1 && $_SESSION['tip_u
     exit;
 }
 if(!isset($_GET['id']) || empty($_GET['id'])){
-    header('Location: equipos.php?error='.urlencode('ID de equipo no especificado'));
+    header('Location: equipo.php?error='.urlencode('ID de equipo no especificado'));
     exit;
 }
 $id_equipo = intval($_GET['id']);
@@ -23,7 +23,7 @@ $equipo = mysqli_fetch_assoc($resultado);
 mysqli_stmt_close($stmt);
 
 if(!$equipo){
-    header('Location: equipos.php?error='.urlencode('Equipo no encontrado'));
+    header('Location: equipo.php?error='.urlencode('Equipo no encontrado'));
     exit;
 }
 
@@ -99,10 +99,10 @@ mysqli_stmt_close($stmt_t);
     <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
-    <?php require_once __DIR__ . '/../gestion/menu.php'; ?>
+    <?php require_once __DIR__ . '/../gestion/menus.php'; ?>
     <div class="container mt-4">
         <div class="mb-3">
-            <a href="equipos.php" class="btn btn-secondary">
+            <a href="equipo.php" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> Volver
             </a>
             <a href="editar_equipo.php?id_equipo=<?= $equipo['id_equipo'] ?>" class="btn btn-warning">
@@ -134,7 +134,7 @@ mysqli_stmt_close($stmt_t);
                                 <p>
                                     <span class="info-label">Blanco y Negro: </span> <?= number_format($totalizadores['bn'] ?? 0) ?>
                                 </p>
-                                <form action="../lib/gestion__equipo.php" method="post" class="mt-2">
+                                <form action="../lib/gestion_equipos.php" method="post" class="mt-2">
                                     <input type="hidden" name="accion" value="totalizadores">
                                     <input type="hidden" name="id_equipo" value="<?= $equipo['id_equipo'] ?>">
                                     <input type="hidden" name="mes" value="<?= $mes ?>">
@@ -197,7 +197,7 @@ mysqli_stmt_close($stmt_t);
                         </div>
                         <?php if(!empty($mes)): ?>
                             <div class="col-md-2">
-                                <a href="ver_equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-secondary">
+                                <a href="ve_equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-secondary">
                                     <i class="bi bi-x-circle"></i> Limpiar
                                 </a>
                             </div>
@@ -224,6 +224,9 @@ mysqli_stmt_close($stmt_t);
                                             <th>Fecha</th>
                                             <th>Componentes</th>
                                             <th>Reparaciones</th>
+                                            <th>Preventivos</th>
+                                            <th>Correctivos</th>
+                                            <th>Estado</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -232,14 +235,48 @@ mysqli_stmt_close($stmt_t);
                                             <tr>
                                                 <td><?= date('d/m/Y', strtotime($reporte['fecha'])) ?></td>
                                                 <td><?php if($reporte['total_componentes'] > 0): ?>
-                                                        <i class="bi bi-check"></i>
+                                                        <span class="badge-outline-success" style="font-size: 1rem;">
+                                                            <i class="bi bi-check-circle"></i>
+                                                        </span>
                                                     <?php else: ?>
-                                                        <i class="bi bi-cross"></i>
+                                                        <span class="badge-outline-danger" style="font-size: 1rem;">
+                                                            <i class="bi bi-x-circle"></i>
+                                                        </span>
                                                     <?php endif; ?>
                                                 </td>
-                                                <td><?= htmlspecialchars($reporte['repacariones']) ?></td>
-                                                <td><?= htmlspecialchars($reporte['preventivos']) ?></td>
-                                                <td><?= htmlspecialchars($reporte['correctivos']) ?></td>
+                                                <td>
+                                                    <?php if($reporte['repacariones'] > 0): ?>
+                                                        <span class="badge-outline-success" style="font-size: 1rem">
+                                                            <i class="bi bi-check-circle"></i>
+                                                        </span>
+                                                    <?php else: ?>
+                                                        <span class="badge-outline-danger" style="font-size: 1rem;">
+                                                            <i class="bi bi-x-circle"></i>
+                                                        </span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td>
+                                                    <?php if($reporte['preventivos'] > 0): ?>
+                                                        <span class="badge-outline-success" style="font-size: 1rem">
+                                                            <i class="bi bi-check-circle"></i>
+                                                        </span>
+                                                    <?php else: ?>
+                                                        <span class="badge-outline-danger" style="font-size: 1rem;">
+                                                            <i class="bi bi-x-circle"></i>
+                                                        </span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td>
+                                                    <?php if($reporte['correctivos'] > 0): ?>
+                                                        <span class="badge-outline success" style="font-size: 1rem">
+                                                            <i class="bi bi-check-circle"></i>
+                                                        </span>
+                                                    <?php else: ?>
+                                                        <span class="badge-outline-danger" style="font-size: 1rem;">
+                                                            <i class="bi bi-x-circle"></i>
+                                                        </span>
+                                                    <?php endif; ?>
+                                                </td>
                                                 <td><?= htmlspecialchars($reporte['estado']) ?></td>
                                                 <td>
                                                     <a href="../reportes/ver_reporte.php?id=<?= $reporte['id_reporte'] ?>" class="btn btn-sm btn-info">

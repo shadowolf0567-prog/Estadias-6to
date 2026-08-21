@@ -95,7 +95,7 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
     </style>
 </head>
 <body>
-    <?php require_once __DIR__ .'/../gestion/menu.php'; ?>
+    <?php require_once __DIR__ .'/../gestion/menus.php'; ?>
     <div class="container mt-4">
         <h2 class="text-center mb-4">Registrar Nuevo Equipo</h2>
 
@@ -282,7 +282,7 @@ $tab_activa = isset($_GET['tab']) ? $_GET['tab'] : 'existente';
             <button type="button" class="btn btn-primary" id="btnGuardar">
                 <i class="bi bi-save"></i> Guardar Equipo
             </button>
-            <a href="./equipos.php" class="btn btn-secondary">
+            <a href="./equipo.php" class="btn btn-secondary">
                 <i class="bi bi-x-circle"></i> Cancelar
             </a>
         </div>

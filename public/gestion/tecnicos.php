@@ -53,7 +53,7 @@ $mes = isset($_GET['mes']) ? intval($_GET['mes']) : null;
     </style>
 </head>
 <body>
-    <?php require_once __DIR__ . '/menu.php'; ?>
+    <?php require_once __DIR__ . '/menus.php'; ?>
     <div class="container mt-4">
         <h2 class="mb-4">Inventario</h2>
         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregar">

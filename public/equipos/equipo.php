@@ -120,7 +120,7 @@ $total_resultados = count($equipos);
     </style>
 </head>
 <body>
-    <?php require_once __DIR__ . '/../gestion/menu.php'; ?>
+    <?php require_once __DIR__ . '/../gestion/menus.php'; ?>
 
     <div class="container mt-4">
         <h2 class="mb-4">Equipos</h2>
@@ -149,7 +149,7 @@ $total_resultados = count($equipos);
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-search"></i> Buscar
                         </button>
-                        <a href="equipos.php" class="btn btn-secondary">
+                        <a href="equipo.php" class="btn btn-secondary">
                             <i class="bi bi-x-circle"></i> Limpiar filtros
                         </a>
                     </div>
@@ -224,7 +224,7 @@ $total_resultados = count($equipos);
                                     onclick="eliminarEquipo(<?= $equipo['id_equipo'] ?>, '<?= addslashes($equipo['no_serie']) ?>')">
                                         <i class="bi bi-trash"></i> Eliminar
                                     </button>
-                                    <a href="ver_equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-sm btn-info">
+                                    <a href="ve_equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-sm btn-info">
                                         <i class="bi bi-eye"></i> Ver Equipo
                                     </a>
                                 </td>
@@ -259,7 +259,7 @@ $total_resultados = count($equipos);
             if(confirm(`¿Eliminar el equipo "${serie}"?`)){
                 const form=document.createElement('form');
                 form.method = 'POST';
-                form.action = '../lib/gestion__equipo.php';
+                form.action = '../lib/gestion_equipos.php';
                 form.innerHTML = `
                 <input type="hidden" name = "accion" value="eliminar"> 
                 <input type="hidden" name="id_equipo" value="${id}">

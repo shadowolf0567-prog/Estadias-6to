@@ -94,7 +94,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
     </style>
 </head>
 <body>
-    <?php require_once __DIR__ . '/../gestion/menu.php'; ?>
+    <?php require_once __DIR__ . '/../gestion/menus.php'; ?>
     <div class="container mt-4">
         <h2 class="mb-4">Nuevo Reporte</h2>
         <a href="reportar_muchos.php" class="btn btn-sm btn-primary">

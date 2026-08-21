@@ -47,7 +47,7 @@ if($resultado){
     </style>
 </head>
 <body>
-    <?php require_once __DIR__ . '/menu.php'; ?>
+    <?php require_once __DIR__ . '/menuss.php'; ?>
     <div class="container mt-4">
         <h2 class="mb-4">Inventario</h2>
         <p class="text-muted text-small">Esta seccion esta vinculada a la tabla de inventario</p>

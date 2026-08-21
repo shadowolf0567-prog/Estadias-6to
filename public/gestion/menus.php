@@ -13,7 +13,7 @@
                     <a class="nav-link" href="../clientes/clientes.php">Clientes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../equipos/equipos.php">Equipos</a>
+                    <a class="nav-link" href="../equipos/equipo.php">Equipos</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="../reportes/reportes.php">Reportes</a>

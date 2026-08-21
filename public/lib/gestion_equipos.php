@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../config/db.php';
 if($_SERVER['REQUEST_METHOD'] !== 'POST'){
-    header('Location: ../equipos/equipos.php');
+    header('Location: ../equipos/equipo.php');
     exit;
 }
 function mostrar_equipos(){
@@ -396,7 +396,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                     if(isset($_POST['id_equipo'])){
                         $id_equipo = intval($_POST['id_equipo']);
                         $resultado = eliminar_equipo($id_equipo);
-                        header('Location: ../equipos/equipos.php?'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
+                        header('Location: ../equipos/equipo.php?'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
                         exit;
                     }
                     break;
@@ -438,15 +438,15 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                         $fecha = date('Y') . '-' . str_pad($mes, 2, '0', STR_PAD_LEFT) . '-01';
                         $resultado = totalizadores($id_equipo,$color,$bn,$fecha);
                         if ($resultado['estatus'] === 'msg') {
-                            header('Location: ../equipos/ver_equipo.php?id=' .$id_equipo .'&mes=' .$mes .'&msg=' .urlencode($resultado['mensaje']));
+                            header('Location: ../equipos/ve_equipo.php?id=' .$id_equipo .'&mes=' .$mes .'&msg=' .urlencode($resultado['mensaje']));
                         } else {
-                            header( 'Location: ../equipos/ver_equipo.php?id=' . $id_equipo . '&mes=' . $mes . '&error=' . urlencode($resultado['mensaje']));
+                            header( 'Location: ../equipos/ve_equipo.php?id=' . $id_equipo . '&mes=' . $mes . '&error=' . urlencode($resultado['mensaje']));
                         }
                         exit;
                     }
                 break;
                 default:
-                    header('Location: ../equipos/equipos.php?error='.urlencode('Acción no válida'));
+                    header('Location: ../equipos/equipo.php?error='.urlencode('Acción no válida'));
                 exit;
         }
     }
