@@ -192,7 +192,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                     <button type="submit" class="btn btn-primary" id="btnGuardar">
                         <i class="bi bi-save"></i> Guardar Cambios
                     </button>
-                    <a href="./ver__equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-secondary">
+                    <a href="./ver_equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-secondary">
                         <i class="bi bi-x-circle"></i> Cancelar
                     </a>
                 </div>

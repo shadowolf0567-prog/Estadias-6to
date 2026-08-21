@@ -438,9 +438,9 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                         $fecha = date('Y') . '-' . str_pad($mes, 2, '0', STR_PAD_LEFT) . '-01';
                         $resultado = totalizadores($id_equipo,$color,$bn,$fecha);
                         if ($resultado['estatus'] === 'msg') {
-                            header('Location: ../equipos/ver__equipo.php?id=' .$id_equipo .'&mes=' .$mes .'&msg=' .urlencode($resultado['mensaje']));
+                            header('Location: ../equipos/ver_equipo.php?id=' .$id_equipo .'&mes=' .$mes .'&msg=' .urlencode($resultado['mensaje']));
                         } else {
-                            header( 'Location: ../equipos/ver__equipo.php?id=' . $id_equipo . '&mes=' . $mes . '&error=' . urlencode($resultado['mensaje']));
+                            header( 'Location: ../equipos/ver_equipo.php?id=' . $id_equipo . '&mes=' . $mes . '&error=' . urlencode($resultado['mensaje']));
                         }
                         exit;
                     }

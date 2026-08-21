@@ -197,7 +197,7 @@ mysqli_stmt_close($stmt_t);
                         </div>
                         <?php if(!empty($mes)): ?>
                             <div class="col-md-2">
-                                <a href="ver__equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-secondary">
+                                <a href="ver_equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-secondary">
                                     <i class="bi bi-x-circle"></i> Limpiar
                                 </a>
                             </div>
@@ -224,9 +224,6 @@ mysqli_stmt_close($stmt_t);
                                             <th>Fecha</th>
                                             <th>Componentes</th>
                                             <th>Reparaciones</th>
-                                            <th>Preventivos</th>
-                                            <th>Correctivos</th>
-                                            <th>Estado</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -234,7 +231,12 @@ mysqli_stmt_close($stmt_t);
                                         <?php foreach($reportes_equipos as $reporte): ?>
                                             <tr>
                                                 <td><?= date('d/m/Y', strtotime($reporte['fecha'])) ?></td>
-                                                <td><?= htmlspecialchars($reporte['total_componentes']) ?></td>
+                                                <td><?php if($reporte['total_componentes'] > 0): ?>
+                                                        <i class="bi bi-check"></i>
+                                                    <?php else: ?>
+                                                        <i class="bi bi-cross"></i>
+                                                    <?php endif; ?>
+                                                </td>
                                                 <td><?= htmlspecialchars($reporte['repacariones']) ?></td>
                                                 <td><?= htmlspecialchars($reporte['preventivos']) ?></td>
                                                 <td><?= htmlspecialchars($reporte['correctivos']) ?></td>
