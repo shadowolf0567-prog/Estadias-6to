@@ -210,9 +210,6 @@ mysqli_close($conn);
                                 <p><span class="info-label">Número de Cuenta: </span><?= htmlspecialchars(($cliente['no_cuenta'] ?: 'No registrado')) ?></p>
                                 <p><span class="info-label">Contrato: </span><?= htmlspecialchars($cliente['contrato'] ?: 'No registrado') ?></p>
                                 <p><span class="info-label">Dirección: </span><?= htmlspecialchars($cliente['direccion'] ?: 'No registrado') ?></p>
-                                <?php if(!empty($cliente['subdireccion'])): ?>
-                                    <p><span class="info-label">Ubicación: </span><?= htmlspecialchars($cliente['subdireccion']) ?></p>
-                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -322,7 +319,7 @@ mysqli_close($conn);
                         <div class="text-center p-4">
                             <i class="bi bi-inbox" style="font-size: 2rem;"></i>
                             <p class="mt-2 text-muted">
-                                No hay componentes registrados para este cliente este mes
+                                No hay componentes solicitados en este mes
                             </p>
                         </div>
                     <?php endif; ?>
@@ -376,7 +373,7 @@ mysqli_close($conn);
                         <div class="text-center p-4">
                             <i class="bi bi-inbox" style="font-size: 2rem;"></i>
                             <p class="mt-2 text-muted">
-                                No hay reportes registrados en este mes
+                                El cliente no tiene ningún equipo
                             </p>
                         </div>
                     <?php endif; ?>

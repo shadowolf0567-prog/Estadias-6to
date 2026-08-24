@@ -35,6 +35,9 @@ if($equipo){
                                 WHERE rc.id_reporte = r.id_reporte) as total_componentes,
                                 (SELECT COUNT(*) FROM reportes_componentes rc
                                 WHERE rc.id_reporte = r.id_reporte
+                                AND (rc.tipo = 'falla')) as mantenimiento,
+                                (SELECT COUNT(*) FROM reportes_componentes rc
+                                WHERE rc.id_reporte = r.id_reporte
                                 AND (rc.tipo = 'SER-01')) as preventivos,
                                 (SELECT COUNT(*) FROM reportes_componentes rc
                                 WHERE rc.id_reporte = r.id_reporte
@@ -223,9 +226,10 @@ mysqli_stmt_close($stmt_t);
                                         <tr>
                                             <th>Fecha</th>
                                             <th>Componentes</th>
-                                            <th>Reparaciones</th>
-                                            <th>Preventivos</th>
-                                            <th>Correctivos</th>
+                                            <th>Mantenimiento</th>
+                                            <th>Reparación</th>
+                                            <th>Preventivo</th>
+                                            <th>Correctivo</th>
                                             <th>Estado</th>
                                             <th></th>
                                         </tr>
@@ -235,6 +239,16 @@ mysqli_stmt_close($stmt_t);
                                             <tr>
                                                 <td><?= date('d/m/Y', strtotime($reporte['fecha'])) ?></td>
                                                 <td><?php if($reporte['total_componentes'] > 0): ?>
+                                                        <span class="badge-outline-success" style="font-size: 1rem;">
+                                                            <i class="bi bi-check-circle"></i>
+                                                        </span>
+                                                    <?php else: ?>
+                                                        <span class="badge-outline-danger" style="font-size: 1rem;">
+                                                            <i class="bi bi-x-circle"></i>
+                                                        </span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td><?php if($reporte['mantenimiento'] > 0): ?>
                                                         <span class="badge-outline-success" style="font-size: 1rem;">
                                                             <i class="bi bi-check-circle"></i>
                                                         </span>
