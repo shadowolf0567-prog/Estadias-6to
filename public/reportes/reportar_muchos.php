@@ -33,6 +33,14 @@ if($result_clientes){
         $clientes[] = $row;
     }
 }
+$tecnicos = [];
+$sql_tecnicos = "SELECT * FROM tecnicos";
+$result_tecnicos = mysqli_query($conn,$sql_tecnicos);
+if($result_tecnicos){
+    while($row = mysqli_fetch_assoc($result_tecnicos)){
+        $tecnicos[] = $row;
+    }
+}
 $cliente = "SELECT c.*,r.* FROM clientes c
             INNER JOIN reportes r
             ON r.id_cliente = c.id_cliente";
@@ -160,9 +168,15 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                             <input type="date" name="fecha" value="<?= date('Y-m-d') ?>" class="form-control">
                         </div>
                         <div class="col-md-4">
-                            <label for="" class="form-label">Técnico</label>
-                            <input type="text" name="tecnico" class="form-control">
-                        </div>
+                        <label class="form-label">Técnico</label>
+                        <select name="id" class="form-select">
+                            <?php foreach($tecnicos as $tecnico): ?>
+                                <option value="<?= $tecnico['id'] ?>">
+                                    <?= htmlspecialchars($tecnico['nombre']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                     </div>
                 </div>
                 <div class="form-section">

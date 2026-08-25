@@ -1,5 +1,5 @@
 -- Backup de Base de Datos Emipac
--- Fecha: 2026-08-20 17:26:05
+-- Fecha: 2026-08-25 17:26:31
 DROP DATABASE IF EXISTS emipac;
 CREATE DATABASE emipac;
 USE emipac;
@@ -25,22 +25,21 @@ CREATE TABLE `clientes` (
   `direccion` varchar(255) DEFAULT NULL,
   `encargado` varchar(255) DEFAULT NULL,
   `contrato` varchar(20) DEFAULT NULL,
-  `subdireccion` text DEFAULT NULL,
   PRIMARY KEY (`id_cliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: clientes
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('1', 'Intelligence Berau and Laborator', '291901', 'Av. Antea #1032 Int. 404 Jurica', 'Roberto Alfaro', 'C-0399', '');
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('2', 'Nachi Technologies México', '287201', 'Tequisquiapan No.2 Galerias Aerotech Industrial Park Colón', 'Benito Sanchez', 'C-0133', '');
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('3', 'Industrial Powder Coatings Mex', '130701', 'Av. de la Noria No. 104 Parque Qro.', 'Norma Luna', '', '');
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('4', 'GNS Automotive México', '268501', 'Av. Ing. Antonio Gutierrez Cortina No. 14 Parque Opción SJI', 'Oscar Nazareth', '', '');
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('5', 'SEPSA SA de CV.', '232301', 'Espuela del Ferrocarril No. 204 Carrillo Puerto', 'Sarahí Bustamante', 'C-0318', '');
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('6', 'María Magdalena Mejía Ruíz', '172401', 'Puente de Alvarado No. 210 Carretas', 'Erika Gudiño', 'C-0080', '');
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('7', 'GW Plastics Mexicana S de RL', '294901', 'Circuito Marques #23A Parque IND El Marqués.', 'Mariana Martínez', 'C-0429', '');
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('12', 'Clarton Horn México', '271301', 'Av. de la Cruz 103 Col. Buenavista', 'Abigail Cabrera', 'C-0020', '');
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('13', 'Gerresheimer Querétaro', '230001', 'Av. Coahuila No. 9 Industrial Benito Juarez', 'Luis Culebro', 'C-0046', '');
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('14', 'Flex N Gate México S de RL de CV', '246401', 'Principal No. 1 Parque Industrial Opción SJI', 'Nathanael Torres', 'C-0213', '');
-INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`, `subdireccion`) VALUES ('24', 'TMD FRICTION', '265401', 'Acceso II No. 50 Industrial Benito Juarez', 'Julio Arrioja', '0110', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`) VALUES ('1', 'Intelligence Berau and Laborator', '291901', 'Av. Antea #1032 Int. 404 Jurica', 'Roberto Alfaro', 'C-0399');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`) VALUES ('2', 'Nachi Technologies México', '287201', 'Tequisquiapan No.2 Galerias Aerotech Industrial Park Colón', 'Benito Sanchez', 'C-0133');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`) VALUES ('3', 'Industrial Powder Coatings Mex', '130701', 'Av. de la Noria No. 104 Parque Qro.', 'Norma Luna', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`) VALUES ('4', 'GNS Automotive México', '268501', 'Av. Ing. Antonio Gutierrez Cortina No. 14 Parque Opción SJI', 'Oscar Nazareth', '');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`) VALUES ('5', 'SEPSA SA de CV.', '232301', 'Espuela del Ferrocarril No. 204 Carrillo Puerto', 'Sarahí Bustamante', 'C-0318');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`) VALUES ('6', 'María Magdalena Mejía Ruíz', '172401', 'Puente de Alvarado No. 210 Carretas', 'Erika Gudiño', 'C-0080');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`) VALUES ('7', 'GW Plastics Mexicana S de RL', '294901', 'Circuito Marques #23A Parque IND El Marqués.', 'Mariana Martínez', 'C-0429');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`) VALUES ('12', 'Clarton Horn México', '271301', 'Av. de la Cruz 103 Col. Buenavista', 'Abigail Cabrera', 'C-0020');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`) VALUES ('13', 'Gerresheimer Querétaro', '230001', 'Av. Coahuila No. 9 Industrial Benito Juarez', 'Luis Culebro', 'C-0046');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`) VALUES ('14', 'Flex N Gate México S de RL de CV', '246401', 'Principal No. 1 Parque Industrial Opción SJI', 'Nathanael Torres', 'C-0213');
+INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`) VALUES ('24', 'TMD FRICTION', '265401', 'Acceso II No. 50 Industrial Benito Juarez', 'Julio Arrioja', '0110');
 
 -- Estructura de tabla: correos
 DROP TABLE IF EXISTS `correos`;
@@ -66,7 +65,7 @@ CREATE TABLE `equipos` (
   PRIMARY KEY (`id_equipo`),
   KEY `id_cliente` (`id_cliente`),
   CONSTRAINT `equipos_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=118 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: equipos
 INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('1', 'C757M500195', 'S-11MPC6004R+', '1', '');
@@ -156,13 +155,7 @@ CREATE TABLE `reabiertos` (
   PRIMARY KEY (`id`),
   KEY `reportes` (`reportes`),
   CONSTRAINT `1` FOREIGN KEY (`reportes`) REFERENCES `reportes` (`id_reporte`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---Datos de tabla: reabiertos
-INSERT INTO `reabiertos` (`fechas`, `acciones`, `reportes`, `observaciones`, `id`) VALUES ('2026-08-11', 'nada xd', '156', '', '3');
-INSERT INTO `reabiertos` (`fechas`, `acciones`, `reportes`, `observaciones`, `id`) VALUES ('2026-08-11', 'todo', '156', '', '5');
-INSERT INTO `reabiertos` (`fechas`, `acciones`, `reportes`, `observaciones`, `id`) VALUES ('2026-08-11', 'mucho', '155', 'se atoran las hojas', '6');
-INSERT INTO `reabiertos` (`fechas`, `acciones`, `reportes`, `observaciones`, `id`) VALUES ('2026-08-12', 'aaam', '155', 'mmam', '7');
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- Estructura de tabla: reportes
 DROP TABLE IF EXISTS `reportes`;
@@ -184,91 +177,83 @@ CREATE TABLE `reportes` (
   CONSTRAINT `1` FOREIGN KEY (`id`) REFERENCES `tecnicos` (`id`),
   CONSTRAINT `reportes_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE SET NULL,
   CONSTRAINT `reportes_ibfk_2` FOREIGN KEY (`id_equipo`) REFERENCES `equipos` (`id_equipo`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=162 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=167 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: reportes
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('1', '2026-07-08', 'atendido', '2026-07-08', '', '1', '1', '291901-0399-0001', '5', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('2', '2026-07-07', 'atendido', '2026-07-07', '', '2', '2', '294901-0429-0001', '6', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('3', '2026-07-07', 'atendido', '2026-07-07', '', '4', '6', '', NULL, NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('4', '2026-07-10', 'atendido', '2026-07-10', '', '5', '7', '232301-0318-0001', '7', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('5', '2026-07-09', 'atendido', '2026-07-09', '', '7', '9', '294901-0429-0001', '6', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('7', '2026-07-09', 'atendido', '2026-07-09', '', '7', '10', '294901-0429', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('11', '2026-07-10', 'atendido', '2026-07-10', '', '1', '1', '291901-0399', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('12', '2026-07-09', 'atendido', '2026-07-09', '', '6', '8', '172401-0080', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('13', '2026-07-07', 'atendido', '2026-07-07', '', '2', '3', '287201-0133', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('21', '2026-07-09', 'atendido', '2026-07-09', '', '7', '11', '294901-0429', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('24', '2026-07-17', 'atendido', '2026-07-17', '', '12', '18', '271301-0020', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('25', '2026-07-20', 'atendido', '2026-07-20', '', '13', '22', '230001-0046-0001', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('26', '2026-07-20', 'atendido', '2026-07-20', '', '13', '32', '230001-0046-0014', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('27', '2026-07-20', 'atendido', '2026-07-20', '', '13', '41', '230001-0046-0024', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('28', '2026-07-20', 'atendido', '2026-07-20', '', '13', '39', '230001-0046-0021', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('29', '2026-07-20', 'atendido', '2026-07-20', '', '13', '42', '230001-0046-0025', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('30', '2026-07-20', 'atendido', '2026-07-20', '', '13', '40', '230001-0046-0023', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('31', '2026-07-20', 'atendido', '2026-07-20', '', '13', '38', '230001-0046-0021', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('32', '2026-07-20', 'atendido', '2026-07-20', '', '13', '37', '230001-0046-0020', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('33', '2026-07-20', 'atendido', '2026-07-20', '', '13', '33', '230001-0046-0015', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('34', '2026-07-20', 'atendido', '2026-07-20', '', '13', '21', '230001-0046-0016', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('35', '2026-07-20', 'atendido', '2026-07-20', '', '13', '20', '230001-0046-0017', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('36', '2026-07-20', 'atendido', '2026-07-20', '', '13', '34', '230001-0046-0006', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('37', '2026-07-20', 'atendido', '2026-07-20', '', '13', '35', '230001-0046-0018', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('38', '2026-07-20', 'atendido', '2026-07-20', '', '13', '31', '230001-0046-0013', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('39', '2026-07-20', 'atendido', '2026-07-20', '', '13', '29', '230001-0046-0011', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('40', '2026-07-20', 'atendido', '2026-07-20', '', '13', '30', '230001-0046-0012', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('41', '2026-07-20', 'atendido', '2026-07-20', '', '13', '36', '230001-0046-0019', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('42', '2026-07-20', 'atendido', '2026-07-20', '', '13', '43', '230001-0046-0026', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('43', '2026-07-20', 'atendido', '2026-07-20', '', '13', '27', '230001-0046-0008', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('44', '2026-07-20', 'atendido', '2026-07-20', '', '13', '28', '230001-0046-0010', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('45', '2026-07-20', 'atendido', '2026-07-20', '', '13', '23', '230001-0046-0002', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('46', '2026-07-20', 'atendido', '2026-07-20', '', '13', '24', '230001-0046-0003', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('47', '2026-07-20', 'atendido', '2026-07-20', '', '13', '25', '230001-0046-0005', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('48', '2026-07-20', 'atendido', '2026-07-20', '', '13', '26', '230001-0046-0007', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('49', '2026-07-16', 'atendido', '2026-07-16', '', '13', '20', '230001-0046-0017', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('50', '2026-07-21', 'atendido', '2026-07-21', '', '14', '59', '246401-0213-0034', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('51', '2026-07-21', 'atendido', '2026-07-21', '', '14', '71', '246401-0213-0053', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('52', '2026-07-21', 'atendido', '2026-07-21', '', '14', '60', '246401-0213-0036', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('53', '2026-07-21', 'atendido', '2026-07-21', '', '14', '61', '246401-0213-0037', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('54', '2026-07-21', 'atendido', '2026-07-21', '', '14', '62', '246401-0213-0038', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('55', '2026-07-21', 'atendido', '2026-07-21', '', '14', '63', '246401-0213-0039', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('56', '2026-07-21', 'atendido', '2026-07-21', '', '14', '66', '246401-0213-0048', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('57', '2026-07-21', 'atendido', '2026-07-21', '', '14', '58', '246401-0213-0033', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('58', '2026-07-21', 'atendido', '2026-07-21', '', '14', '67', '246401-0213-0049', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('59', '2026-07-21', 'atendido', '2026-07-21', '', '14', '54', '246401-0213-0027', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('60', '2026-07-21', 'atendido', '2026-07-21', '', '14', '55', '246401-0213-0028', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('61', '2026-07-21', 'atendido', '2026-07-21', '', '14', '65', '246401-0213-0047', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('62', '2026-07-21', 'atendido', '2026-07-21', '', '14', '45', '246401-0213-0010', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('63', '2026-07-21', 'atendido', '2026-07-21', '', '14', '56', '246401-0213-0029', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('64', '2026-07-21', 'atendido', '2026-07-21', '', '14', '46', '246401-0213-0011', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('65', '2026-07-21', 'atendido', '2026-07-21', '', '14', '47', '246401-0213-0012', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('66', '2026-07-21', 'atendido', '2026-07-21', '', '14', '57', '246401-0213-0030', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('67', '2026-07-21', 'atendido', '2026-07-21', '', '14', '64', '246401-0213-0045', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('68', '2026-07-21', 'atendido', '2026-07-21', '', '14', '48', '246401-0213-0016', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('69', '2026-07-21', 'atendido', '2026-07-21', '', '14', '49', '246401-0213-0019', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('70', '2026-07-21', 'atendido', '2026-07-21', '', '14', '50', '246401-0213-0020', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('71', '2026-07-21', 'atendido', '2026-07-21', '', '14', '51', '246401-0213-0021', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('72', '2026-07-21', 'atendido', '2026-07-21', '', '14', '68', '246401-0213-0050', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('73', '2026-07-21', 'atendido', '2026-07-21', '', '14', '70', '246401-0213-0052', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('74', '2026-07-21', 'atendido', '2026-07-21', '', '14', '52', '246401-0213-0025', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('75', '2026-07-21', 'atendido', '2026-07-21', '', '14', '53', '246401-0213-0026', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('76', '2026-07-21', 'atendido', '2026-07-21', '', '14', '69', '246401-0213-0051', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('77', '2026-07-21', 'atendido', '2026-07-21', '', '14', '72', '246401-0213-0056', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('78', '2026-07-21', 'atendido', '2026-07-21', '', '14', '73', '246401-0213-0057', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('79', '2026-07-21', 'atendido', '2026-07-21', '', '14', '74', '246401-0213-0058', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('80', '2026-07-21', 'atendido', '2026-07-21', '', '14', '75', '246401-0213-0059', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('81', '2026-07-21', 'atendido', '2026-07-21', '', '14', '76', '246401-0213-0060', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('82', '2026-07-21', 'atendido', '2026-07-21', '', '14', '77', '246401-0213-0061', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('83', '2026-07-21', 'atendido', '2026-07-21', '', '14', '78', '246401-0213-0063', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('84', '2026-07-21', 'atendido', '2026-07-21', '', '14', '79', '246401-0213-0064', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('85', '2026-07-21', 'atendido', '2026-07-21', '', '14', '80', '246401-0213-0065', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('86', '2026-07-21', 'atendido', '2026-07-21', '', '14', '81', '246401-0213', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('87', '2026-07-21', 'atendido', '2026-07-21', '', '14', '82', '246401-0213-0067', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('144', '2026-08-06', 'atendido', '2026-08-11', 'Escribe el nombre del componente, refacción o la descripción del prpblema', NULL, '111', '', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('149', '2026-08-10', 'incompleto', '2026-08-10', '', '12', '18', '271301-0020', '6', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('153', '2026-08-10', 'incompleto', NULL, 'lmjnp', '14', '46', '246401-0213', '4', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('154', '2026-08-10', 'atendido', '2026-08-11', 'kmñnojbhiv g', '13', '22', '230001-0046', '4', '');
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('155', '2026-08-10', 'atendido', '2026-08-12', 'vkhb', '13', '32', '230001-0046', '5', 'aaa');
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('156', '2026-08-11', 'atendido', '2026-08-15', 'aaaaaa', '14', '71', '246401-0213', '4', 'si');
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('157', '2026-08-11', 'pendiente', NULL, NULL, '14', '71', '246401-0213', '6', NULL);
-INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('158', '2026-08-11', 'pendiente', NULL, NULL, NULL, '73', '', '4', NULL);
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('1', '2026-07-08', 'atendido', '2026-07-08', '', '1', '1', '291901-0399-0001', '5', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('2', '2026-07-07', 'atendido', '2026-07-07', '', '2', '2', '294901-0429-0001', '6', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('3', '2026-07-07', 'atendido', '2026-07-07', '', '4', '6', '', NULL, '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('4', '2026-07-10', 'atendido', '2026-07-10', '', '5', '7', '232301-0318-0001', '7', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('5', '2026-07-09', 'atendido', '2026-07-09', '', '7', '9', '294901-0429-0001', '6', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('7', '2026-07-09', 'atendido', '2026-07-09', '', '7', '10', '294901-0429', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('11', '2026-07-10', 'atendido', '2026-07-10', '', '1', '1', '291901-0399', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('12', '2026-07-09', 'atendido', '2026-07-09', '', '6', '8', '172401-0080', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('13', '2026-07-07', 'atendido', '2026-07-07', '', '2', '3', '287201-0133', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('21', '2026-07-09', 'atendido', '2026-07-09', '', '7', '11', '294901-0429', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('24', '2026-07-17', 'atendido', '2026-07-17', '', '12', '18', '271301-0020', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('25', '2026-07-20', 'atendido', '2026-07-20', '', '13', '22', '230001-0046-0001', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('26', '2026-07-20', 'atendido', '2026-07-20', '', '13', '32', '230001-0046-0014', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('27', '2026-07-20', 'atendido', '2026-07-20', '', '13', '41', '230001-0046-0024', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('28', '2026-07-20', 'atendido', '2026-07-20', '', '13', '39', '230001-0046-0021', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('29', '2026-07-20', 'atendido', '2026-07-20', '', '13', '42', '230001-0046-0025', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('30', '2026-07-20', 'atendido', '2026-07-20', '', '13', '40', '230001-0046-0023', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('31', '2026-07-20', 'atendido', '2026-07-20', '', '13', '38', '230001-0046-0021', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('32', '2026-07-20', 'atendido', '2026-07-20', '', '13', '37', '230001-0046-0020', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('33', '2026-07-20', 'atendido', '2026-07-20', '', '13', '33', '230001-0046-0015', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('34', '2026-07-20', 'atendido', '2026-07-20', '', '13', '21', '230001-0046-0016', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('35', '2026-07-20', 'atendido', '2026-07-20', '', '13', '20', '230001-0046-0017', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('36', '2026-07-20', 'atendido', '2026-07-20', '', '13', '34', '230001-0046-0006', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('37', '2026-07-20', 'atendido', '2026-07-20', '', '13', '35', '230001-0046-0018', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('38', '2026-07-20', 'atendido', '2026-07-20', '', '13', '31', '230001-0046-0013', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('39', '2026-07-20', 'atendido', '2026-07-20', '', '13', '29', '230001-0046-0011', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('40', '2026-07-20', 'atendido', '2026-07-20', '', '13', '30', '230001-0046-0012', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('41', '2026-07-20', 'atendido', '2026-07-20', '', '13', '36', '230001-0046-0019', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('42', '2026-07-20', 'atendido', '2026-07-20', '', '13', '43', '230001-0046-0026', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('43', '2026-07-20', 'atendido', '2026-07-20', '', '13', '27', '230001-0046-0008', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('44', '2026-07-20', 'atendido', '2026-07-20', '', '13', '28', '230001-0046-0010', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('45', '2026-07-20', 'atendido', '2026-07-20', '', '13', '23', '230001-0046-0002', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('46', '2026-07-20', 'atendido', '2026-07-20', '', '13', '24', '230001-0046-0003', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('47', '2026-07-20', 'atendido', '2026-07-20', '', '13', '25', '230001-0046-0005', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('48', '2026-07-20', 'atendido', '2026-07-20', '', '13', '26', '230001-0046-0007', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('49', '2026-07-16', 'atendido', '2026-07-16', '', '13', '20', '230001-0046-0017', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('50', '2026-07-21', 'atendido', '2026-07-21', '', '14', '59', '246401-0213-0034', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('51', '2026-07-21', 'atendido', '2026-07-21', '', '14', '71', '246401-0213-0053', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('52', '2026-07-21', 'atendido', '2026-07-21', '', '14', '60', '246401-0213-0036', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('53', '2026-07-21', 'atendido', '2026-07-21', '', '14', '61', '246401-0213-0037', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('54', '2026-07-21', 'atendido', '2026-07-21', '', '14', '62', '246401-0213-0038', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('55', '2026-07-21', 'atendido', '2026-07-21', '', '14', '63', '246401-0213-0039', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('56', '2026-07-21', 'atendido', '2026-07-21', '', '14', '66', '246401-0213-0048', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('57', '2026-07-21', 'atendido', '2026-07-21', '', '14', '58', '246401-0213-0033', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('58', '2026-07-21', 'atendido', '2026-07-21', '', '14', '67', '246401-0213-0049', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('59', '2026-07-21', 'atendido', '2026-07-21', '', '14', '54', '246401-0213-0027', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('60', '2026-07-21', 'atendido', '2026-07-21', '', '14', '55', '246401-0213-0028', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('61', '2026-07-21', 'atendido', '2026-07-21', '', '14', '65', '246401-0213-0047', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('62', '2026-07-21', 'atendido', '2026-07-21', '', '14', '45', '246401-0213-0010', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('63', '2026-07-21', 'atendido', '2026-07-21', '', '14', '56', '246401-0213-0029', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('64', '2026-07-21', 'atendido', '2026-07-21', '', '14', '46', '246401-0213-0011', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('65', '2026-07-21', 'atendido', '2026-07-21', '', '14', '47', '246401-0213-0012', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('66', '2026-07-21', 'atendido', '2026-07-21', '', '14', '57', '246401-0213-0030', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('67', '2026-07-21', 'atendido', '2026-07-21', '', '14', '64', '246401-0213-0045', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('68', '2026-07-21', 'atendido', '2026-07-21', '', '14', '48', '246401-0213-0016', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('69', '2026-07-21', 'atendido', '2026-07-21', '', '14', '49', '246401-0213-0019', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('70', '2026-07-21', 'atendido', '2026-07-21', '', '14', '50', '246401-0213-0020', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('71', '2026-07-21', 'atendido', '2026-07-21', '', '14', '51', '246401-0213-0021', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('72', '2026-07-21', 'atendido', '2026-07-21', '', '14', '68', '246401-0213-0050', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('73', '2026-07-21', 'atendido', '2026-07-21', '', '14', '70', '246401-0213-0052', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('74', '2026-07-21', 'atendido', '2026-07-21', '', '14', '52', '246401-0213-0025', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('75', '2026-07-21', 'atendido', '2026-07-21', '', '14', '53', '246401-0213-0026', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('76', '2026-07-21', 'atendido', '2026-07-21', '', '14', '69', '246401-0213-0051', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('77', '2026-07-21', 'atendido', '2026-07-21', '', '14', '72', '246401-0213-0056', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('78', '2026-07-21', 'atendido', '2026-07-21', '', '14', '73', '246401-0213-0057', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('79', '2026-07-21', 'atendido', '2026-07-21', '', '14', '74', '246401-0213-0058', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('80', '2026-07-21', 'atendido', '2026-07-21', '', '14', '75', '246401-0213-0059', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('81', '2026-07-21', 'atendido', '2026-07-21', '', '14', '76', '246401-0213-0060', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('82', '2026-07-21', 'atendido', '2026-07-21', '', '14', '77', '246401-0213-0061', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('83', '2026-07-21', 'atendido', '2026-07-21', '', '14', '78', '246401-0213-0063', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('84', '2026-07-21', 'atendido', '2026-07-21', '', '14', '79', '246401-0213-0064', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('85', '2026-07-21', 'atendido', '2026-07-21', '', '14', '80', '246401-0213-0065', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('86', '2026-07-21', 'atendido', '2026-07-21', '', '14', '81', '246401-0213', '4', '');
+INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('87', '2026-07-21', 'atendido', '2026-07-21', '', '14', '82', '246401-0213-0067', '4', '');
 
 -- Estructura de tabla: reportes_componentes
 DROP TABLE IF EXISTS `reportes_componentes`;
@@ -281,7 +266,7 @@ CREATE TABLE `reportes_componentes` (
   PRIMARY KEY (`id_reporte_componente`),
   KEY `id_reporte` (`id_reporte`),
   CONSTRAINT `1` FOREIGN KEY (`id_reporte`) REFERENCES `reportes` (`id_reporte`)
-) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --Datos de tabla: reportes_componentes
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `descripcion`) VALUES ('1', '25', 'Servicio Preventivo', 'SER-01', '');
@@ -354,8 +339,6 @@ INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `comp
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `descripcion`) VALUES ('68', '4', 'Servicio Correctivo', 'SER-02', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `descripcion`) VALUES ('69', '4', '130948', 'componente', 'Unidad de Imagen 501/ IM430');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `descripcion`) VALUES ('70', '5', 'Servicio Preventivo', 'SER-01', '');
-INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `descripcion`) VALUES ('72', '153', 'Servicio Correctivo', 'SER-02', '');
-INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `descripcion`) VALUES ('73', '149', 'Servicio Preventivo', 'SER-01', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `descripcion`) VALUES ('74', '86', 'Servicio Preventivo', 'SER-01', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `descripcion`) VALUES ('75', '7', 'Servicio Preventivo', 'SER-01', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `descripcion`) VALUES ('76', '11', 'Servicio Correctivo', 'SER-02', '');
@@ -364,11 +347,6 @@ INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `comp
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `descripcion`) VALUES ('79', '21', 'Servicio Preventivo', 'SER-01', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `descripcion`) VALUES ('80', '24', 'Servicio Correctivo', 'SER-02', '');
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `descripcion`) VALUES ('81', '24', '131224', 'componente', 'Fotoconductora MP402 SP4500/4510');
-INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `descripcion`) VALUES ('82', '154', 'Servicio Preventivo', 'SER-01', '');
-INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `descripcion`) VALUES ('84', '144', 'Servicio Correctivo', 'SER-02', 'hjblu');
-INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `descripcion`) VALUES ('85', '155', 'Servicio Preventivo', 'SER-01', '');
-INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `descripcion`) VALUES ('86', '157', 'Servicio Correctivo', 'SER-02', '');
-INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `descripcion`) VALUES ('87', '156', 'Servicio Correctivo', 'SER-02', '');
 
 -- Estructura de tabla: tecnicos
 DROP TABLE IF EXISTS `tecnicos`;
@@ -394,7 +372,7 @@ CREATE TABLE `telefonos` (
   PRIMARY KEY (`id`),
   KEY `id_cliente` (`id_cliente`),
   CONSTRAINT `telefonos_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: telefonos
 INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('38', '4422133388', '1', '');
@@ -407,25 +385,20 @@ INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('46
 INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('47', '4422389600', '3', '');
 INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('48', '4421532410', '2', '');
 INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('53', '4422193717', '24', '');
-INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('54', '4422744952', '14', '');
+INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('56', '4422744952', '14', '');
 
 -- Estructura de tabla: totalizadores
 DROP TABLE IF EXISTS `totalizadores`;
 CREATE TABLE `totalizadores` (
+  `id_totalizador` int(11) NOT NULL AUTO_INCREMENT,
   `color` bigint(20) DEFAULT 0,
   `bn` bigint(20) DEFAULT 0,
+  `fecha` datetime DEFAULT NULL,
   `id_equipo` int(11) DEFAULT NULL,
-  `fecha` date DEFAULT NULL,
-  `id_totalizador` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id_totalizador`),
   KEY `id_equipo` (`id_equipo`),
-  CONSTRAINT `1` FOREIGN KEY (`id_equipo`) REFERENCES `equipos` (`id_equipo`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---Datos de tabla: totalizadores
-INSERT INTO `totalizadores` (`color`, `bn`, `id_equipo`, `fecha`, `id_totalizador`) VALUES ('100', '10', '82', '2026-08-01', '1');
-INSERT INTO `totalizadores` (`color`, `bn`, `id_equipo`, `fecha`, `id_totalizador`) VALUES ('1090', '99', '111', '2026-08-01', '2');
-INSERT INTO `totalizadores` (`color`, `bn`, `id_equipo`, `fecha`, `id_totalizador`) VALUES ('9000', '0', '111', '2026-09-01', '3');
+  CONSTRAINT `1` FOREIGN KEY (`id_equipo`) REFERENCES `equipos` (`id_equipo`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- Estructura de tabla: usuarios
 DROP TABLE IF EXISTS `usuarios`;
@@ -444,9 +417,9 @@ CREATE TABLE `usuarios` (
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: usuarios
-INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('1', 'a', 'Servicio tecnico', '1234', '1', '25fe305e0d1b55d19aa9f7881acac45a', NULL, '2026-08-20 17:28:13', '1', NULL);
-INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('2', 'b', 'Administracion', '1234', '2', '08e2f7e7058fdacc5f14e1be0717e43d', NULL, '2026-08-20 15:00:54', '1', NULL);
-INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('3', 'c', 'yo', '1234', '3', '2e68e822054a0fa30b8efdea0ef03b8c', NULL, '2026-08-20 17:43:04', '1', NULL);
-INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('4', 'tecnicos', 'tecnicos', '1234', '1', NULL, NULL, NULL, '1', NULL);
+INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('1', 'a', 'servicio_tecnico', '1234', '1', NULL, NULL, NULL, '1', NULL);
+INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('2', 'b', 'Administracion', '1234', '2', NULL, NULL, NULL, '1', NULL);
+INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('3', 'c', 'yo', '1234', '3', '1c460e37ef59ab5c72c21033a7448ec5', NULL, '2026-08-24 15:30:06', '1', NULL);
+INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('4', 'tecnicos', 'tecnicos', '1234', '1', '48a0dd9bb0548508cf78df5aa5a5cab7', NULL, '2026-08-21 22:26:36', '1', NULL);
 
 SET FOREIGN_KEY_CHECKS=1;

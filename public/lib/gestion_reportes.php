@@ -408,7 +408,7 @@ function agregar_en_masa($reportes,$id_cliente = null){
             continue;
         }
         $fecha = trim($reporte['fecha']);
-        $tecnico = trim($reporte['tecnico'] ?? '');
+        $tecnico = trim($reporte['id'] ?? '');
         $id_equipo = intval($reporte['id_equipo']);
         $servicio = trim($reporte['servicio'] ?? 'SER-01');
         $referencia = trim($reporte['referencia']) ?? '';
@@ -419,18 +419,18 @@ function agregar_en_masa($reportes,$id_cliente = null){
             $nombre_servicio = 'Servicio Correctivo';
         }
 
-        $sql="INSERT INTO reportes(fecha,tecnico,referencia,id_equipo,id_cliente,estado)
+        $sql="INSERT INTO reportes(fecha,referencia,id_equipo,id_cliente,id,estado)
                 VALUES (?,?,?,?,?,'pendiente')";
         $stmt = mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt,'sssii',$fecha,$tecnico,$referencia,$id_equipo,$id_cliente);
+        mysqli_stmt_bind_param($stmt,'ssiii',$fecha,$referencia,$id_equipo,$id_cliente,$tecnico);
         if(!$stmt){
             $errores[] = 'Error en la preparación';
             continue;
         }
         if(mysqli_stmt_execute($stmt)){
             $id_reporte = mysqli_insert_id($conn);
-            $sql_comp = "INSERT INTO reportes_componentes(id_reporte, componente,cantidad,tipo,descripcion)
-                            VALUES (?,?,1,?,' ')";
+            $sql_comp = "INSERT INTO reportes_componentes(id_reporte, componente,tipo,descripcion)
+                            VALUES (?,?,?,' ')";
             $stmt_comp = mysqli_prepare($conn,$sql_comp);
             mysqli_stmt_bind_param($stmt_comp,'iss',$id_reporte,$nombre_servicio,$servicio);
             mysqli_stmt_execute($stmt_comp);
@@ -789,7 +789,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                         $id_cliente = intval($_POST['id_cliente']);
                     }
                     $fecha  = trim($_POST['fecha'] ?? date('Y-m-d'));
-                    $tecnico = trim($_POST['tecnico'] ?? '');
+                    $tecnico = trim($_POST['id'] ?? '');
                     $servicio = trim($_POST['servicio'] ?? 'SER-01');
                     $referencia = '';
                     if(isset($_POST['referencia']) && is_array($_POST['referencia'])){
@@ -808,7 +808,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                         if(!empty($equipo['id_equipo'])){
                             $reportes[] = [
                                 'fecha' => $fecha,
-                                'tecnico' => $tecnico,
+                                'id' => $tecnico,
                                 'id_equipo' => intval($equipo['id_equipo']),
                                 'servicio' => $servicio,
                                 'referencia' => $referencia
