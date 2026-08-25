@@ -4,6 +4,8 @@ if($_SERVER['REQUEST_METHOD'] !== 'POST'){
     header('Location: ../equipos/equipo.php');
     exit;
 }
+date_default_timezone_set('Etc/GMT+6');
+
 function mostrar_equipos(){
     global $conn;
     if(!$conn){
@@ -284,7 +286,7 @@ function totalizadores($id_equipo, $color, $bn, $fecha = null){
     }
 
     if (empty($fecha)) {
-        $fecha = date('Y-m-d');
+        $fecha = date('Y-m-d H:m:s');
     }
 
     $mes = intval(date('m', strtotime($fecha)));
@@ -435,7 +437,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                         if ($mes < 1 || $mes > 12) {
                             $mes = intval(date('m'));
                         }
-                        $fecha = date('Y') . '-' . str_pad($mes, 2, '0', STR_PAD_LEFT) . '-01';
+                        $fecha = date('Y/m/d H:i:s');
                         $resultado = totalizadores($id_equipo,$color,$bn,$fecha);
                         if ($resultado['estatus'] === 'msg') {
                             header('Location: ../equipos/ve_equipo.php?id=' .$id_equipo .'&mes=' .$mes .'&msg=' .urlencode($resultado['mensaje']));

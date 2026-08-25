@@ -90,6 +90,7 @@ mysqli_stmt_execute($stmt_t);
 $resultado_t = mysqli_stmt_get_result($stmt_t);
 $totalizadores = mysqli_fetch_assoc($resultado_t);
 mysqli_stmt_close($stmt_t);
+date_default_timezone_set('Etc/GMT+6');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -131,6 +132,7 @@ mysqli_stmt_close($stmt_t);
                                 <p><span class="info-label">Ubicación: </span><?= htmlspecialchars($equipo['ubicacion']) ?></p>
                             </div>
                             <div class="col-md-6">
+                                <p><span class="info-label">Último registro:</span> <?= htmlspecialchars($totalizadores['fecha'] ?? '-') ?></p>
                                 <p>
                                     <span class="info-label">Color: </span> <?= number_format($totalizadores['color'] ?? 0) ?>
                                 </p>

@@ -20,7 +20,8 @@ if($result_equipos){
 $clientes = [];
 $sql_clientes = "SELECT c.*,
                         GROUP_CONCAT(DISTINCT ct.telefono SEPARATOR ', ') as telefonos,
-                        GROUP_CONCAT(DISTINCT cc.correo SEPARATOR ', ') as correos
+                        GROUP_CONCAT(DISTINCT cc.correo SEPARATOR ', ') as correos,
+                        CONCAT(c.no_cuenta, '-', REPLACE(c.contrato, 'C-', '')) as referencia_auto
                 FROM clientes c
                 LEFT JOIN telefonos ct ON c.id_cliente = ct.id_cliente
                 LEFT JOIN correos cc ON c.id_cliente = cc.id_cliente
@@ -171,7 +172,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                             <div class="row g-3">
                                 <div class="col-md-3">
                                     <label class="form-label">Referencia</label>
-                                    <input type="text" name="referencia[0][referencia]" id="referencia_0" class="form-control">
+                                    <input type="text" name="referencia[0][referencia]" id="referencia_0" class="form-control referencia_auto" readonly>
                                 </div>
                                 <div class="col-md-9">
                                     <label class="form-label">Buscar Equipo</label>
@@ -234,6 +235,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
         const resultadosDiv = document.getElementById('resultadosBusqueda');
         const clienteSeleccionadoDiv = document.getElementById('clienteSeleccionado');
         const nombreClienteSpan = document.getElementById('nombreClienteSeleccionado');
+        const referenciaInput = document.getElementById('referencia_0');
         const btnGuardar = document.getElementById('btnGuardar');
 
         function escapeHtml(text){
@@ -422,7 +424,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                     <div class="row g-2">
                         <div class="col-md-3">
                                     <label class="form-label">Referencia</label>
-                                    <input type="text" name="referencia[${index}][referencia]" id="referencia_0" class="form-control">
+                                    <input type="text" name="referencia[${index}][referencia]" id="referencia_${index}" class="form-control referencia_auto">
                                 </div>
                                 <div class="col-md-9">
                                     <label class="form-label">Buscar Equipo</label>
@@ -455,6 +457,12 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             `;
             container.insertAdjacentHTML('beforeend',html);
             contadorReportes++;
+            if(clienteIDSeleccionado){
+                const clienteSeleccionado = clientesData.find(cliente => cliente.id_cliente == clienteIDSeleccionado);
+                if(clienteSeleccionado && clienteSeleccionado.referencia_auto){
+                    document.getElementById('referencia_' + index).value = clienteSeleccionado.referencia_auto;
+                }
+            }
         }
         function removerEquipo(index){
             const item = document.getElementById('equipo_' + index);
@@ -490,11 +498,23 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 filtrarEquiposPorCliente(clienteId,parseInt(id));
             });
         }
+        function actualizarReferencias() {
+            const clienteSeleccionado = clientesData.find(cliente => cliente.id_cliente == clienteIDSeleccionado);
+            const referencia = clienteSeleccionado ? clienteSeleccionado.referencia_auto : '';
+            document.querySelectorAll('.referencia_auto').forEach(function(input) {
+                input.value = referencia;
+            });
+        }
         window.seleccionarCliente = function(id,nombre){
             clienteIDSeleccionado = id;
             if(idClienteInput) idClienteInput.value=id; 
             if(nombreClienteSpan) nombreClienteSpan.textContent = nombre;
             if(clienteSeleccionadoDiv) clienteSeleccionadoDiv.style.display='block';
+            const clienteSeleccionado = clientesData.find(cliente => cliente.id_cliente == id);
+            const referencia = clienteSeleccionado ? clienteSeleccionado.referencia_auto : '';
+            document.querySelectorAll('.referencia_auto').forEach(function(input) {
+                input.value = referencia;
+            });
             if(elementoSeleccionado){
                 elementoSeleccionado.classList.remove('cliente-seleccionado');
                 const iconAntiguo = elementoSeleccionado.querySelector('.bi-check-circle-fill');
@@ -526,12 +546,16 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             if(clienteSeleccionadoDiv) clienteSeleccionadoDiv.style.display = 'none';
             if(idClienteInput) idClienteInput.value=0;
             if(nombreClienteSpan) nombreClienteSpan.textContent = '';
+            document.querySelectorAll('.referencia_auto').forEach(function(input) {
+                input.value = '';
+            });
             document.querySelectorAll('.equipo-select').forEach((select,index) => {
                 select.innerHTML = '<option value="">-- Seleccione un cliente primero --</option>';
             });
         };
         function validarFormulario(){
             const titulo = document.querySelector('input[name="reporte"]');
+            const referencia = referenciaInput.value;
             if(btnGuardar){
                 btnGuardar.disabled = (titulo && titulo.value.trim() === '');
             }
