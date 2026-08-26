@@ -129,35 +129,56 @@ function agregar_equipo_con_cliente($equipos, $id_cliente = null){
             'mensaje' => 'Error de conexión a la base de datos'
         ];
     }
+    
     $equipos_registrados = 0;
     $errores = [];
+    
     foreach($equipos as $equipo){
         if(empty($equipo['no_serie'])){
-            $errores[]='Número de serie vacío en uno de los equipos';
+            $errores[] = 'Número de serie vacío en uno de los equipos';
             continue;
         }
+        
         $no_serie = trim($equipo['no_serie']);
         $modelo = trim($equipo['modelo']);
         $ubicacion = trim($equipo['ubicacion']);
 
-        $sql='INSERT INTO equipos(no_serie,modelo,ubicacion,id_cliente) VALUES (?,?,?,?)';
-        $stmt = mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt,'sssi',$no_serie,$modelo,$ubicacion,$id_cliente);
-            if(!$stmt){
-            $errores[] = 'Error en la preparación';
+        $sql_check = "SELECT id_equipo FROM equipos WHERE id_cliente = ? AND no_serie = ? LIMIT 1";
+        $stmt_check = mysqli_prepare($conn, $sql_check);
+        mysqli_stmt_bind_param($stmt_check, 'is', $id_cliente, $no_serie);
+        mysqli_stmt_execute($stmt_check);
+        $resultado_check = mysqli_stmt_get_result($stmt_check);
+        $existe = mysqli_fetch_assoc($resultado_check);
+        mysqli_stmt_close($stmt_check);
+        
+        if($existe){
+            $errores[] = 'El equipo con serie ' . $no_serie . ' ya existe para este cliente';
             continue;
         }
+        
+        $sql = 'INSERT INTO equipos (no_serie, modelo, ubicacion, id_cliente) VALUES (?, ?, ?, ?)';
+        $stmt = mysqli_prepare($conn, $sql);
+        
+        if(!$stmt){
+            $errores[] = 'Error en la preparación para ' . $no_serie;
+            continue;
+        }
+        
+        mysqli_stmt_bind_param($stmt, 'sssi', $no_serie, $modelo, $ubicacion, $id_cliente);
+        
         if(mysqli_stmt_execute($stmt)){
             $equipos_registrados++;
-        }else{
-            $errores[] = 'Error al insertar equipos';
+        } else {
+            $errores[] = 'Error al insertar equipo ' . $no_serie . ': ' . mysqli_error($conn);
         }
+        
         mysqli_stmt_close($stmt);
     }
+    
     if($equipos_registrados > 0){
         $mensaje = $equipos_registrados . ' equipo(s) registrado(s) correctamente';
         if(!empty($errores)){
-            $mensaje .= '. Errores: ' . implode(', ' , $errores);
+            $mensaje .= '. Errores: ' . implode(', ', $errores);
         }
         return[
             'estatus' => 'msg',
@@ -165,10 +186,15 @@ function agregar_equipo_con_cliente($equipos, $id_cliente = null){
             'registrados' => $equipos_registrados,
             'errores' => $errores
         ];
-    }else{
+    } else {
+        $mensaje = 'No se pudo registrar ningún equipo';
+        if(!empty($errores)){
+            $mensaje .= '. Errores: ' . implode(', ', $errores);
+        }
         return[
             'estatus' => 'error',
-            'mensaje' => 'No se pudo registrar ningún equipo'
+            'mensaje' => $mensaje,
+            'errores' => $errores
         ];
     }
 }

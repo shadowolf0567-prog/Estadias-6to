@@ -190,7 +190,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                 </div>
                                 <div class="col-md-9">
                                     <label class="form-label">Buscar Equipo</label>
-                                    <input type="text" id="buscarEquipo_0" class="form-control" onkeyup="buscarEquipos(this.value, 0)"  placeholder="Buscar por número de serie">
+                                    <input type="text" id="buscarEquipo_0" class="form-control" onkeyup="buscarEquipos(this.value, 0)"  placeholder="Buscar por número de serie o modelo">
                                     <input type="hidden" name="equipos[0][id_equipo]" id="equipoId_0" value="">
                                 </div>
                                 <div class="col-md-12" id="resultadosEquipos_0"></div>
@@ -365,7 +365,8 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                 resultados = resultados.filter(equipo => equipo.id_cliente == clienteIDSeleccionado);
             }
             resultados = resultados.filter(equipo =>
-                equipo.no_serie.toLowerCase().includes(terminoLower)
+                equipo.no_serie.toLowerCase().includes(terminoLower) ||
+                (equipo.modelo && equipo.modelo.toLowerCase().includes(terminoLower))
             );
             const idSeleccionados = Object.values(equiposSeleccionados).filter(id => id > 0);
             resultados = resultados.filter(equipo => !idSeleccionados.includes(equipo.id_equipo));

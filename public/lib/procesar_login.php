@@ -37,10 +37,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 mysqli_stmt_close($stmt_update);
                 switch($usuario['tip_usr']){
                     case 1:
-                        header("Location: ../clientes/clientes.php");
+                        header("Location: ../reportes/reportes.php");
                         exit;
                     case 2:
-                        header("Location: ../reportes/reportes.php");
+                        header("Location: ../clientes/clietnes.php");
                         exit;
                     case 3:
                         header("Location: ../gestion/pruebas.php");
