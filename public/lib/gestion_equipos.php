@@ -231,50 +231,7 @@ function agregar_equipo_con_cliente($no_serie,$modelo,$accesorios,$ubicacion,$id
         ];
     }
 }
-function editar_cliente_completo($id_cliente,$nombre,$no_cuenta,$direccion,$telefonos=[],$correos=[]){
-    global $conn;
-    if(!$conn){
-        return[
-            'estatus' => 'error',
-            'mensaje' => 'Error de conexión a la base de datos'
-        ];
-    }
-    $sql = "UPDATE clientes SET nombres = ?,no_cuenta=?,direcciones=? WHERE id_cliente = ?";
-    $stmt = mysqli_prepare($conn,$sql);
-    mysqli_stmt_bind_param($stmt,'sssi',$nombre,$no_cuenta,$direccion,$id_cliente);
 
-    if(!mysqli_stmt_execute($stmt)){
-        return[
-            'estatus' => 'error',
-            'mensaje' => 'Error al actualizar cliente'
-        ];
-    }
-    mysqli_stmt_close($stmt);
-}
-function obtener_cliente_completo($id_cliente){
-    global $conn;
-    $sql = "SELECT * FROM clientes WHERE id_cliente = ?";
-    $stmt = mysqli_prepare($conn,$sql);
-    mysqli_stmt_bind_param($stmt,'i',$id_cliente);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    $cliente = mysqli_fetch_assoc($result);
-    mysqli_stmt_close($stmt);
-
-    if(!$cliente) return null;
-
-    $sql_telefono="SELECT id,telefono,correo WHERE id_cliente = ?";
-    $stmt_telefonos = mysqli_prepare($conn,$sql_telefono);
-    mysqli_stmt_bind_param($stmt_telefonos,'i',$id_cliente);
-    mysqli_stmt_execute($stmt_telefonos);
-    $result_telefono=mysqli_stmt_get_result($stmt_telefonos);
-    $telefonos = [];
-    while($row = mysqli_fetch_assoc($result_telefono)){
-        $telefonos[] = $row;
-    }
-    mysqli_stmt_close($stmt_telefonos);
-    return $cliente;
-}
 function totalizadores($id_equipo, $color, $bn, $fecha = null){
     global $conn;
 
@@ -399,31 +356,6 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                         $id_equipo = intval($_POST['id_equipo']);
                         $resultado = eliminar_equipo($id_equipo);
                         header('Location: ../equipos/equipo.php?'.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
-                        exit;
-                    }
-                    break;
-                case 'agregar_con_cliente':
-                    if(isset($_POST['no_serie'],$_POST['modelo'],$_POST['accesorios'])){
-                        $no_serie=trim($_POST['no_serie']);
-                        $modelo=trim($_POST['modelo']);
-                        $accesorios=trim($_POST['accesorios']);
-                        $ubicacion = trim($_POST['ubicacion']);
-                        $modo_cliente=$_POST['modo_cliente'] ?? 'existente';
-
-                        $id_cliente=null;
-                        if(isset($_POST['id_cliente']) && !empty($_POST['id_cliente']) && $_POST['id_cliente'] > 0){
-                            $id_cliente = intval($_POST['id_cliente']);
-                        }
-                        if(empty($no_serie)){
-                            header('Location: ../equipos/agregar_equipo.php?error='.urlencode('El número de serie es obligatorio'));
-                            exit;
-                        }
-                        $resultado = agregar_equipo_con_cliente($no_serie,$modelo,$accesorios,$ubicacion,$id_cliente);
-                        if($resultado['estatus']==='msg'){
-                            header('Location: ../equipos/agregar_equipo.php?msg='.urlencode($resultado['mensaje']));
-                        }else{
-                            header('Location: ../equipos/agregar_equipo.php?error='.urlencode($resultado['mensaje']));
-                        }
                         exit;
                     }
                     break;

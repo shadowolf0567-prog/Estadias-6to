@@ -40,7 +40,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                         header("Location: ../reportes/reportes.php");
                         exit;
                     case 2:
-                        header("Location: ../clientes/clietnes.php");
+                        header("Location: ../clientes/clientes.php");
                         exit;
                     case 3:
                         header("Location: ../gestion/pruebas.php");
