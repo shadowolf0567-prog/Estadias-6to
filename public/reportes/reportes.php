@@ -425,7 +425,6 @@ $contadores = contar_reportes_por_estado();
             window.location.href = url.toString();
         }
         function abrirModalIncompleto(id_reporte) {
-        // Asignar el ID al campo oculto
             document.getElementById('modal_reabrir').value = id_reporte;
             var modal = new bootstrap.Modal(document.getElementById('modalIncompleto'));
             modal.show();

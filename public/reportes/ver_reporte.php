@@ -58,7 +58,12 @@ $result_rea = mysqli_stmt_get_result($stmt_rea);
 $reabiertos = mysqli_fetch_assoc($result_rea);
 
 $atenciones = [];
-$sql_at = "SELECT * from reabiertos WHERE reportes = ?";
+$sql_at = "SELECT r.id, r.fechas, r.acciones, r.observaciones, 
+                   t.nombre as tecnico_nombre, 
+                   r.tecnico as tecnico_id
+            FROM reabiertos r
+            INNER JOIN tecnicos t ON r.tecnico = t.id
+            WHERE r.reportes = ?";
 $stmt_at = mysqli_prepare($conn,$sql_at);
 mysqli_stmt_bind_param($stmt_at,'i',$reporte['id_reporte']);
 mysqli_stmt_execute($stmt_at);
@@ -66,7 +71,14 @@ $result_at = mysqli_stmt_get_result($stmt_at);
 while($row = mysqli_fetch_assoc($result_at)){
     $atenciones[] = $row;
 }
-
+$tecnicos = [];
+$sql_tecnicos = "SELECT * FROM tecnicos";
+$result_tecnicos = mysqli_query($conn,$sql_tecnicos);
+if($result_tecnicos){
+    while($row = mysqli_fetch_assoc($result_tecnicos)){
+        $tecnicos[] = $row;
+    }
+}
 mysqli_stmt_close($stmt);
 mysqli_close($conn);
 ?>
@@ -156,7 +168,7 @@ mysqli_close($conn);
             <a href="reportes.php" class="btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> Volver
             </a>
-            <?php if($reporte['estado'] === 'pendiente'): ?>
+            <?php if($reporte['estado'] != 'atendido'): ?>
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAtender">
                     <i class="bi bi-check-circle"></i> Marcar Atendido
                 </button>
@@ -166,25 +178,9 @@ mysqli_close($conn);
                 <a href="editar_reportes.php?id_reporte=<?= $reporte['id_reporte'] ?>" class="btn btn-outline-warning text-black">
                     <i class="bi bi-pencil"></i> Editar
                 </a>
-            <?php elseif($reporte['estado'] === 'incompleto'): ?>
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAtender">
-                    <i class="bi bi-check-circle"></i> Marcar Atendido
-                </button>
-                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalIncompleto">
-                    <i class="bi bi-arrow-repeat"></i> Sin Concluir
-                </button>
-                <button class="button btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalPendiente">
-                    <i class="bi bi-clock"></i> Marcar Pendiente
-                </button>
-                <a href="editar_reportes.php?id_reporte=<?= $reporte['id_reporte'] ?>" class="btn btn-outline-warning text-black">
-                    <i class="bi bi-pencil"></i> Editar
-                </a>
-            <?php elseif($reporte['estado'] === 'atendido'): ?>
+            <?php else: ?>
                 <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalIncompleto">
                     <i class="bi bi-arrow-repeat"></i> Sin Concluir
-                </button>
-                <button class="button btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalPendiente">
-                    <i class="bi bi-clock"></i> Marcar Pendiente
                 </button>
                 <a href="editar_atendido.php?id_reporte=<?= $reporte['id_reporte'] ?>" class="btn btn-outline-warning text-black">
                     <i class="bi bi-pencil"></i> Editar
@@ -282,6 +278,7 @@ mysqli_close($conn);
                                 <div class="col-md-4">
                                     <p><span class="info-label">Fecha: </span><?= date('d/m/Y', strtotime($atencion['fechas'])) ?></p>
                                     <p><span class="info-label">¿Qué se hizo?</span> <?= htmlspecialchars($atencion['acciones']) ?></p>
+                                    <p><span class="info-label">Técnico: </span><?= htmlspecialchars($atencion['tecnico_nombre']) ?></p>
                                     <p><span class="info-label">Observaciones: </span></p>
                                     <div class="bg-white p-2 rounded"><?= nl2br(htmlspecialchars($atencion['observaciones'])) ?></div>
                                     <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditar<?= $atencion['id'] ?>">
@@ -310,9 +307,25 @@ mysqli_close($conn);
                                                     <input type="hidden" name="accion" value="editar_reabierto">
                                                     <input type="hidden" name="id" value="<?= $atencion['id'] ?>">
                                                     <input type="hidden" name="id_reporte" value="<?= $reporte['id_reporte'] ?>">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Fecha:</label>
-                                                        <input type="date" name="fechas" class="form-control" value="<?= $atencion['fechas'] ?>">
+                                                    <div class="row g-3">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Fecha:</label>
+                                                                <input type="date" name="fechas" class="form-control" value="<?= $atencion['fechas'] ?>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Técnico</label>
+                                                                <select name="tecnico" class="form-select">
+                                                                    <?php foreach($tecnicos as $tecnico): ?>
+                                                                        <option value="<?= $tecnico['id'] ?>" <?= (isset($atencion['tecnico_id']) && $atencion['tecnico_id'] == $tecnico['id']) ? 'selected' : '' ?>>
+                                                                            <?= htmlspecialchars($tecnico['nombre']) ?>
+                                                                        </option>
+                                                                    <?php endforeach; ?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label class="form-label">¿Qué se hizo?</label>
@@ -394,9 +407,25 @@ mysqli_close($conn);
                         <input type="hidden" name="accion" value="reabrir">
                         <input type="hidden" name="id_reporte" value="<?= $reporte['id_reporte'] ?>">
                         <p></p>
-                        <div class="mb-3">
-                            <label class="form-label">Fecha de atención</label>
-                            <input type="date" name="fechas" class="form-control">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Fecha de atención</label>
+                                    <input type="date" name="fechas" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Técnico</label>
+                                    <select name="id" class="form-select">
+                                        <?php foreach($tecnicos as $tecnico): ?>
+                                            <option value="<?= $tecnico['id'] ?>">
+                                                <?= htmlspecialchars($tecnico['nombre']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">¿Qué se hizo?</label>
@@ -410,27 +439,6 @@ mysqli_close($conn);
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-warning">Marcar Incompleto</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="modalPendiente">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-danger">
-                    <h5 class="modal-title">Marcar como Pendiente</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form action="../lib/gestion_reportes.php" method="post">
-                    <div class="modal-body">
-                        <input type="hidden" name="accion" value="pendiente">
-                        <input type="hidden" name="id_reporte" value="<?= $reporte['id_reporte'] ?>">
-                        <p>¿Marcar como Pendiente?</p>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-danger">Marcar Pendiente</button>
-                        </div>
                     </div>
                 </form>
             </div>
@@ -458,7 +466,6 @@ mysqli_close($conn);
             }
         });
         function abrirModalIncompleto(id_reporte) {
-        // Asignar el ID al campo oculto
             document.getElementById('modal_reabrir').value = id_reporte;
             var modal = new bootstrap.Modal(document.getElementById('modalIncompleto'));
             modal.show();

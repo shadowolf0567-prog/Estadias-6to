@@ -62,50 +62,6 @@ function agregar_equipo($no_serie,$modelo,$ubicacion){
         ];
     }
 }
-function agregar_cliente_completo($nombre,$no_cuenta,$direccion,$telefonos = [],$correos=[]){
-    global $conn;
-    if(!$conn){
-        return[
-            'estatus' => 'error',
-            'mensaje' => 'Error de conexión a la base de datos'
-        ];
-    }
-    $sql = "INSERT INTO clientes(nombre,no_cuenta,direccion)
-            VALUES (?,?,?)";
-    $stmt = mysqli_prepare($conn,$sql);
-    mysqli_stmt_bind_param($stmt,'sss',$nombre,$no_cuenta,$direccion);
-    if(!mysqli_stmt_execute($stmt)){
-        return[
-            'estatus' => 'error',
-            'mensaje' => 'Error al insertar cliente'
-        ];
-    }
-    $id_cliente=mysqli_insert_id($conn);
-    mysqli_stmt_close($stmt);
-    if(!empty($telefono)){
-        $sql_telefono = "INSERT INTO clientes_telefonos(id_cliente,telefono) VALUES (?,?)";
-        $stmt_telefono=mysqli_prepare($conn,$sql_telefono);
-
-        foreach($telefono as $telefono){
-            mysqli_stmt_bind_param($stmt_telefono,'is',$id_cliente,$telefono['numero']);
-            mysqli_stmt_execute($stmt_telefono);
-        }
-        mysqli_stmt_close($stmt_telefono);
-    }
-    if(!empty($correos)){
-        $sql_correo = "INSERT INTO clientes_correo (id_cliente,correo) VALUES (?,?)";
-        $stmt_correo = mysqli_prepare($conn,$sql_correo);
-        foreach($correos as $correo){
-            mysqli_stmt_bind_param($stmt_correo,'is',$id_cliente,$correo['direccion']);
-        }
-        mysqli_stmt_close($stmt_correo);
-    }
-    return[
-        'estatus' => 'msg',
-        'mensaje' => 'Cliente agregado correctamente',
-        'id_cliente' => $id_cliente
-    ];
-}
 function editar_equipo($id_equipo,$no_serie,$modelo,$ubicacion,$id_cliente = null){
     global $conn;
     if(!$conn){
@@ -177,57 +133,6 @@ function eliminar_equipo($id_equipo){
         return[
             'estatus' => 'error',
             'mensaje' => 'No se pudo eliminar el producto'
-        ];
-    }
-}
-function agregar_equipo_con_cliente($no_serie,$modelo,$accesorios,$ubicacion,$id_cliente = null){
-    global $conn;
-    if(!$conn){
-        return[
-            'estatus' => 'error',
-            'mensaje' => 'Error de conexión a la base de datos'
-        ];
-    }
-    if(empty($id_cliente) || $id_cliente == 0){
-        $sql='INSERT INTO equipos (no_serie,modelo,accesorios,ubicacion) VALUES(?,?,?,?)';
-        $stmt=mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt, 'ssss', $no_serie,$modelo,$accesorios,$ubicacion);
-    }else{
-        $sql = 'INSERT INTO equipos(no_serie,modelo,accesorios,ubicacion,id_cliente) VALUES(?,?,?,?,?)';
-        $stmt = mysqli_prepare($conn,$sql);
-        mysqli_stmt_bind_param($stmt, 'ssssi', $no_serie,$modelo,$accesorios,$ubicacion,$id_cliente);
-        $mensaje = 'Equipo agregado correctamente';
-    }
-    if(!$stmt){
-        return[
-            'estatus' => 'error',
-            'mensaje' => 'Error en la preparación: '
-        ];
-    }
-    $query_ok=mysqli_stmt_execute($stmt);
-    if(!$query_ok){
-        $error=mysqli_stmt_error($stmt);
-        mysqli_stmt_close($stmt);
-        return[
-            'estatus' => 'error',
-            'mensaje' => 'Error al insertar: '.$error
-        ];
-    }
-    $rows_ok=mysqli_affected_rows($conn);
-    mysqli_stmt_close($stmt);
-    if($rows_ok>0){
-        $mensaje=empty($id_cliente) || $id_cliente == 0 ?
-        'Producto agregado correctamente':
-        'Producto agregado y vinculado al cliente correctamente';
-
-        return[
-            'estatus' => 'msg',
-            'mensaje' => $mensaje
-        ];
-    }else{
-        return[
-            'estatus' => 'error',
-            'mensaje' => 'No se pudo insertar el producto'
         ];
     }
 }

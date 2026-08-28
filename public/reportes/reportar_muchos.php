@@ -169,14 +169,14 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         </div>
                         <div class="col-md-4">
                         <label class="form-label">Técnico</label>
-                        <select name="id" class="form-select">
-                            <?php foreach($tecnicos as $tecnico): ?>
-                                <option value="<?= $tecnico['id'] ?>">
-                                    <?= htmlspecialchars($tecnico['nombre']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                            <select name="id" class="form-select">
+                                <?php foreach($tecnicos as $tecnico): ?>
+                                    <option value="<?= $tecnico['id'] ?>">
+                                        <?= htmlspecialchars($tecnico['nombre']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="form-section">

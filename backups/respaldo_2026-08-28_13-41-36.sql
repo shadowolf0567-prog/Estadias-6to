@@ -1,5 +1,5 @@
 -- Backup de Base de Datos Emipac
--- Fecha: 2026-08-25 17:26:31
+-- Fecha: 2026-08-28 13:41:36
 DROP DATABASE IF EXISTS emipac;
 CREATE DATABASE emipac;
 USE emipac;
@@ -26,7 +26,7 @@ CREATE TABLE `clientes` (
   `encargado` varchar(255) DEFAULT NULL,
   `contrato` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id_cliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: clientes
 INSERT INTO `clientes` (`id_cliente`, `nombre`, `no_cuenta`, `direccion`, `encargado`, `contrato`) VALUES ('1', 'Intelligence Berau and Laborator', '291901', 'Av. Antea #1032 Int. 404 Jurica', 'Roberto Alfaro', 'C-0399');
@@ -52,7 +52,7 @@ CREATE TABLE `correos` (
   PRIMARY KEY (`id`),
   KEY `id_cliente` (`id_cliente`),
   CONSTRAINT `correos_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Estructura de tabla: equipos
 DROP TABLE IF EXISTS `equipos`;
@@ -65,7 +65,7 @@ CREATE TABLE `equipos` (
   PRIMARY KEY (`id_equipo`),
   KEY `id_cliente` (`id_cliente`),
   CONSTRAINT `equipos_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=118 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=119 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: equipos
 INSERT INTO `equipos` (`id_equipo`, `no_serie`, `modelo`, `id_cliente`, `ubicacion`) VALUES ('1', 'C757M500195', 'S-11MPC6004R+', '1', '');
@@ -152,10 +152,13 @@ CREATE TABLE `reabiertos` (
   `reportes` int(11) DEFAULT NULL,
   `observaciones` text DEFAULT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tecnico` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `reportes` (`reportes`),
-  CONSTRAINT `1` FOREIGN KEY (`reportes`) REFERENCES `reportes` (`id_reporte`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+  KEY `tecnico` (`tecnico`),
+  CONSTRAINT `1` FOREIGN KEY (`reportes`) REFERENCES `reportes` (`id_reporte`) ON DELETE CASCADE,
+  CONSTRAINT `2` FOREIGN KEY (`tecnico`) REFERENCES `tecnicos` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- Estructura de tabla: reportes
 DROP TABLE IF EXISTS `reportes`;
@@ -177,7 +180,7 @@ CREATE TABLE `reportes` (
   CONSTRAINT `1` FOREIGN KEY (`id`) REFERENCES `tecnicos` (`id`),
   CONSTRAINT `reportes_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE SET NULL,
   CONSTRAINT `reportes_ibfk_2` FOREIGN KEY (`id_equipo`) REFERENCES `equipos` (`id_equipo`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=167 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=163 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: reportes
 INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('1', '2026-07-08', 'atendido', '2026-07-08', '', '1', '1', '291901-0399-0001', '5', '');
@@ -265,8 +268,8 @@ CREATE TABLE `reportes_componentes` (
   `descripcion` text DEFAULT NULL,
   PRIMARY KEY (`id_reporte_componente`),
   KEY `id_reporte` (`id_reporte`),
-  CONSTRAINT `1` FOREIGN KEY (`id_reporte`) REFERENCES `reportes` (`id_reporte`)
-) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+  CONSTRAINT `1` FOREIGN KEY (`id_reporte`) REFERENCES `reportes` (`id_reporte`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --Datos de tabla: reportes_componentes
 INSERT INTO `reportes_componentes` (`id_reporte_componente`, `id_reporte`, `componente`, `tipo`, `descripcion`) VALUES ('1', '25', 'Servicio Preventivo', 'SER-01', '');
@@ -372,7 +375,7 @@ CREATE TABLE `telefonos` (
   PRIMARY KEY (`id`),
   KEY `id_cliente` (`id_cliente`),
   CONSTRAINT `telefonos_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: telefonos
 INSERT INTO `telefonos` (`id`, `telefono`, `id_cliente`, `contacto`) VALUES ('38', '4422133388', '1', '');
@@ -419,7 +422,7 @@ CREATE TABLE `usuarios` (
 --Datos de tabla: usuarios
 INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('1', 'a', 'servicio_tecnico', '1234', '1', NULL, NULL, NULL, '1', NULL);
 INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('2', 'b', 'Administracion', '1234', '2', NULL, NULL, NULL, '1', NULL);
-INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('3', 'c', 'yo', '1234', '3', '1c460e37ef59ab5c72c21033a7448ec5', NULL, '2026-08-24 15:30:06', '1', NULL);
-INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('4', 'tecnicos', 'tecnicos', '1234', '1', '48a0dd9bb0548508cf78df5aa5a5cab7', NULL, '2026-08-21 22:26:36', '1', NULL);
+INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('3', 'c', 'yo', '1234', '3', '39ab6265253c506c1088ba74375f0fce', NULL, '2026-08-25 19:24:36', '1', NULL);
+INSERT INTO `usuarios` (`id_usr`, `nom_usr`, `mail`, `pass`, `tip_usr`, `session_id`, `session_ip`, `session_time`, `session_count`, `session_tokens`) VALUES ('4', 'tecnicos', 'tecnicos', '1234', '1', NULL, NULL, NULL, '1', NULL);
 
 SET FOREIGN_KEY_CHECKS=1;

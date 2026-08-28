@@ -252,7 +252,7 @@ function marcar_atendido($id_reporte, $observaciones = '',$fecha_atencion = ''){
         ];
     }
 }
-function reabrir_reporte($id_reporte, $fecha = null, $acciones= '', $observaciones = ''){
+function reabrir_reporte($id_reporte, $fecha = null, $acciones= '', $observaciones = '', $tecnico = ''){
     global $conn;
     if(empty($fecha)){
         $fecha = date('Y-m-d');
@@ -292,8 +292,8 @@ function reabrir_reporte($id_reporte, $fecha = null, $acciones= '', $observacion
     }
         
     if(!empty($acciones) || !empty($observaciones)){
-        $sql_rea = "INSERT INTO reabiertos(reportes,fechas,acciones,observaciones)
-                    VALUES (?,?,?,?)";
+        $sql_rea = "INSERT INTO reabiertos(reportes,fechas,acciones,observaciones,tecnico)
+                    VALUES (?,?,?,?,?)";
         $stmt_rea = mysqli_prepare($conn,$sql_rea);
         if(!$stmt_rea){
             return[
@@ -302,7 +302,7 @@ function reabrir_reporte($id_reporte, $fecha = null, $acciones= '', $observacion
             ];
         }
         if($stmt_rea){
-            mysqli_stmt_bind_param($stmt_rea, 'isss', $id_reporte,$fecha,$acciones,$observaciones);
+            mysqli_stmt_bind_param($stmt_rea, 'isssi', $id_reporte,$fecha,$acciones,$observaciones,$tecnico);
             $result_rea = mysqli_stmt_execute($stmt_rea);
             mysqli_stmt_close($stmt_rea);
             if(!$result_rea){
@@ -459,9 +459,9 @@ function agregar_en_masa($reportes,$id_cliente = null){
         ];
     }
 }
-function editar_reabiertos($id,$fechas,$acciones,$observaciones){
+function editar_reabiertos($id,$fechas,$acciones,$observaciones,$tecnico){
     global $conn;
-    $sql = "UPDATE reabiertos SET fechas = ?,acciones = ?, observaciones = ? WHERE id = ?";
+    $sql = "UPDATE reabiertos SET fechas = ?,acciones = ?, observaciones = ?,tecnico = ? WHERE id = ?";
     $stmt = mysqli_prepare($conn, $sql);
     if(!$stmt){
         return[
@@ -469,7 +469,7 @@ function editar_reabiertos($id,$fechas,$acciones,$observaciones){
             'mensaje' => 'Error en la ejecución de la base de datos'
         ];
     }
-    mysqli_stmt_bind_param($stmt,'sssi',$fechas,$acciones,$observaciones,$id);
+    mysqli_stmt_bind_param($stmt,'sssii',$fechas,$acciones,$observaciones,$tecnico,$id);
     $query_ok = mysqli_stmt_execute($stmt);
     if(!$query_ok){
         $error = mysqli_stmt_error($stmt);
@@ -490,32 +490,6 @@ function editar_reabiertos($id,$fechas,$acciones,$observaciones){
         return[
             'estatus' => 'info',
             'mensaje' => 'No se realizaron cambios'
-        ];
-    }
-}
-function marcar_pendiente($id_reporte){
-    global $conn;
-    $sql = "UPDATE reportes SET estado = 'pendiente', fecha_atencion = NULL, observaciones_atencion = NULL, acciones = NULL WHERE id_reporte = ?";
-    $stmt = mysqli_prepare($conn,$sql);
-    if(!$stmt){
-        return[
-            'estatus' => 'error',
-            'mensaje' => 'Error en la preparación: ' . mysqli_error($conn)
-        ];
-    } 
-    mysqli_stmt_bind_param($stmt,'i',$id_reporte);
-    $query_ok = mysqli_stmt_execute($stmt);
-    $rows_ok = mysqli_affected_rows($conn);
-    mysqli_stmt_close($stmt);
-    if($query_ok && $rows_ok > 0){
-        return[
-            'estatus' => 'msg',
-            'mensaje' => 'Reporte marcado como pendiente'
-        ];
-    }else{
-        return[
-            'estatus' => 'error',
-            'mensaje' => 'No se pudo marcar como pendiente'
         ];
     }
 }
@@ -719,15 +693,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     $fecha = trim($_POST['fechas']);
                     $acciones = trim($_POST['acciones'] ?? '');
                     $observaciones = trim($_POST['observaciones']);
-                    $resultado = reabrir_reporte($id_reporte,$fecha,$acciones,$observaciones);
-                    header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
-                    exit;
-                }
-                break;
-            case 'pendiente':
-                if(isset($_POST['id_reporte'])){
-                    $id_reporte = intval($_POST['id_reporte']);
-                    $resultado = marcar_pendiente($id_reporte);
+                    $tecnico = trim($_POST['id']);
+                    $resultado = reabrir_reporte($id_reporte,$fecha,$acciones,$observaciones,$tecnico);
                     header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.$resultado['estatus'].'='.urlencode($resultado['mensaje']));
                     exit;
                 }
@@ -838,7 +805,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     $fechas = trim($_POST['fechas']);
                     $acciones = trim($_POST['acciones']);
                     $observaciones = trim($_POST['observaciones']);
-                    $resultado = editar_reabiertos($id,$fechas,$acciones,$observaciones);
+                    $tecnico = trim($_POST['tecnico']);
+                    $resultado = editar_reabiertos($id,$fechas,$acciones,$observaciones,$tecnico);
                     if($resultado['estatus'] === 'msg' || $resultado['estatus'] === 'info'){
                         header('Location: ../reportes/ver_reporte.php?id='.$id_reporte.'&msg='.urlencode($resultado['mensaje']));
                     }else{
