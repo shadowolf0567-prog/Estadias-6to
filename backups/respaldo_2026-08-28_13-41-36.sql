@@ -180,7 +180,7 @@ CREATE TABLE `reportes` (
   CONSTRAINT `1` FOREIGN KEY (`id`) REFERENCES `tecnicos` (`id`),
   CONSTRAINT `reportes_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE SET NULL,
   CONSTRAINT `reportes_ibfk_2` FOREIGN KEY (`id_equipo`) REFERENCES `equipos` (`id_equipo`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=163 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --Datos de tabla: reportes
 INSERT INTO `reportes` (`id_reporte`, `fecha`, `estado`, `fecha_atencion`, `observaciones_atencion`, `id_cliente`, `id_equipo`, `referencia`, `id`, `acciones`) VALUES ('1', '2026-07-08', 'atendido', '2026-07-08', '', '1', '1', '291901-0399-0001', '5', '');

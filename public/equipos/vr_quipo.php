@@ -26,7 +26,24 @@ if(!$equipo){
     header('Location: equipo.php?error='.urlencode('Equipo no encontrado'));
     exit;
 }
-
+$contadores = [];
+$sql_cont = "SELECT r.id_equipo,
+                SUM(rc.tipo = 'SER-01') as total_preven,
+                SUM(rc.tipo = 'falla') as total_mant,
+                SUM(rc.tipo = 'SER-02') as total_correc,
+                SUM(rc.tipo = 'SER-03') as total_reparaciones,
+                SUM(rc.tipo = 'componente') as total_compon,
+                SUM(rc.tipo = 'configuracion') as total_conf
+            FROM reportes r
+            LEFT JOIN reportes_componentes rc ON r.id_reporte = rc.id_reporte
+            WHERE r.id_equipo = ?";
+$stmt_cont = mysqli_prepare($conn,$sql_cont);
+mysqli_stmt_bind_param($stmt_cont,'i',$id_equipo);
+mysqli_stmt_execute($stmt_cont);
+$result_cont = mysqli_stmt_get_result($stmt_cont);
+while($row = mysqli_fetch_assoc($result_cont)){
+    $contadores[] = $row;
+}
 $reportes_equipos = [];
 $mes = isset($_GET['mes']) ? intval($_GET['mes']) : null;
 if($equipo){
@@ -47,7 +64,10 @@ if($equipo){
                                 AND (rc.tipo = 'SER-03')) as repacariones,
                                 (SELECT COUNT(*) FROM reportes_componentes rc
                                 WHERE rc.id_reporte = r.id_reporte
-                                AND (rc.tipo = 'componente')) as total_componentes
+                                AND (rc.tipo = 'componente')) as total_componentes,
+                                (SELECT COUNT(*) FROM reportes_componentes rc
+                                WHERE rc.id_reporte = r.id_reporte
+                                AND (rc.tipo = 'configuracion')) as total_configuraciones
                                 FROM reportes r
                                 WHERE id_equipo = ?";
     $params = [$equipo['id_equipo']];
@@ -167,13 +187,42 @@ date_default_timezone_set('Etc/GMT+6');
                     <div class="card-header">Información del Cliente</div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <p><span class="info-label">Cliente: </span><?= htmlspecialchars($equipo['nombre']) ?></p>
                                 <p><span class="info-label">Número de Cuenta: </span><?= htmlspecialchars($equipo['no_cuenta']) ?></p>
                                 <a href="../clientes/ver_cliente.php?id=<?= $equipo['id_cliente'] ?>" class="btn btn-info">
                                     <i class="bi bi-eye"></i> Ver Cliente
                                 </a>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card info-card">
+                    <div class="card-header">Total Reportes</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <?php foreach($contadores as $contador): ?>
+                                <div class="col-md-2">
+                                    <p><span class="info-label">Componentes: </span><?= number_format($contador['total_compon'] ?? 0) ?></p>
+                                </div>
+                                <div class="col-md-2">
+                                    <p><span class="info-label">Mantenimientos: </span><?= number_format($contador['total_mant'] ?? 0) ?></p>
+                                </div>
+                                <div class="col-md-2">
+                                    <p><span class="info-label">Reparaciones: </span><?= number_format($contador['total_reparaciones' ] ?? 0) ?></p>
+                                </div>
+                                <div class="col-md-2">
+                                    <p><span class="info-label">Preventivos: </span><?= number_format($contador['total_preven'] ?? 0) ?></p>
+                                </div>
+                                <div class="col-md-2">
+                                    <p><span class="info-label">Correctivos: </span><?= number_format($contador['total_correc'] ?? 0) ?></p>
+                                </div>
+                                <div class="col-md-2">
+                                    <p><span class="info-label">Configuraciones: </span><?= number_format($contador['total_conf'] ?? 0) ?></p>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
                     </div>
                 </div>
@@ -202,7 +251,7 @@ date_default_timezone_set('Etc/GMT+6');
                         </div>
                         <?php if(!empty($mes)): ?>
                             <div class="col-md-2">
-                                <a href="ve_equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-secondary">
+                                <a href="vr_quipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-secondary">
                                     <i class="bi bi-x-circle"></i> Limpiar
                                 </a>
                             </div>
@@ -232,6 +281,7 @@ date_default_timezone_set('Etc/GMT+6');
                                             <th>Reparación</th>
                                             <th>Preventivo</th>
                                             <th>Correctivo</th>
+                                            <th>Configuración</th>
                                             <th>Estado</th>
                                             <th></th>
                                         </tr>
@@ -284,6 +334,17 @@ date_default_timezone_set('Etc/GMT+6');
                                                 </td>
                                                 <td>
                                                     <?php if($reporte['correctivos'] > 0): ?>
+                                                        <span class="badge-outline success" style="font-size: 1rem">
+                                                            <i class="bi bi-check-circle"></i>
+                                                        </span>
+                                                    <?php else: ?>
+                                                        <span class="badge-outline-danger" style="font-size: 1rem;">
+                                                            <i class="bi bi-x-circle"></i>
+                                                        </span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td>
+                                                    <?php if($reporte['total_configuraciones'] > 0): ?>
                                                         <span class="badge-outline success" style="font-size: 1rem">
                                                             <i class="bi bi-check-circle"></i>
                                                         </span>

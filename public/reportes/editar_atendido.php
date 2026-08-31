@@ -263,6 +263,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                         <label class="form-label">Tipo</label>
                                         <select name="componentes[<?= $index ?>][tipo]" class="form-select" onchange="mostrarSeccion(this, <?= $index ?>)">
                                             <option value="">-- Ninguno --</option>
+                                            <option value="configuracion" <?= ($comp['tipo'] == 'configuracion') ? 'selected' : '' ?>>Configuración</option>
                                             <option value="SER-01" <?= ($comp['tipo'] == 'SER-01') ? 'selected' : '' ?>>SER-01</option>
                                             <option value="SER-02" <?= ($comp['tipo'] == 'SER-02') ? 'selected' : '' ?>>SER-02</option>
                                             <option value="falla" <?= ($comp['tipo'] == 'falla') ? 'selected' : '' ?>>Falla/Mantenimiento</option>
@@ -294,6 +295,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                     <label class="form-label">Tipo</label>
                                     <select name="componentes[0][tipo]" class="form-select" onchange="mostrarSeccion(this,0)">
                                         <option value="">-- Ninguno --</option>
+                                        <option value="configuracion">Configuración</option>
                                         <option value="SER-01">SER-01</option>
                                         <option value="SER-02">SER-02</option>
                                         <option value="falla">Falla/Mantenimiento</option>
@@ -406,7 +408,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
             const seccion = document.getElementById('seccionDescripcion_' + index);
             const nombreInput = document.getElementById('nombre_' + index);
             if(seccion){
-                if(select.value === 'componente' || select.value === 'SER-03' || select.value === 'SER-01' || select.value === 'SER-02' || select.value === 'falla'){
+                if(select.value === 'componente' || select.value === 'SER-03' || select.value === 'SER-01' || select.value === 'SER-02' || select.value === 'falla' || select.value === 'configuracion'){
                     seccion.style.display = 'block';
                 }else{
                     seccion.style.display = 'none';
@@ -430,11 +432,16 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         nombreInput.value = 'Reparación';
                         nombreInput.readOnly = true;
                     break;
+                    case 'configuracion':
+                        nombreInput.value = 'Configuración';
+                        nombreInput.readOnly = true;
+                    break;
                     default:
                         if(nombreInput.value === 'Servicio Preventivo' || 
                             nombreInput.value === 'Servicio Correctivo' ||
                             nombreInput.value === 'Reparación' ||
-                            nombreInput.value === 'Falla/Mantenimiento') {
+                            nombreInput.value === 'Falla/Mantenimiento' ||
+                            nombreInput.value === 'Configuración') {
                                 nombreInput.value = '';
                             }
                             nombreInput.readOnly = false;
@@ -454,6 +461,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                             <label class="form-label">Tipo</label>
                             <select name ="componentes[${index}][tipo]" class="form-select" onchange="mostrarSeccion(this,${index})">
                                 <option value="">-- Ninguno --</option>
+                                <option value="configuracion" ?>Configuración</option>
                                 <option value="SER-01">SER-01</option>
                                 <option value="SER-02">SER-02</option>
                                 <option value="SER-03">Reparación</option>

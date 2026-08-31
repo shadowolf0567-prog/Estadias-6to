@@ -49,6 +49,8 @@ function agregar_reportes_con_reportes($fecha,$referencia,$id_cliente = null,$id
                     $componente = 'Reparación';
                 }elseif($tipo == 'falla'){
                     $componente = 'Falla/Mantenimiento';
+                }elseif($tipo == 'configuracion'){
+                    $componente = 'Configuración';
                 }
             }
             if(empty($tipo)){
@@ -60,6 +62,8 @@ function agregar_reportes_con_reportes($fecha,$referencia,$id_cliente = null,$id
                     $tipo = 'SER-03';
                 } elseif(strpos($componente, 'Falla/Mantenimiento') !== false){
                     $tipo = 'falla';
+                } elseif(strpos($componente, 'Configuración') !== false){
+                    $tipo = 'configuracion';
                 }else{
                     $tipo = 'componente';
                 }
@@ -127,6 +131,8 @@ function editar_reporte_con_componentes($id_reporte,$referencia,$fecha,$id_clien
                             $componente = 'Servicio Correctivo';
                         }elseif($tipo == 'SER-03'){
                             $componente = 'Reparación';
+                        }elseif($tipo == 'configuracion'){
+                            $componente = 'Configuración';
                         }
                     }if(empty($tipo)){
                         if(strpos($componente, 'Preventivo') !== false){
@@ -135,6 +141,10 @@ function editar_reporte_con_componentes($id_reporte,$referencia,$fecha,$id_clien
                             $tipo = 'SER-02';
                         } elseif(strpos($componente, 'Reparación') !== false){
                             $tipo = 'SER-03';
+                        } elseif(strpos($componente, 'Falla/Mantenimiento') !== false){
+                            $tipo = 'falla';
+                        } elseif(strpos($componente, 'Configuración') !== false){
+                            $tipo = 'configuracion';
                         } else{
                             $tipo = 'componente';
                         }
@@ -362,19 +372,24 @@ function editar_atendidos($id_reporte,$fecha,$referencia,$fecha_atencion,$accion
                     if(empty($componente)){
                         if($tipo == 'SER-01'){
                             $componente = 'Servicio Preventivo';
-                        } elseif($tipo == 'SER-02'){
+                        }elseif($tipo == 'SER-02'){
                             $componente = 'Servicio Correctivo';
-                        } elseif($tipo == 'SER-03'){
+                        }elseif($tipo == 'SER-03'){
                             $componente = 'Reparación';
+                        }elseif($tipo == 'configuracion'){
+                            $componente = 'Configuración';
                         }
-                    }
-                    if(empty($tipo)){
+                    }if(empty($tipo)){
                         if(strpos($componente, 'Preventivo') !== false){
                             $tipo = 'SER-01';
                         } elseif(strpos($componente, 'Correctivo') !== false){
                             $tipo = 'SER-02';
                         } elseif(strpos($componente, 'Reparación') !== false){
                             $tipo = 'SER-03';
+                        } elseif(strpos($componente, 'Falla/Mantenimiento') !== false){
+                            $tipo = 'falla';
+                        } elseif(strpos($componente, 'Configuración') !== false){
+                            $tipo = 'configuracion';
                         } else{
                             $tipo = 'componente';
                         }
@@ -547,6 +562,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                                     $nombre = 'Reparación';
                                 }elseif($tipo == 'falla'){
                                     $nombre = 'Falla/Mantenimiento';
+                                }elseif($tipo == 'configuracion'){
+                                    $nombre = 'Configuración';
                                 }
                             }
                             
@@ -593,7 +610,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                                 }elseif($tipo == 'SER-03'){
                                     $componente = 'Reparación';
                                 }elseif($tipo == 'falla'){
-                                    $nombre = 'Falla/Mantenimiento';
+                                    $componente = 'Falla/Mantenimiento';
+                                }elseif($tipo == 'configuracion'){
+                                    $componente = 'Configuración';
                                 }
                             }
                             if(!empty($componente)){
@@ -729,7 +748,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                                 }elseif($tipo == 'SER-03'){
                                     $componente = 'Reparación';
                                 }elseif($tipo == 'falla'){
-                                    $nombre = 'Falla/Mantenimiento';
+                                    $componente = 'Falla/Mantenimiento';
+                                }elseif($tipo == 'configuracion'){
+                                    $componente = 'Configuración';
                                 }
                             }
                             if(!empty($componente)){

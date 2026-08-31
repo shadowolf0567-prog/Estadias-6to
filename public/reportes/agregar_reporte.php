@@ -190,6 +190,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                                 <label class="form-label">Tipo</label>
                                 <select name="componentes[0][tipo]" class="form-select" onchange="mostrarSeccion(this,0)">
                                     <option value="">-- Ninguno --</option>
+                                    <option value="configuracion">Configuración</option>
                                     <option value="SER-01">SER-01</option>
                                     <option value="SER-02">SER-02</option>
                                     <option value="falla">Falla/Mantenimiento</option>
@@ -316,11 +317,16 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                         nombreInput.value = 'Reparación';
                         nombreInput.readOnly = true;
                     break;
+                    case 'configuracion':
+                        nombreInput.value = 'Configuración';
+                        nombreInput.readOnly = true;
+                    break;
                     default:
                         if(nombreInput.value === 'Servicio Preventivo' || 
                             nombreInput.value === 'Servicio Correctivo' ||
                             nombreInput.value === 'Reparación' ||
-                            nombreInput.value === 'Falla/Mantenimiento') {
+                            nombreInput.value === 'Falla/Mantenimiento' ||
+                            nombreInput.value === 'Configuración') {
                                 nombreInput.value = '';
                             }
                             nombreInput.readOnly = false;
@@ -339,6 +345,7 @@ $mensaje = isset($_GET['msg']) ? $_GET['msg'] : '';
                             <label class="form-label">Tipo</label>
                             <select name ="componentes[${contadorComponentes}][tipo]" class="form-select" onchange="mostrarSeccion(this,${contadorComponentes})">
                                 <option value="">-- Ninguno --</option>
+                                <option value="configuracion">Configuración</option>
                                 <option value="SER-01">SER-01</option>
                                 <option value="SER-02">SER-02</option>
                                 <option value="falla">Falla/Mantenimiento</option>

@@ -277,9 +277,9 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                         $fecha = date('Y/m/d H:i:s');
                         $resultado = totalizadores($id_equipo,$color,$bn,$fecha);
                         if ($resultado['estatus'] === 'msg') {
-                            header('Location: ../equipos/ve_equipo.php?id=' .$id_equipo .'&mes=' .$mes .'&msg=' .urlencode($resultado['mensaje']));
+                            header('Location: ../equipos/vr_quipo.php?id=' .$id_equipo .'&mes=' .$mes .'&msg=' .urlencode($resultado['mensaje']));
                         } else {
-                            header( 'Location: ../equipos/ve_equipo.php?id=' . $id_equipo . '&mes=' . $mes . '&error=' . urlencode($resultado['mensaje']));
+                            header( 'Location: ../equipos/vr_quipo.php?id=' . $id_equipo . '&mes=' . $mes . '&error=' . urlencode($resultado['mensaje']));
                         }
                         exit;
                     }

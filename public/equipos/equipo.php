@@ -224,7 +224,7 @@ $total_resultados = count($equipos);
                                     onclick="eliminarEquipo(<?= $equipo['id_equipo'] ?>, '<?= addslashes($equipo['no_serie']) ?>')">
                                         <i class="bi bi-trash"></i> Eliminar
                                     </button>
-                                    <a href="ve_equipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-sm btn-info">
+                                    <a href="vr_quipo.php?id=<?= $equipo['id_equipo'] ?>" class="btn btn-sm btn-info">
                                         <i class="bi bi-eye"></i> Ver Equipo
                                     </a>
                                 </td>
